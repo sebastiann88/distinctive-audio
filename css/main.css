@@ -121,7 +121,7 @@ body {
 .navmenu a {
     display: block;
     text-decoration: none;
-    width: 190px;
+    width: 195px;
     line-height: 20px;
     background-color: #FFF;
     border-radius: 5px;
@@ -129,11 +129,16 @@ body {
 }
 
 .navmenu .submenu1 a {
-    margin-top: 8px;
+    margin-top: 5px;
 }
 
 .navmenu .submenu2 a {
     margin-left: 5px;
+}
+
+.tab-content > a {
+    display: none;
+    visibility: hidden;
 }
 
 .navmenu li:hover > a {
@@ -149,7 +154,7 @@ body {
 }
 
 .navmenu .submenu2 {
-    display: block;
+    display: none;
 
 }
 
@@ -194,6 +199,11 @@ body {
         
     .navmenu a {
         padding: 20px;   
+    }
+    
+    .tab-content > a {
+        display: block;
+        visibility: visible;
     }
     
     .navmenu .submenu1 {
