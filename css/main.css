@@ -83,8 +83,8 @@ body {
 }
 
 .tab-content > a {
-    display: none;
-    visibility: hidden;
+    display: block;
+    line-height: 0;
 }
 
 .tab input:checked ~ .tab-content {
@@ -122,7 +122,6 @@ body {
     display: block;
     text-decoration: none;
     width: 155px;
-    height: 100%;
     line-height: 20px;
     background-color: #FFF;
     border-radius: 5px;
