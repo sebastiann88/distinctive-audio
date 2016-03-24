@@ -33,10 +33,6 @@ body {
     padding: 3em;
 }
 
-.logo {
-    width: 110px;
-}
-
 
 /* --------------------------
   ACCORDION
@@ -95,6 +91,28 @@ body {
 }
 
 /* --------------------------
+  FLEXBOX
+--------------------------- */
+
+.main-header,
+.navmenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.navmenu {
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 1.5em;
+}
+
+.logo {
+    align-self: center;
+    margin: 0 auto;
+}
+
+
+/* --------------------------
   NAVIGATION
 --------------------------- */
 
@@ -138,10 +156,16 @@ body {
     margin-left: 5px;
 }
 
+.tab-content{
+    margin-top: 5px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
 .tab-content > a {
-    display: none;
-    visibility: hidden;
-    max-width: 100%;
+    display: block;
+    visibility: visible;
+    width: 99.2%;
 }
 
 .navmenu li:hover > a {
@@ -167,18 +191,119 @@ body {
 
 
 @media (min-width: 769px) {
-    
 
     
 }
 
 @media (min-width: 1026px) {
+    .main-header {
+        display: flex;
+        justify-content: flex-end;
+    }
     
+    .navmenu {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 1.5em;
+    }
+    
+    .navmenu li {
+        float: left;
+    }
+    
+    .tabgroup, .tab input, .tab label  {
+        display: none;
+        visibility: hidden;
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .tab-content {
+        overflow: visible;
+        max-height: 100%;
+    }
+    
+    .tab-content > a {
+        display: visible;
+        visibility: visible;
+    }
+    
+    .navmenu li {
+        width: 150px;    
+    }
+    
+    .navmenu a {
+        padding: 20px;   
+    }
+    
+    .tab-content{
+        margin-top: 0;
+    }
+    
+    .tab-content > a {
+        display: block;
+        visibility: visible;
+    }
+    
+    .navmenu .submenu1 {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0px;
+    }
+    
+    .navmenu .submenu1 a {
+        width: 150px;   
+    }
+    
+    .navmenu .submenu2 {
+        display: none;
+        position: absolute;
+        top: 0px;
+        left: 150px;
+    }
+        
+    .navmenu li:hover .submenu1 {
+            display: block;
+    }
+    
+    .navmenu .submenu1 li:hover .submenu2 {
+            display: block;
+    } 
 
 }
 
 
 @media (min-width: 1545px) {
+    
+    .main-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    
+    .navmenu {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 0;
+        align-self: center;
+    }
+    
+    .logo {
+        align-self: center;
+        margin: 0 auto;
+    }
+    
+    .main-header,
+    .navmenu {
+        display: flex;
+    }
+    
+    .navmenu {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    
     .navmenu li {
         float: left;
     }

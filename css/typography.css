@@ -27,6 +27,7 @@ fieldset, pre, table {
 
 h1 {
     -webkit-column-span: all; /* Chrome, Safari, Opera */
+    text-align: center;
 
 }
 
