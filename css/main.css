@@ -114,7 +114,6 @@ body {
 }
 
 .navmenu li {
-    width: 200px;
     text-align: center;
     position: relative;
     margin-right: 5px;
@@ -132,6 +131,7 @@ body {
 
 .navmenu .submenu1 a {
     margin-top: 5px;
+    width: 100%;
 }
 
 .navmenu .submenu2 a {
@@ -141,6 +141,7 @@ body {
 .tab-content > a {
     display: none;
     visibility: hidden;
+    max-width: 100%;
 }
 
 .navmenu li:hover > a {
@@ -198,6 +199,10 @@ body {
         display: visible;
         visibility: visible;
     }
+    
+    .navmenu li {
+        width: 200px;   
+    }
         
     .navmenu a {
         padding: 20px;   
@@ -213,6 +218,10 @@ body {
         position: absolute;
         top: 60px;
         left: 0px;
+    }
+    
+    .navmenu .submenu1 a {
+        width: 195px;
     }
     
     .navmenu .submenu2 {
