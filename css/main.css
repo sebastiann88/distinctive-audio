@@ -54,7 +54,7 @@ body {
 
 .tab input {
     position: absolute;
-    left: 0;
+    left: -99px;
     top: 0;
     z-index: -999;
 }
@@ -112,7 +112,7 @@ body {
 }
 
 .navmenu li {
-    width: 155px;
+    width: 200px;
     text-align: center;
     position: relative;
     margin-right: 5px;
@@ -121,7 +121,7 @@ body {
 .navmenu a {
     display: block;
     text-decoration: none;
-    width: 155px;
+    width: 190px;
     line-height: 20px;
     background-color: #FFF;
     border-radius: 5px;
@@ -129,11 +129,11 @@ body {
 }
 
 .navmenu .submenu1 a {
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
 .navmenu .submenu2 a {
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .navmenu li:hover > a {
@@ -193,8 +193,8 @@ body {
     }
         
     .navmenu a {
-            padding: 20px;   
-        }
+        padding: 20px;   
+    }
     
     .navmenu .submenu1 {
         display: none;
@@ -207,7 +207,7 @@ body {
         display: none;
         position: absolute;
         top: 0px;
-        left: 150px;
+        left: 195px;
     }
         
     .navmenu li:hover .submenu1 {
