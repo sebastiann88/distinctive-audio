@@ -102,15 +102,70 @@ body {
     flex-direction: column;
 }
 
+.logo {
+    align-self: center;
+    margin: 0 auto;
+}
+
+/* --------------------------
+  TOGGLE NAVIGATION
+--------------------------- */
+
+.main-header {
+    position: relative;
+    padding: 1em 0 40px;
+}
+
 .navmenu {
     flex-direction: column;
     justify-content: space-between;
     margin-top: 1.5em;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
 }
 
-.logo {
-    align-self: center;
-    margin: 0 auto;
+.nav-check {
+    position: absolute;
+    top: -20em;
+}
+
+.nav-check:checked ~ .navmenu {
+    display: block;
+    max-height: 30em;
+    height: 100%;
+    transition: all 350ms ease-out;
+}
+
+.nav-label {
+    cursor: pointer;
+    font-size: 1.25rem;
+    display: inline-block;
+    width: 40px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    margin-bottom: 2%;
+}
+
+.nav-open,
+.nav-close {
+    display: block;
+    width: 100%;
+}
+
+.nav-close {
+    display: none;
+}
+
+.nav-check:checked ~ .nav-label .nav-open {
+    display: none;
+}
+
+.nav-check:checked ~ .nav-label .nav-close {
+    display: block;
 }
 
 
@@ -202,9 +257,12 @@ body {
     }
     
     .navmenu {
+        display: flex;
+        visibility: visible;
         flex-direction: row;
         justify-content: space-between;
         margin-top: 1.5em;
+        position: relative;
     }
     
     .navmenu li {
@@ -275,7 +333,18 @@ body {
     
     .navmenu .submenu1 li:hover .submenu2 {
             display: block;
-    } 
+    }
+    
+    .nav-check:checked ~ .navmenu {
+        display: flex;
+    }
+    
+    .nav-open,
+    .nav-close {
+        display: none;
+        visibility: hidden;
+        width: 100%;
+}
 
 }
 
