@@ -69,6 +69,7 @@
 .logo {
     align-self: center;
     margin: 0 auto;
+    width: 20em;
 }
 
 /* --------------------------
@@ -89,7 +90,7 @@
     display: block;
     position: absolute;
     right: 0;
-    top: 100%;
+    top: 1em;
 }
 
 .nav-check {
@@ -119,8 +120,8 @@
     position: absolute;
     display: block;
     width: 40px;
-    top: 4.3em;
     right: 0;
+    top: 4.3em;
 }
 
 .nav-close {
@@ -213,11 +214,25 @@
 
 
 @media (min-width: 769px) {
+    .logo {
+        align-self: center;
+        margin: 0 auto;
+        max-width: 22em;
+        width: 100%;
+    }
 
     
 }
 
 @media (min-width: 1026px) {
+    
+    .logo {
+        align-self: center;
+        margin: 0 auto;
+        max-width: 24em;
+        width: 100%;
+    }
+    
     .main-header {
         display: flex;
         justify-content: flex-end;
@@ -230,14 +245,15 @@
         overflow: visible;
         flex-direction: row;
         justify-content: space-between;
-        margin-top: 1.5em;
+        margin-top: 0;
         position: relative;
+        top: 100%;
     }
     
     .navmenu li {
         float: left;
         max-width: 200px;
-        width: 100%;
+        width: 150px;
     }
     
     .tabgroup, .tab input, .tab label  {
@@ -252,12 +268,14 @@
         max-height: 100%;
     }
     
-    .navmenu li {
-        width: 150px;    
-    }
     
     .navmenu a {
         padding: 20px;   
+    }
+    
+    .nav-check:checked ~ .navmenu {
+        position: relative;
+        margin-bottom: 0;
     }
     
     .submenu1 li,
@@ -320,6 +338,13 @@
 
 
 @media (min-width: 1545px) {
+    
+    .logo {
+        align-self: center;
+        margin: 0 auto;
+        max-width: 26em;
+        width: 100%;
+    }
     
     .main-header {
         display: flex;
