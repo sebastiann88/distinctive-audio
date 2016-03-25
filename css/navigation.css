@@ -20,7 +20,7 @@
 }
 
 .tab label {
-    background: #72d2c6;
+    background: slategrey;
     color: #fff;
     display: block;
     font-weight: bold;
@@ -34,7 +34,7 @@
 
 .tab input: focus + label,
 .tab label: hover {
-    background: #85D8CE;
+    background: slategrey;
     letter-spacing: 1px;
 }
 
@@ -191,11 +191,11 @@
 }
 
 .navmenu li:hover > a {
-    background-color: #CFC;
+    background-color: #72d2c6;
 }
 
 .navmenu li:hover a:hover {
-    background-color: #FF0;
+    background-color: #72d2c6;
 }
 
 .navmenu .submenu1 {
@@ -247,6 +247,7 @@
     }
     
     .tab-content {
+        position: relative;
         overflow: visible;
         max-height: 100%;
     }
