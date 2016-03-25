@@ -209,6 +209,8 @@ body {
     
     .navmenu li {
         float: left;
+        max-width: 200px;
+        width: 100%;
     }
     
     .tabgroup, .tab input, .tab label  {
@@ -230,6 +232,12 @@ body {
         padding: 20px;   
     }
     
+    .submenu1 li,
+    .submenu2 li {
+        max-width: 200px;
+        width: 100%;
+    }
+    
     .tab-content{
         margin-top: 0;
     }
@@ -247,14 +255,18 @@ body {
     }
     
     .navmenu .submenu1 a {
-        width: 150px;   
+        max-width: 150px;
+        width: 100%;
     }
     
     .navmenu .submenu2 {
         display: none;
         position: absolute;
         top: 0px;
-        left: 150px;
+        left: 100%;
+        max-width: 150px;
+        width: 100%;
+        padding-left: 1px;
     }
         
     .navmenu li:hover .submenu1 {
@@ -304,6 +316,12 @@ body {
         width: 100%;
     }
     
+    .submenu1 li,
+    .submenu2 li {
+        max-width: 200px;
+        width: 100%;
+    }
+    
     .tabgroup, .tab input, .tab label  {
         display: none;
         visibility: hidden;
@@ -328,14 +346,19 @@ body {
     }
     
     .navmenu .submenu1 a {
-        width: 195px;   
+        max-width: 200px;
+        width: 100%;
+        margin-left: 0;
     }
     
     .navmenu .submenu2 {
         display: none;
         position: absolute;
+        max-width: 200px;
+        width: 100%;
         top: 0px;
-        left: 195px;
+        left: 100%;
+        padding-left: 5px;
     }
         
     .navmenu li:hover .submenu1 {
