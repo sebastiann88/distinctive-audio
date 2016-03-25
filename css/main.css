@@ -89,7 +89,7 @@ body {
     max-height: 45em;
     height: 100%;
     margin-bottom: 5px;
-    transition: all 350ms ease-out;
+    transition: all 550ms ease-out;
 }
 
 /* --------------------------
@@ -117,10 +117,12 @@ body {
 }
 
 .navmenu {
+    max-height: 0;
+    overflow: hidden;
     flex-direction: column;
     justify-content: space-between;
     margin-top: 1.5em;
-    display: none;
+    display: block;
     position: absolute;
     right: 0;
     top: 100%;
@@ -132,10 +134,8 @@ body {
 }
 
 .nav-check:checked ~ .navmenu {
-    display: block;
-    max-height: 30em;
-    height: 100%;
-    transition: all 350ms ease-out;
+    max-height: 70em;
+    transition: all 850ms ease-out;
 }
 
 .nav-label {
@@ -259,6 +259,8 @@ body {
     .navmenu {
         display: flex;
         visibility: visible;
+        max-height: 70em;
+        overflow: visible;
         flex-direction: row;
         justify-content: space-between;
         margin-top: 1.5em;
