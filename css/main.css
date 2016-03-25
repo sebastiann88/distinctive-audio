@@ -28,10 +28,45 @@ html {
   MAIN CONTENT
 --------------------------- */
 
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     background-color: #ABC;
+}
+
+.main-wrapper {
+    min-height: 100%;
+    margin-bottom: -170px;
     padding: 3em;
 }
+
+footer {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 1.5em;
+    background-color: slategrey;
+}
+
+footer > div {
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.wrapper:after {
+    content: "";
+    display: block;
+}
+
+.wrapper:after, footer {
+    height: 170px;
+}
+
+
 
 
 

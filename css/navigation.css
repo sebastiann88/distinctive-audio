@@ -98,8 +98,10 @@
 }
 
 .nav-check:checked ~ .navmenu {
+    position: relative;
     max-height: 70em;
     transition: all 850ms ease-out;
+    margin-bottom: 8em;
 }
 
 .nav-label {
@@ -107,17 +109,18 @@
     font-size: 1.25rem;
     display: inline-block;
     width: 40px;
-    position: absolute;
     right: 0;
     bottom: 0;
-    z-index: 5;
     margin-bottom: 2%;
 }
 
 .nav-open,
 .nav-close {
+    position: absolute;
     display: block;
-    width: 100%;
+    width: 40px;
+    top: 4.3em;
+    right: 0;
 }
 
 .nav-close {
