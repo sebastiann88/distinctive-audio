@@ -80,6 +80,11 @@ body {
     transition: all .35s;
 }
 
+.tab-content a {
+    color: black;
+    font-weight: normal;
+}
+
 .tab input:checked ~ .tab-content {
     max-height: 45em;
     height: 100%;
