@@ -32,6 +32,9 @@ html,
 body {
     height: 100%;
     margin: 0;
+    
+    display: table;
+    width: 100%;
 }
 
 body {
@@ -41,10 +44,12 @@ body {
 .main-wrapper {
     min-height: 100%;
     margin-bottom: -170px;
+    height: auto;
 }
 
 footer {
-    display: block;
+    display:table-row;
+    height: 1px;
     margin: 0 auto;
     text-align: center;
     padding: 1.5em;
