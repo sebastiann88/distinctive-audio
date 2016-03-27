@@ -61,12 +61,16 @@ body {
 .main-wrapper {
     min-height: 100%;
     margin-bottom: -170px;
+    margin-left: auto;
+    margin-right: auto;
     height: auto;
 }
 
 .main-content-wrapper {
     display: block;
     position: relative;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 12em;
 }
 
@@ -76,10 +80,15 @@ body {
 
 .banner {
     width: 100%;
+    margin: 0 auto;
 }
 
 .banner img {
     width: 100%;
+}
+
+.banner-img-1080 {
+    padding: 0.355em;
 }
 
 
@@ -156,11 +165,11 @@ footer > .grid {
 
 @media (min-width: 515px) {
     .main-wrapper {
-        min-height: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: -170px;
         max-width: 95%;
+    }
+    
+    .main-content-wrapper {
+        max-width: 100%;
     }
     
     footer > .grid {
@@ -173,6 +182,10 @@ footer > .grid {
         max-width: 90%   
     }
     
+    .main-content-wrapper {
+        max-width: 95%;
+    }
+    
     footer > .grid {
         max-width: 70%;
     }
@@ -182,6 +195,10 @@ footer > .grid {
 @media (min-width: 1545px) {
     .main-wrapper {
         max-width: 90%   
+    }
+    
+    .main-content-wrapper {
+        max-width: 95%;
     }
     
     footer > .grid {
