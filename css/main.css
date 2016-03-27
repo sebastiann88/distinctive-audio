@@ -25,6 +25,24 @@ html {
 }
 
 /* --------------------------
+  BRAND COLOURS
+---------------------------
+
+White 
+colour: #fff;
+
+Light Blue
+color: #ABC;
+
+Blue
+color: #576F90;
+
+Black
+color: black;
+
+*/
+
+/* --------------------------
   MAIN CONTENT
 --------------------------- */
 
@@ -48,7 +66,22 @@ body {
 
 .main-content-wrapper {
     display: block;
+    position: relative;
+    margin-bottom: 12em;
 }
+
+/* --------------------------
+  BANNER IMAGES
+--------------------------- */
+
+.banner {
+    width: 100%;
+}
+
+.banner img {
+    width: 100%;
+}
+
 
 /* --------------------------
   FOOTER
