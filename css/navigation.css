@@ -68,7 +68,8 @@
 .logo {
     align-self: center;
     margin: 0 auto;
-    width: 20em;
+    max-width: 20em;
+    width: 100%;
 }
 
 /* --------------------------
@@ -99,9 +100,9 @@
 
 .nav-check:checked ~ .navmenu {
     position: relative;
-    max-height: 70em;
+    max-height: 78em;
     transition: all 850ms ease-out;
-    margin-bottom: 9.2em;
+    margin-bottom: 10em;
 }
 
 .nav-label {
@@ -213,7 +214,7 @@
 --------------------------- */
 
 
-@media (min-width: 769px) {
+@media (min-width: 515px) {
     .logo {
         align-self: center;
         margin: 0 auto;

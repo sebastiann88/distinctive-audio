@@ -121,7 +121,7 @@ footer > .grid {
 --------------------------- */
 
 
-@media (min-width: 769px) {
+@media (min-width: 515px) {
     .main-wrapper {
         min-height: 100%;
         margin-left: auto;
