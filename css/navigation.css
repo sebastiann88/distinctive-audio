@@ -102,7 +102,6 @@
     position: relative;
     max-height: 78em;
     transition: all 850ms ease-out;
-    margin-bottom: 10em;
 }
 
 .nav-label {
