@@ -78,7 +78,7 @@
         width: 1180px;
     }
 
-    .analogue:nth-child(3n), .digital:nth-child(3n) {
+    #portfolio .analogue:nth-child(3n), #portfolio .digital:nth-child(3n) {
         left: 564px!important;
     }
 }
