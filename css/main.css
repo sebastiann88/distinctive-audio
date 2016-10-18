@@ -609,15 +609,13 @@ h4, h5, h6 {
 }
 
 .home-slider .slide-item .slide-content {
-    display: table;
+    display: block;
 }
 
 .home-slider .slide-item .inner-content {
     color: #fff;
-    display: table-cell;
+    display: block;
     position: relative;
-    vertical-align: bottom;
-    padding-bottom: 3em;
     z-index: 2;
 }
 
