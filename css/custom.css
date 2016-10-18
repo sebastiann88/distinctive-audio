@@ -68,6 +68,10 @@
     .product-wrapper {
         width: 1180px;
     }
+
+    .analogue:nth-child(3n), .digital:nth-child(3n) {
+        left: 564px!important;
+    }
 }
 
 @media (min-width: 1800px) {
@@ -75,7 +79,4 @@
         width: 1280px;
     }
 
-    .analogue:nth-child(3n), .digital:nth-child(3n) {
-        left: 564px!important;
-    }
 }
