@@ -3,13 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>
-      About Distinctive Audio | Refining the Art of Listening in Ottawa
-    </title>
-    <meta
-      content="Discover the story behind Distinctive Audio. Founded by Rhéal Nadeau in 1986, we curate emotional connections to music through expert system design and acoustical precision in Ottawa-Gatineau."
-      name="description"
-    />
+    <title>High-End Turntables in Ottawa | Distinctive Audio</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+      type="module"
+    ></script>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
@@ -20,11 +19,6 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
-      type="module"
-    ></script>
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -161,76 +155,24 @@
         outline-offset: 2px;
       }
       body {
-        background-color: #f8f9ff;
-        color: #0b1c30;
+        background-color: #f4f7fb;
+        color: #005581;
       }
       .material-symbols-outlined {
         font-variation-settings:
           "FILL" 0,
-          "wght" 400,
+          "wght" 300,
           "GRAD" 0,
           "opsz" 24;
       }
-      .material-symbols-outlined.fill {
-        font-variation-settings: "FILL" 1;
-      }
-      .leader-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .leader-list li {
-        display: flex;
-        align-items: baseline;
-        margin-bottom: 0.5rem;
-      }
-      .leader-list li::before {
-        content: "";
-        flex-grow: 1;
-        border-bottom: 1px dotted #c1c7ce;
-        margin: 0 0.5rem;
-        order: 1;
-      }
-      .leader-list .label {
-        order: 0;
-        font-family: "Inter", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        color: #0b1c30;
-      }
-      .leader-list .value {
-        order: 2;
-        font-family: "Manrope", sans-serif;
-        font-size: 16px;
-        color: #41474e;
-      }
     </style>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "AboutPage",
-        "mainEntity": {
-          "@type": "LocalBusiness",
-          "name": "Distinctive Audio",
-          "foundingDate": "1986",
-          "founder": {
-            "@type": "Person",
-            "name": "Rhéal Nadeau",
-            "jobTitle": "Founder & President",
-            "alumniOf": "DEC in analytical chemistry, BSc, MSc"
-          },
-          "description": "Locally owned and operated high-fidelity audio equipment boutique serving Ottawa-Gatineau since 1986."
-        }
-      }
-    </script>
   </head>
-  <body class="antialiased min-h-screen flex flex-col">
+  <body class="font-body-md antialiased">
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
       >Skip to main content</a
     >
-    <!-- TopNavBar -->
     <header>
       <nav
         class="relative bg-primary-container shadow dark:bg-gray-800/50 dark:shadow-none dark:after:pointer-events-none dark:after:absolute dark:after:inset-x-0 dark:after:bottom-0 dark:after:h-px dark:after:bg-white/10"
@@ -261,7 +203,7 @@
                 >
                 <a
                   href="about.html"
-                  class="inline-flex items-center border-b-2 border-accent-gold px-1 pt-1 text-sm font-medium text-accent-gold dark:border-accent-gold dark:text-accent-gold"
+                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
                   >About</a
                 >
                 <a
@@ -271,7 +213,7 @@
                 >
                 <a
                   href="products.html"
-                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                  class="inline-flex items-center border-b-2 border-accent-gold px-1 pt-1 text-sm font-medium text-accent-gold dark:border-accent-gold dark:text-accent-gold"
                   >Products</a
                 >
                 <a
@@ -340,7 +282,7 @@
             >
             <a
               href="about.html"
-              class="block border-l-4 border-accent-gold bg-accent-gold/10 py-2 pl-3 pr-4 text-base font-medium text-accent-gold dark:border-accent-gold dark:bg-accent-gold/10 dark:text-accent-gold"
+              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
               >About</a
             >
             <a
@@ -350,7 +292,7 @@
             >
             <a
               href="products.html"
-              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
+              class="block border-l-4 border-accent-gold bg-accent-gold/10 py-2 pl-3 pr-4 text-base font-medium text-accent-gold dark:border-accent-gold dark:bg-accent-gold/10 dark:text-accent-gold"
               >Products</a
             >
             <a
@@ -362,399 +304,486 @@
         </el-disclosure>
       </nav>
     </header>
-    <main id="main-content" class="flex-grow pt-12">
-      <!-- HERO -->
-      <section
-        class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-16 md:py-24 text-center md:text-left"
+    <main id="main-content">
+      <!-- Breadcrumb -->
+      <div
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4"
       >
-        <div class="max-w-3xl">
-          <div
-            class="flex items-center justify-center md:justify-start gap-4 mb-8"
-          >
-            <span class="w-12 h-0.5 bg-secondary-container"></span>
-            <span
-              class="font-label-lg text-label-lg text-on-surface-variant tracking-widest uppercase"
-              >ESTABLISHED 1986</span
-            >
-          </div>
-          <h1
-            class="font-display-lg text-display-lg md:text-[80px] md:leading-[88px] text-on-surface mb-8"
-          >
-            Refining the Art of
-            <span class="text-[#f0aa10] italic">Listening</span>
-          </h1>
-          <p
-            class="font-body-lg text-body-lg text-on-surface-variant md:text-xl max-w-2xl leading-relaxed"
-          >
-            We don't just sell equipment — we curate emotional connections to
-            music through expert system design and acoustical precision.
-          </p>
-        </div>
-      </section>
-      <!-- FOUNDER BIO -->
+        <nav
+          aria-label="Breadcrumb"
+          class="flex text-sm text-outline font-label-md"
+        >
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+              <a
+                class="hover:text-primary-container transition-colors"
+                href="index.html"
+                >Home</a
+              >
+            </li>
+            <li>
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-sm mx-1"
+                  >chevron_right</span
+                >
+                <a
+                  class="hover:text-primary-container transition-colors"
+                  href="products.html"
+                  >Products</a
+                >
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-sm mx-1"
+                  >chevron_right</span
+                >
+                <a
+                  class="hover:text-primary-container transition-colors"
+                  href="analogue.html"
+                  >Analogue</a
+                >
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-sm mx-1"
+                  >chevron_right</span
+                >
+                <span aria-current="page" class="text-on-surface"
+                  >Turntables</span
+                >
+              </div>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <!-- Hero Section -->
       <section
-        class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-16 md:py-24 border-t border-outline-variant/30"
+        class="bg-primary-container text-on-primary py-16 md:py-24 px-margin-mobile md:px-margin-desktop"
       >
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-          <div
-            class="md:col-span-5 md:col-start-1 order-1 md:order-1 mb-12 md:mb-0"
-          >
-            <div
-              class="aspect-[4/5] relative overflow-hidden rounded border border-outline-variant p-2 bg-surface-bright shadow-sm"
-            >
-              <img
-                alt="Founder Rhéal Nadeau"
-                class="w-full h-full object-cover rounded-sm hover:grayscale-0 transition-all duration-700"
-                src="images/rheal-nadeau.jpg"
-              />
+        <div
+          class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+        >
+          <div class="max-w-lg">
+            <div class="flex flex-col items-start gap-2 mb-6">
+              <span
+                class="font-label-md text-label-md tracking-[0.1em] text-on-primary-container uppercase"
+                >ANALOGUE</span
+              >
+              <div class="h-1 bg-accent-gold w-8"></div>
             </div>
-          </div>
-          <div
-            class="md:col-span-6 md:col-start-7 order-2 md:order-2 pl-0 md:pl-12"
-          >
-            <div
-              class="inline-block bg-[#005581] text-[#8EC9FB] px-3 py-1 rounded-sm font-label-md text-label-md uppercase tracking-wider mb-6"
+            <h1
+              class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-6 leading-tight"
             >
-              FOUNDER &amp; PRESIDENT
-            </div>
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">
-              Rhéal Nadeau
-            </h2>
+              <span class="text-accent-gold italic">High-End</span> Turntables
+              in Ottawa
+            </h1>
             <p
-              class="font-label-lg text-label-lg text-on-surface-variant mb-8 italic"
+              class="font-body-lg text-body-lg text-on-primary-container mb-10 leading-relaxed"
             >
-              DEC in analytical chemistry, BSc, MSc
+              Curated selection of world-class decks with expert setup and
+              calibration.
             </p>
-            <div
-              class="space-y-6 font-body-md text-body-md text-on-surface-variant leading-relaxed"
-            >
-              <p class="">
-                Raised on a family dairy farm, Rhéal pursued a rigorous academic
-                path culminating in three chemistry degrees. He spent 14 years
-                working as a chemist and lab supervisor, developing a meticulous
-                attention to detail and analytical rigor.
-              </p>
-              <p class="">
-                An avid audiophile since his college days, his passion for
-                high-fidelity sound reproduction naturally evolved into a
-                business. He founded Distinctive Audio part-time in February
-                1986, transitioning to full-time dedication by January 1988.
-              </p>
-              <p class="">
-                For nearly four decades, Rhéal has served the Ottawa–Gatineau
-                community from the exact same location, applying his scientific
-                background to the art of acoustic synergy.
-              </p>
+            <div class="flex flex-wrap gap-4">
+              <a
+                class="bg-accent-gold text-on-secondary-fixed px-8 py-3 rounded font-label-lg text-label-lg hover:bg-secondary-fixed-dim transition-colors flex items-center gap-2"
+                href="contact.html"
+              >
+                Book Setup Guidance
+                <span class="material-symbols-outlined" style="font-size: 18px"
+                  >arrow_forward</span
+                >
+              </a>
+              <a
+                class="border border-on-primary text-on-primary px-8 py-3 rounded font-label-lg text-label-lg hover:bg-on-primary hover:text-primary transition-colors"
+                href="phono-cartridges.html"
+              >
+                Explore Cartridges
+              </a>
             </div>
           </div>
-        </div>
-      </section>
-      <!-- THE DISTINCTIVE APPROACH -->
-      <section class="bg-surface-container-low py-20 md:py-32">
-        <div
-          class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
-        >
-          <h2
-            class="font-headline-lg text-headline-lg text-center md:text-left text-on-surface mb-16"
+          <div
+            class="aspect-video relative rounded-xl overflow-hidden shadow-sm bg-primary-container"
           >
-            The Distinctive Approach
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            <!-- Card 1 -->
-            <div
-              class="bg-surface-bright border border-outline-variant rounded p-8 hover:shadow-sm transition-shadow duration-300"
-            >
-              <div
-                class="w-12 h-12 bg-primary-container rounded flex items-center justify-center mb-6"
-              >
-                <span class="material-symbols-outlined text-secondary-container"
-                  >tune</span
-                >
-              </div>
-              <h3 class="font-title-lg text-title-lg text-on-surface mb-4">
-                Tailored Synergy
-              </h3>
-              <ul
-                class="space-y-3 font-body-md text-body-md text-on-surface-variant"
-              >
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Component matching
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Tonal balance
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Power requirements
-                </li>
-              </ul>
-            </div>
-            <!-- Card 2 -->
-            <div
-              class="bg-surface-bright border border-outline-variant rounded p-8 hover:shadow-sm transition-shadow duration-300"
-            >
-              <div
-                class="w-12 h-12 bg-primary-container rounded flex items-center justify-center mb-6"
-              >
-                <span class="material-symbols-outlined text-secondary-container"
-                  >home</span
-                >
-              </div>
-              <h3 class="font-title-lg text-title-lg text-on-surface mb-4">
-                Environment First
-              </h3>
-              <ul
-                class="space-y-3 font-body-md text-body-md text-on-surface-variant"
-              >
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Room acoustics analysis
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Precision speaker placement
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  In-home consultation
-                </li>
-              </ul>
-            </div>
-            <!-- Card 3 -->
-            <div
-              class="bg-surface-bright border border-outline-variant rounded p-8 hover:shadow-sm transition-shadow duration-300"
-            >
-              <div
-                class="w-12 h-12 bg-primary-container rounded flex items-center justify-center mb-6"
-              >
-                <span class="material-symbols-outlined text-secondary-container"
-                  >handyman</span
-                >
-              </div>
-              <h3 class="font-title-lg text-title-lg text-on-surface mb-4">
-                Long-Term Support
-              </h3>
-              <ul
-                class="space-y-3 font-body-md text-body-md text-on-surface-variant"
-              >
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Expert setup &amp; calibration
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Fair trade-in program
-                </li>
-                <li class="flex items-start gap-3">
-                  <span
-                    class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5"
-                    >stop_circle</span
-                  >
-                  Certified expert repairs
-                </li>
-              </ul>
-            </div>
+            <img
+              alt="High-end turntable hero image"
+              class="w-full h-full object-contain"
+              data-alt="A close-up, high-end product shot of a premium analog turntable in a dimly lit, sophisticated listening room. The lighting highlights the brushed aluminum platter and the precise mechanical tonearm. The mood is rich and editorial, with a dark background creating contrast against the silver and gold accents of the audio equipment. The aesthetic matches high-fidelity boutique catalog photography."
+              src="images/products/clear-audio-turntable-high-end.jpg"
+            />
           </div>
         </div>
       </section>
-      <section class="bg-surface py-20 md:py-32 overflow-hidden">
+      <!-- Benefits Section -->
+      <section class="py-20 px-margin-mobile md:px-margin-desktop bg-surface">
         <div
-          class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
+          class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-8"
         >
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-            <div class="md:col-span-5 md:order-1 order-2">
+          <div
+            class="p-6 bg-surface border border-outline-variant/50 rounded-xl shadow-sm flex flex-col items-start hover:border-primary/30 transition-colors"
+          >
+            <span
+              class="material-symbols-outlined text-secondary-container mb-4"
+              style="font-size: 32px"
+              >diamond</span
+            >
+            <h3 class="font-headline-md text-title-lg text-primary mb-2">
+              Curated <span class="text-accent-gold">Decks</span>
+            </h3>
+            <p class="font-body-md text-body-md text-accent-teal">
+              Hand-selected models from the world's most respected analog
+              manufacturers.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-surface border border-outline-variant/50 rounded-xl shadow-sm flex flex-col items-start hover:border-primary/30 transition-colors"
+          >
+            <span
+              class="material-symbols-outlined text-secondary-container mb-4"
+              style="font-size: 32px"
+              >tune</span
+            >
+            <h3 class="font-headline-md text-title-lg text-primary mb-2">
+              Cartridge <span class="text-accent-gold">Matching</span>
+            </h3>
+            <p class="font-body-md text-body-md text-accent-teal">
+              Expert pairing of tonearm mass and cartridge compliance for
+              optimal tracking.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-surface border border-outline-variant/50 rounded-xl shadow-sm flex flex-col items-start hover:border-primary/30 transition-colors"
+          >
+            <span
+              class="material-symbols-outlined text-secondary-container mb-4"
+              style="font-size: 32px"
+              >precision_manufacturing</span
+            >
+            <h3 class="font-headline-md text-title-lg text-primary mb-2">
+              Expert <span class="text-accent-gold">Installation</span>
+            </h3>
+            <p class="font-body-md text-body-md text-accent-teal">
+              Precise alignment of azimuth, VTA, and zenith using professional
+              tooling.
+            </p>
+          </div>
+          <div
+            class="p-6 bg-surface border border-outline-variant/50 rounded-xl shadow-sm flex flex-col items-start hover:border-primary/30 transition-colors"
+          >
+            <span
+              class="material-symbols-outlined text-secondary-container mb-4"
+              style="font-size: 32px"
+              >support_agent</span
+            >
+            <h3 class="font-headline-md text-title-lg text-primary mb-2">
+              Long-Term <span class="text-accent-gold">Support</span>
+            </h3>
+            <p class="font-body-md text-body-md text-accent-teal">
+              Ongoing maintenance, stylus replacement, and performance tuning
+              services.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Product Grid -->
+      <section
+        class="py-20 px-margin-mobile md:px-margin-desktop bg-background"
+      >
+        <div class="max-w-container-max mx-auto">
+          <div
+            class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-outline-variant/50 pb-6"
+          >
+            <div>
+              <div class="flex flex-col items-start gap-2 mb-4">
+                <span
+                  class="font-label-md text-label-md tracking-[0.1em] text-accent-teal uppercase"
+                  >OUR COLLECTION</span
+                >
+                <div class="h-1 bg-accent-gold w-8"></div>
+              </div>
+              <h2 class="font-headline-md text-headline-md text-primary">
+                Our Selection
+              </h2>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+          >
+            <!-- Product Card 1 -->
+            <div
+              class="group flex flex-col bg-surface rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden p-6"
+            >
               <div
-                class="overflow-hidden rounded border border-outline-variant p-2 bg-surface-bright shadow-sm"
+                class="aspect-square bg-surface border border-outline-variant/50 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center p-0"
               >
+                <div
+                  class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded font-label-md text-label-md uppercase tracking-wider z-10"
+                >
+                  Brand New
+                </div>
                 <img
-                  alt="Cardas and Oracle turntable setup"
-                  class="w-full h-full rounded-sm object-contain h-auto"
-                  src="images/products/lines-we-carry.jpg"
+                  alt="Oracle Delphi MKVII"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="A front-facing, clean product shot of a high-end luxury turntable on a stark light gray background. The turntable features a thick clear acrylic base and heavy aluminum components. The lighting is soft and even, highlighting the meticulous engineering and premium materials. High-key, minimalist catalog style."
+                  src="images/products/oracle-turntable-high-end-3.jpg"
                 />
               </div>
+              <h3 class="font-headline-md text-title-lg text-primary mb-2">
+                Oracle Paris&nbsp;<span class="text-accent-gold">Series V</span>
+              </h3>
+              <div class="flex gap-2 mb-4">
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Belt Drive</span
+                >
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Clear Acrylic / Silver</span
+                >
+              </div>
+              <div class="flex justify-between items-end mt-auto">
+                <div>
+                  <span class="font-title-lg text-title-lg text-primary"
+                    >$5,999</span
+                  >
+                </div>
+                <button
+                  class="border border-primary text-primary px-6 py-2 rounded font-label-lg text-label-lg hover:bg-surface-variant transition-colors"
+                >
+                  Enquire
+                </button>
+              </div>
             </div>
+            <!-- Product Card 2 -->
             <div
-              class="md:col-span-7 md:pl-12 mb-12 md:mb-0 z-10 md:order-2 order-1"
+              class="group flex flex-col bg-surface rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden p-6"
             >
-              <h2
-                class="font-headline-lg text-headline-lg text-on-surface mb-6"
+              <div
+                class="aspect-square bg-surface border border-outline-variant/50 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center p-0"
               >
-                About the Store
+                <img
+                  alt="Clearaudio Performance DC"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="A clean, minimalist product shot of a sleek modern turntable featuring a matte black plinth and a silver aluminum platter. Photographed straight on against a light grey studio background. The lighting is diffused, emphasizing the clean lines and contemporary industrial design. High-fidelity audio equipment catalog style."
+                  src="images/products/clear-audio-turntable-high-end-2.jpg"
+                />
+              </div>
+              <h3 class="font-headline-md text-title-lg text-primary mb-2">
+                Clearaudio Performance <span class="text-accent-gold">DC</span>
+              </h3>
+              <div class="flex gap-2 mb-4">
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Belt Drive</span
+                >
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Black / Silver</span
+                >
+              </div>
+              <div class="flex justify-between items-end mt-auto">
+                <div>
+                  <span class="font-title-lg text-title-lg text-primary"
+                    >$8,498</span
+                  >
+                </div>
+                <button
+                  class="border border-primary text-primary px-6 py-2 rounded font-label-lg text-label-lg hover:bg-surface-variant transition-colors"
+                >
+                  Enquire
+                </button>
+              </div>
+            </div>
+            <!-- Product Card 3 -->
+            <div
+              class="group flex flex-col bg-surface rounded-xl border border-outline-variant/50 shadow-sm overflow-hidden p-6"
+            >
+              <div
+                class="aspect-square bg-surface border border-outline-variant/50 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center p-0"
+              >
+                <div
+                  class="absolute top-4 left-4 bg-background text-accent-teal border border-outline-variant/50 px-3 py-1 rounded font-label-md text-label-md uppercase tracking-wider z-10"
+                >
+                  Display Model
+                </div>
+                <img
+                  alt="Pro-Ject Debut PRO"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  data-alt="A precise product photograph of an elegant turntable with a satin black finish and a carbon fiber tonearm. Set against a soft white background. The image highlights the minimalist aesthetic and the texture of the carbon weave. Studio lighting, premium editorial look."
+                  src="images/products/pro-ject-turntable-mid-end.jpg"
+                />
+              </div>
+              <h3 class="font-headline-md text-title-lg text-primary mb-2">
+                Pro-Ject Debut <span class="text-accent-gold">PRO</span>
+              </h3>
+              <div class="flex gap-2 mb-4">
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Belt Drive</span
+                >
+                <span
+                  class="bg-background text-accent-teal px-2 py-1 rounded text-xs font-label-md border border-outline-variant/50"
+                  >Satin Black</span
+                >
+              </div>
+              <div class="flex justify-between items-end mt-auto">
+                <div>
+                  <span class="font-title-lg text-title-lg text-primary"
+                    >$1,399</span
+                  >
+                </div>
+                <button
+                  class="border border-primary text-primary px-6 py-2 rounded font-label-lg text-label-lg hover:bg-surface-variant transition-colors"
+                >
+                  Enquire
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Frequently Asked Questions -->
+      <section
+        class="py-20 px-margin-mobile md:px-margin-desktop bg-surface-container-low"
+      >
+        <div class="max-w-container-max mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div class="lg:col-span-1">
+              <h2
+                class="font-headline-md text-headline-lg text-on-surface mb-4"
+              >
+                Frequently Asked Questions
               </h2>
-              <p class="font-body-lg text-body-lg text-on-surface-variant">
-                Established in 1986, Distinctive Audio has been providing expert
-                service to our customers for over 40 years. We are a locally
-                owned and operated business serving the Ottawa Gatineau region.
-                Shopping at Distinctive Audio is a boutique-like experience
-                where you will receive personalized service. Every customer’s
-                needs are unique and addressed by offering specialized advice on
-                our products. Through our expert advice we guide our customers
-                through the process of selecting from our diverse inventory.
-                Through this we help you build a truly satisfying high-end audio
-                system. As a client of Distinctive Audio we will connect a high
-                fidelity sound to the music you love. You will feel a greater
-                emotional connection to your music.
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Expert guidance on choosing and setting up the right turntable
+                for your system.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-      <!-- 40 YEARS OF EXPERTISE -->
-      <section
-        class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-20 md:py-32"
-      >
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-16">
-          <div class="md:col-span-5 flex flex-col justify-center">
-            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">
-              40 Years of Expertise
-            </h2>
-            <p
-              class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mb-8 border-l-2 border-secondary-container pl-6"
-            >
-              Locally owned and operated, offering a boutique experience with
-              personalised advice. We guide you to a system that fits your room,
-              taste and budget.
-            </p>
-            <a
-              class="inline-flex items-center gap-2 font-label-lg text-label-lg text-primary-container hover:text-secondary-container transition-colors group"
-              href="contact.html"
-            >
-              Visit our showroom
-              <span
-                class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform"
-                >arrow_forward</span
+            <div class="lg:col-span-2">
+              <details
+                class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
               >
-            </a>
-          </div>
-          <div class="md:col-span-7 mt-12 md:mt-0">
-            <div
-              class="aspect-[16/9] overflow-hidden rounded border border-outline-variant p-2 bg-surface-bright shadow-sm"
-            >
-              <img
-                alt="Distinctive Audio Showroom setup with high-end equipment"
-                class="w-full h-full object-cover rounded-sm"
-                src="images/products/home-2.jpg"
-              />
+                <summary
+                  class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+                >
+                  <span>Belt drive or direct drive — which is better?</span>
+                  <span
+                    class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </summary>
+                <div class="pb-6 pr-12">
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    Neither is inherently superior. Belt drive isolates the
+                    platter from motor vibration and is favoured by many
+                    audiophile decks for its low noise floor, while direct drive
+                    offers strong torque and rock-steady speed stability, which
+                    is why it is preferred by DJs. For home listening, the
+                    quality of the plinth, bearing, tonearm, and cartridge
+                    matters far more than the drive type itself.
+                  </p>
+                </div>
+              </details>
+              <details
+                class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+              >
+                <summary
+                  class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+                >
+                  <span>Do I need a separate phono preamp?</span>
+                  <span
+                    class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </summary>
+                <div class="pb-6 pr-12">
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    A turntable's signal is very low level and needs RIAA
+                    equalization before it can drive a line input. Some
+                    turntables and integrated amplifiers include a built-in
+                    phono stage, in which case no extra box is required. If
+                    neither does, or if you want to upgrade sound quality, a
+                    dedicated external phono preamplifier matched to your
+                    cartridge type (moving magnet or moving coil) is needed.
+                  </p>
+                </div>
+              </details>
+              <details
+                class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+              >
+                <summary
+                  class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+                >
+                  <span
+                    >What is the difference between manual and automatic
+                    turntables?</span
+                  >
+                  <span
+                    class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </summary>
+                <div class="pb-6 pr-12">
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    An automatic turntable cues, lowers, and returns the tonearm
+                    for you, which adds convenience and protects the stylus from
+                    mishandling. A manual turntable requires you to place and
+                    lift the arm yourself, but it omits the extra mechanism in
+                    the signal path and is generally favoured on higher-end
+                    decks for its mechanical simplicity and performance.
+                  </p>
+                </div>
+              </details>
+              <details
+                class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+              >
+                <summary
+                  class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+                >
+                  <span
+                    >Why does cartridge alignment and professional setup
+                    matter?</span
+                  >
+                  <span
+                    class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                    data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </summary>
+                <div class="pb-6 pr-12">
+                  <p class="font-body-md text-body-md text-on-surface-variant">
+                    Proper setup directly determines sound quality and record
+                    wear. Tracking force, anti-skate, overhang, azimuth, and
+                    vertical tracking angle all need to be set within fine
+                    tolerances so the stylus sits correctly in the groove. A
+                    professional setup using alignment protractors and a
+                    tracking force gauge ensures accurate tracking, balanced
+                    channels, and long stylus and record life.
+                  </p>
+                </div>
+              </details>
             </div>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-          <div
-            class="aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-surface-bright"
-          >
-            <img
-              alt="Close up of premium floor standing speakers"
-              class="w-full h-full object-cover"
-              src="images/products/audio-physics-floor-standing-speakers-high-end-3.jpg"
-            />
-          </div>
-          <div
-            class="aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-surface-bright"
-          >
-            <img
-              alt="Detailed view of high-fidelity audio components"
-              class="w-full h-full object-cover"
-              src="images/products/contact-4.jpg"
-            />
-          </div>
-        </div>
       </section>
-      <!-- QUOTE BAND -->
-      <section class="bg-primary-container py-24 px-margin-mobile text-center">
-        <div class="max-w-4xl mx-auto">
-          <span
-            class="material-symbols-outlined text-secondary-container text-opacity-50 text-[64px] mb-6"
-            >format_quote</span
+      <!-- Final CTA -->
+      <section
+        class="py-24 bg-accent-gold text-on-secondary-fixed text-center px-margin-mobile md:px-margin-desktop"
+      >
+        <div class="max-w-3xl mx-auto">
+          <h2
+            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-8"
           >
-          <blockquote
-            class="font-headline-lg text-headline-lg text-on-primary md:text-[56px] md:leading-[64px] italic font-light"
-          >
-            "We don't just sell components; we build the vessel for your
-            emotional connection to music."
-          </blockquote>
-        </div>
-      </section>
-      <!-- FINAL CTA -->
-      <section class="bg-[#f0aa10] py-20 px-margin-mobile text-center">
-        <div class="max-w-container-max mx-auto">
-          <h2 class="font-headline-lg text-headline-lg text-[#0b1c30] mb-8">
-            Experience the difference.
+            Ready to Hear the Difference?
           </h2>
           <a
-            class="inline-block bg-[#003d5e] text-white px-8 py-4 rounded-sm font-label-lg text-label-lg tracking-wider hover:bg-[#00263d] transition-colors shadow-sm"
+            class="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-lg px-8 py-4 rounded transition-colors duration-300"
             href="contact.html"
-          >
-            Book a Showroom Demo
-          </a>
-        </div>
-      </section>
-      <!-- RELATED PILLS -->
-      <section
-        class="py-12 border-t border-outline-variant/30 px-margin-mobile md:px-margin-desktop"
-      >
-        <div
-          class="max-w-container-max mx-auto flex flex-wrap gap-3 justify-center"
-        >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors bg-surface-container-high text-on-surface"
-            href="about.html"
-            >About</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="products.html"
-            >Products</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="lines-we-carry.html"
-            >Lines We Carry</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="contact.html"
-            >Listening Demos</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="cables-power.html"
-            >Custom Cables</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="contact.html"
-            >Contact</a
-          >
-          <a
-            class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
-            href="index.html"
-            >Home</a
+            >Book a Listening Demo</a
           >
         </div>
       </section>

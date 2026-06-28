@@ -4,30 +4,35 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>High-End Audio Products in Ottawa | Distinctive Audio</title>
+    <title>Subwoofers in Ottawa | Distinctive Audio</title>
     <meta
-      content="Explore our curated collection of high-end audio equipment in Ottawa. Analogue, Amplification, Loudspeakers, Digital Sources, and more for a complete high-fidelity system."
+      content="Discover high-end subwoofers at Distinctive Audio in Ottawa. Experience depth, impact, and room-filling low end integrated cleanly with your main speakers."
       name="description"
     />
     <meta
-      content="High-End Audio Products in Ottawa | Distinctive Audio"
+      content="High-End Subwoofers | Distinctive Audio"
       property="og:title"
     />
     <meta
-      content="Explore our curated collection of high-end audio equipment in Ottawa. Everything for a complete high-fidelity system, curated and auditioned."
+      content="Add depth and impact to your soundstage. Explore our curated selection of premium subwoofers in Ottawa."
       property="og:description"
     />
     <meta content="website" property="og:type" />
     <meta content="en_CA" property="og:locale" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap"
       rel="stylesheet"
     />
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
       type="module"
@@ -155,78 +160,17 @@
         outline: 2px solid #f0aa10;
         outline-offset: 2px;
       }
-      .leader-dots {
-        background-image: radial-gradient(
-          circle,
-          #c1c7d0 1px,
-          transparent 1.5px
-        );
-        background-position: bottom;
-        background-size: 8px 4px;
-        background-repeat: repeat-x;
-      }
-      .text-accent-gold {
-        color: #f0aa10;
-      }
-      .bg-accent-gold {
-        background-color: #f0aa10;
-      }
-      .border-accent-gold {
-        border-color: #f0aa10;
+      .spec-leader {
+        flex-grow: 1;
+        border-bottom: 1px dotted #72787e;
+        margin: 0 8px;
+        position: relative;
+        top: -6px;
       }
     </style>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "High-End Audio Products in Ottawa",
-        "description": "Everything for a complete high-fidelity system, curated and auditioned.",
-        "url": "https://distinctiveaudio.ca/products",
-        "mainEntity": {
-          "@type": "ItemList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Analogue",
-              "url": "https://distinctiveaudio.ca/products/analogue"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Amplification",
-              "url": "https://distinctiveaudio.ca/products/amplification"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "name": "Loudspeakers",
-              "url": "https://distinctiveaudio.ca/products/loudspeakers"
-            }
-          ]
-        },
-        "breadcrumb": {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://distinctiveaudio.ca/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Products",
-              "item": "https://distinctiveaudio.ca/products"
-            }
-          ]
-        }
-      }
-    </script>
   </head>
   <body
-    class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
+    class="bg-background text-on-background font-body-md antialiased selection:bg-surface-variant selection:text-on-background flex flex-col min-h-screen"
   >
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
@@ -377,7 +321,9 @@
         >
           <ol class="inline-flex items-center space-x-1 md:space-x-3">
             <li class="inline-flex items-center">
-              <a class="hover:text-primary-container transition-colors" href="index.html"
+              <a
+                class="hover:text-primary-container transition-colors"
+                href="index.html"
                 >Home</a
               >
             </li>
@@ -386,8 +332,32 @@
                 <span class="material-symbols-outlined text-sm mx-1"
                   >chevron_right</span
                 >
+                <a
+                  class="hover:text-primary-container transition-colors"
+                  href="products.html"
+                  >Products</a
+                >
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-sm mx-1"
+                  >chevron_right</span
+                >
+                <a
+                  class="hover:text-primary-container transition-colors"
+                  href="loudspeakers.html"
+                  >Loudspeakers</a
+                >
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-sm mx-1"
+                  >chevron_right</span
+                >
                 <span aria-current="page" class="text-on-surface"
-                  >Products</span
+                  >Subwoofers</span
                 >
               </div>
             </li>
@@ -396,383 +366,469 @@
       </div>
       <!-- Hero Section -->
       <section
-        class="bg-primary-container text-on-primary px-margin-mobile md:px-margin-desktop py-16 md:py-24 relative overflow-hidden"
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-[96px]"
       >
         <div
-          class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center relative z-10"
+          class="bg-primary-container text-on-primary rounded overflow-hidden flex flex-col lg:flex-row relative"
         >
-          <div class="col-span-1 md:col-span-6 space-y-8">
-            <div class="flex items-center space-x-4">
+          <div
+            class="p-8 md:p-16 lg:w-1/2 flex flex-col justify-center z-10 relative"
+          >
+            <div class="mb-6 flex flex-col items-start">
               <span
-                class="font-label-md text-label-md tracking-[0.1em] uppercase text-tertiary-fixed-dim"
-                >SHOP</span
+                class="font-label-md text-label-md tracking-[0.1em] text-surface-variant uppercase mb-2"
+                >LOUDSPEAKERS</span
               >
-              <div class="h-px w-12 bg-accent-gold"></div>
+              <div class="w-12 border-b-2 border-tertiary-fixed-dim"></div>
             </div>
-            <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight text-surface">
-              High-End <span class="text-accent-gold italic">Audio</span> in Ottawa
+            <h1
+              class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight mb-6 max-w-lg"
+            >
+              <span class="text-accent-gold italic">Subwoofers</span> in Ottawa
             </h1>
             <p
-              class="font-body-lg text-body-lg leading-relaxed text-surface-container-high max-w-lg"
+              class="font-body-lg text-body-lg leading-relaxed text-surface-variant mb-10 max-w-md"
             >
-              Everything for a complete high-fidelity system, curated and
-              auditioned.
+              Depth, impact and room-filling low end — integrated cleanly with
+              your main speakers.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <div class="flex flex-col sm:flex-row gap-4">
               <a
-                class="inline-flex justify-center items-center bg-accent-gold text-on-secondary-fixed px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-secondary-fixed-dim transition-colors"
+                class="inline-flex items-center justify-center px-8 py-4 bg-accent-gold text-on-secondary-fixed font-label-lg text-label-lg rounded hover:bg-secondary-fixed-dim transition-colors text-center"
                 href="contact.html"
               >
-                Book a Listening Demo
+                Hear It in Our Showroom
               </a>
               <a
-                class="inline-flex justify-center items-center border border-on-primary text-on-primary px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-on-primary hover:text-primary transition-colors"
-                href="lines-we-carry.html"
+                class="inline-flex items-center justify-center px-8 py-4 border border-on-primary text-on-primary font-label-lg text-label-lg rounded hover:bg-on-primary hover:text-primary transition-colors text-center"
+                href="loudspeakers.html"
               >
-                Lines We Carry
+                Explore Speakers
               </a>
             </div>
           </div>
-          <div
-            class="col-span-1 md:col-span-6 mt-12 md:mt-0 relative aspect-[3/2]"
-          >
+          <div class="lg:w-1/2 h-64 lg:h-auto relative">
             <img
-              alt="High-end vacuum tube amplifier glowing warmly in a dimly lit, premium listening room. The rich orange glow of the tubes contrasts with the sleek, brushed metal chassis, creating an atmosphere of sophisticated analog audio."
-              class="w-full h-full object-cover rounded-lg shadow-2xl border border-outline-variant/20"
-              data-alt="A close-up shot of a high-end vacuum tube amplifier in a dimly lit, sophisticated listening room. The glass tubes emit a warm, orange glow that softly illuminates the brushed metal chassis and surrounding dark wood surfaces. The mood is intimate, premium, and focused on the tactile, analog nature of high-fidelity sound. The visual style uses a palette of deep blacks, warm golds, and metallic silvers to convey luxury and precision."
-              src="images/products/unison-research-vacuum-tube-intergrated-amplifier-medium-end.jpg"
+              alt="High-end subwoofer in a modern living room setting"
+              class="absolute inset-0 w-full h-full object-contain"
+              data-alt="A pristine, high-end, matte black square subwoofer positioned elegantly in a bright, modern, minimalist living room with generous natural light filtering through large windows. The setting embodies a light-mode, editorial aesthetic with polished oak floors, neutral-toned modern furniture, and subtle touches of dark teal and warm gold in the decor. The focus is on the sophisticated craftsmanship and seamless integration of the audio equipment within a luxury domestic space."
+              src="images/products/martin-logan-powered-subwoofer-low-end.jpg"
             />
+            <!-- Tonal overlay for better text contrast if it wraps -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent lg:hidden"
+            ></div>
           </div>
         </div>
       </section>
-      <!-- Category Grid -->
+      <!-- Benefits Section -->
       <section
-        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-24"
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-[96px]"
       >
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-          <!-- Category: Analogue -->
-          <a class="group block" href="analogue.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Close up of a premium turntable stylus reading a vinyl record."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A macro shot of a high-end turntable tonearm and stylus gently resting on a spinning vinyl record. The lighting highlights the precision engineering of the brushed aluminum components against the deep black grooves of the record. The mood is focused and classic, evoking the warmth of analog sound. The visual style is editorial minimalism with a color palette of metallic silver, black, and subtle warm undertones."
-                src="images/products/clear-audio-turntable-high-end.jpg"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Analogue
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Turntables, Cartridges, Phono Pre-amplifiers.
-            </p>
-          </a>
-          <!-- Category: Amplification -->
-          <a class="group block" href="amplification.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Brushed metal front panel of a high-end integrated amplifier."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A sleek, brushed aluminum front panel of a high-end integrated amplifier. The image focuses on a large, machined volume knob and several smaller toggles, showcasing precision manufacturing. The lighting is soft and directional, emphasizing the texture of the metal. The mood is modern and authoritative, fitting a premium audio aesthetic. Colors are dominated by cool silvers, deep teal accents, and stark blacks."
-                src="images/products/micro-mega-solid-state-integrated-amplifier-high-end.jpg"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Amplification
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Integrated Amplifiers, Pre-amplifiers, Power Amplifiers,
-              All-in-One Systems.
-            </p>
-          </a>
-          <!-- Category: Loudspeakers -->
-          <a class="group block" href="loudspeakers.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Tall, elegant floor-standing loudspeaker in a modern living space."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A tall, elegant floor-standing loudspeaker featuring rich wood veneer and a matte black baffle, positioned in a well-lit, minimalist modern living room. Sunlight streams through a nearby window, casting soft shadows and highlighting the speaker's fine craftsmanship. The mood is sophisticated and inviting, illustrating high-end audio in a lifestyle setting. The color palette includes warm woods, bright whites, and deep blacks."
-                src="images/products/audio-physics-floor-standing-speakers-high-end.jpg"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Loudspeakers
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Floor Standing, Bookshelf, Electrostatic, Subwoofers, Speaker
-              Stands.
-            </p>
-          </a>
-          <!-- Category: Digital Sources -->
-          <a class="group block" href="digital-sources.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Modern network streamer and DAC with a crisp digital display."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A high-performance digital network streamer and DAC component, featuring a minimalist black chassis and a crisp, glowing digital display showing track information. The component sits on a sleek audio rack against a neutral background. The lighting is controlled and clinical, highlighting the modern, technological nature of digital audio. The palette relies on deep blacks, sharp whites, and subtle blue digital accents."
-                src="images/products/eversolo-streamer-high-end.jpg"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Digital Sources
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Streaming, DACs, CD Players &amp; Transports, Universal Disc
-              Players.
-            </p>
-          </a>
-          <!-- Category: Cables & Power -->
-          <a class="group block" href="cables-power.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Thick, braided high-end audio speaker cables."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A detailed close-up of premium, thick braided speaker cables with heavy-duty gold-plated spade connectors. The cables are coiled elegantly on a dark, textured surface. The lighting catches the metallic sheen of the connectors and the intricate weave of the cable jacket. The mood implies robust connectivity and uncompromising signal purity. Colors feature deep blacks, vibrant golds, and industrial greys."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE6bNOgZtjC5g7nTWPVzUY3n_EOFOVBf77AN1koUBrOp2uQTrt2zXHFFBgiSMmnNeaiQRtFLKBIpsmGveB1ieUpJk2zSRwRjK1br0JXwEAZ92eh5TVgEHZVrUeW8ayW0wj94J836qaiti1MPSsdrPkwplHj7-MGlqjsvU8lA_vOnrMd0KNbi1ytKB5NUxdsgWFRYzXxOJ8OmwXVhAwoXkzbbGz0WQr9SUB_6F8KZ-djvUdXp_Y2Woyz8eDL_Vi48RqEHTVmH2vTYQ"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Cables &amp; Power
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Interconnects &amp; Speaker Cables, AC Power Cords, Power Line
-              Conditioners.
-            </p>
-          </a>
-          <!-- Category: Racks & Accessories -->
-          <a class="group block" href="racks-accessories.html">
-            <div
-              class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative"
-            >
-              <img
-                alt="Sturdy wooden audio equipment rack holding several components."
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
-                data-alt="A robust, multi-tier audio equipment rack constructed from warm maple wood and thick vibration-damping shelves. Several silver and black audio components are neatly arranged on it. The setting is a quiet, dedicated listening space. The lighting emphasizes the structural integrity and fine finish of the wood. The mood is organized and foundational, using a palette of warm woods, silvers, and deep background shadows."
-                src="images/products/norstone-audio-rack-high-end.jpg"
-              />
-            </div>
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
-              Racks &amp; Accessories
-            </h3>
-            <p class="font-body-md text-body-md text-on-surface-variant">
-              Equipment Racks, Cones &amp; Isolation.
-            </p>
-          </a>
-        </div>
-      </section>
-      <!-- New Arrivals Strip -->
-      <section
-        class="bg-surface-container-low py-24 border-y border-outline-variant"
-      >
-        <div
-          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
-        >
-          <div class="flex justify-between items-end mb-12">
-            <h2
-              class="font-display-lg text-headline-md md:text-display-lg text-on-surface"
-            >
-              New Arrivals
-            </h2>
-            <a
-              class="font-label-lg text-primary-container hover:text-accent-gold transition-colors inline-flex items-center group pb-2"
-              href="products.html"
-            >
-              View All
-              <span
-                class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform"
-                >arrow_forward</span
-              >
-            </a>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            <!-- Product Card 1 -->
-            <div
-              class="bg-surface border border-outline-variant rounded-lg p-6 group flex flex-col"
-            >
-              <div
-                class="aspect-[4/5] bg-background rounded mb-6 overflow-hidden relative flex items-center justify-center p-4"
-              >
-                <span
-                  class="absolute top-4 left-4 z-10 bg-primary-container text-primary-fixed text-[10px] uppercase font-label-lg px-2 py-1 rounded"
-                  >Just Added</span
-                >
-                <img
-                  alt="Modern integrated amplifier"
-                  class="w-full h-auto object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                  data-alt="A sleek, minimalist integrated amplifier presented against a pure white background in a studio setting. The device features a brushed silver faceplate with a single large volume knob and a subtle digital display. The lighting is even and flat, emphasizing the clean lines and modern industrial design. The mood is clinical and premium, utilizing strict blacks, whites, and silvers."
-                  src="images/products/ps-audio-digital-analogue-converter-high-end.jpg"
-                />
-              </div>
-              <div class="flex-grow">
-                <p
-                  class="font-label-md text-outline mb-1 uppercase tracking-wider"
-                >
-                  Amplification
-                </p>
-                <h4 class="font-title-lg text-title-lg text-on-surface mb-2">
-                  Auralic Altair G1.1
-                </h4>
-                <p
-                  class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2"
-                >
-                  High-performance digital audio streamer and DAC with robust
-                  connectivity.
-                </p>
-              </div>
-              <div
-                class="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant border-dashed"
-              >
-                <span class="font-title-lg text-on-surface">$3,299</span>
-                <a
-                  href="contact.html"
-                  class="font-label-lg text-label-lg uppercase tracking-wide text-primary-container hover:text-accent-gold transition-colors"
-                  >Inquire</a
-                >
-              </div>
-            </div>
-            <!-- Product Card 2 -->
-            <div
-              class="bg-surface border border-outline-variant rounded-lg p-6 group flex flex-col"
-            >
-              <div
-                class="aspect-[4/5] bg-background rounded mb-6 overflow-hidden relative flex items-center justify-center p-4"
-              >
-                <img
-                  alt="High-end bookshelf speaker"
-                  class="w-full h-auto object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                  data-alt="A premium bookshelf loudspeaker with a glossy walnut finish, sitting on a specialized stand in a well-lit studio environment. The speaker features advanced driver materials visible without a grille. The lighting creates sharp reflections on the glossy wood, highlighting the luxurious finish. The mood is precise and elegant, with a palette of warm rich browns contrasting with technical blacks and silvers."
-                  src="images/products/micro-mega-bookshelf-speakers-mid-end.jpg"
-                />
-              </div>
-              <div class="flex-grow">
-                <p
-                  class="font-label-md text-outline mb-1 uppercase tracking-wider"
-                >
-                  Loudspeakers
-                </p>
-                <h4 class="font-title-lg text-title-lg text-on-surface mb-2">
-                  Focal Kanta N°1
-                </h4>
-                <p
-                  class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2"
-                >
-                  Premium bookshelf speakers delivering exceptional clarity and
-                  deep bass.
-                </p>
-              </div>
-              <div
-                class="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant border-dashed"
-              >
-                <span class="font-title-lg text-on-surface">$7,998 / pr</span>
-                <a
-                  href="contact.html"
-                  class="font-label-lg text-label-lg uppercase tracking-wide text-primary-container hover:text-accent-gold transition-colors"
-                  >Inquire</a
-                >
-              </div>
-            </div>
-            <!-- Product Card 3 -->
-            <div
-              class="bg-surface border border-outline-variant rounded-lg p-6 group flex flex-col hidden md:flex"
-            >
-              <div
-                class="aspect-[4/5] bg-background rounded mb-6 overflow-hidden relative flex items-center justify-center p-4"
-              >
-                <img
-                  alt="Premium turntable"
-                  class="w-full h-auto object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                  data-alt="A high-end analog turntable featuring a thick, transparent acrylic platter and a minimalist black plinth, set against a stark white studio background. The precision-engineered tonearm extends gracefully over the platter. The lighting is crisp, emphasizing the contrast between the clear acrylic and matte black components. The mood is minimalist and sophisticated, strictly utilizing a black, white, and subtle silver palette."
-                  src="images/products/pro-ject-turntable-mid-end.jpg"
-                />
-              </div>
-              <div class="flex-grow">
-                <p
-                  class="font-label-md text-outline mb-1 uppercase tracking-wider"
-                >
-                  Analogue
-                </p>
-                <h4 class="font-title-lg text-title-lg text-on-surface mb-2">
-                  Clearaudio Concept
-                </h4>
-                <p
-                  class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2"
-                >
-                  Award-winning plug-and-play turntable with uncompromising
-                  sound quality.
-                </p>
-              </div>
-              <div
-                class="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant border-dashed"
-              >
-                <span class="font-title-lg text-on-surface">$2,400</span>
-                <a
-                  href="contact.html"
-                  class="font-label-lg text-label-lg uppercase tracking-wide text-primary-container hover:text-accent-gold transition-colors"
-                  >Inquire</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Final CTA & Related Links -->
-      <section class="bg-surface py-24 border-b border-outline-variant">
-        <div class="max-w-3xl mx-auto text-center px-margin-mobile">
-          <h2
-            class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-8"
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+          <!-- Card 1 -->
+          <div
+            class="p-6 border border-outline-variant rounded bg-surface transition-shadow hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] flex flex-col h-full"
           >
-            Ready to experience the difference?
+            <span
+              class="material-symbols-outlined text-primary-container mb-4 text-[32px]"
+              style="font-variation-settings: &quot;FILL&quot; 0"
+              >tune</span
+            >
+            <h3 class="font-title-lg text-title-lg text-on-background mb-3">
+              Sealed &amp; Ported Options
+            </h3>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant mt-auto"
+            >
+              Choose the right topology for your musical or cinematic needs.
+            </p>
+          </div>
+          <!-- Card 2 -->
+          <div
+            class="p-6 border border-outline-variant rounded bg-surface transition-shadow hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] flex flex-col h-full"
+          >
+            <span
+              class="material-symbols-outlined text-primary-container mb-4 text-[32px]"
+              style="font-variation-settings: &quot;FILL&quot; 0"
+              >graphic_eq</span
+            >
+            <h3 class="font-title-lg text-title-lg text-on-background mb-3">
+              Clean Integration
+            </h3>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant mt-auto"
+            >
+              Expert setup to ensure your sub vanishes into the soundstage.
+            </p>
+          </div>
+          <!-- Card 3 -->
+          <div
+            class="p-6 border border-outline-variant rounded bg-surface transition-shadow hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] flex flex-col h-full"
+          >
+            <span
+              class="material-symbols-outlined text-primary-container mb-4 text-[32px]"
+              style="font-variation-settings: &quot;FILL&quot; 0"
+              >settings_input_antenna</span
+            >
+            <h3 class="font-title-lg text-title-lg text-on-background mb-3">
+              Room Calibration
+            </h3>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant mt-auto"
+            >
+              Advanced tuning to overcome the bass nodes in your unique space.
+            </p>
+          </div>
+          <!-- Card 4 -->
+          <div
+            class="p-6 border border-outline-variant rounded bg-surface transition-shadow hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] flex flex-col h-full"
+          >
+            <span
+              class="material-symbols-outlined text-primary-container mb-4 text-[32px]"
+              style="font-variation-settings: &quot;FILL&quot; 0"
+              >waves</span
+            >
+            <h3 class="font-title-lg text-title-lg text-on-background mb-3">
+              Add Depth &amp; Impact
+            </h3>
+            <p
+              class="font-body-md text-body-md text-on-surface-variant mt-auto"
+            >
+              Experience the physical weight and authority of true low
+              frequency.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Product Grid Section -->
+      <section
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-[96px]"
+      >
+        <!-- Filters Header -->
+        <div
+          class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-6 border-b border-outline-variant"
+        >
+          <h2 class="font-headline-md text-headline-md mb-4 md:mb-0">
+            Our Selection
+          </h2>
+        </div>
+        <!-- Grid -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-gutter"
+        >
+          <!-- Product Card 1 -->
+          <article class="flex flex-col group">
+            <div
+              class="relative w-full aspect-square border border-outline-variant bg-surface-lowest mb-6 overflow-hidden flex items-center justify-center p-8"
+            >
+              <div class="absolute top-4 left-4 z-10">
+                <span
+                  class="bg-surface-variant text-on-surface px-3 py-1 text-[10px] font-label-md uppercase tracking-wider rounded-full"
+                  >Brand New</span
+                >
+              </div>
+              <img
+                alt="MartinLogan Dynamo 1600X"
+                class="w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500 object-cover"
+                data-alt="A meticulously photographed, sleek matte black cubic subwoofer, isolated against a pristine bright white backdrop studio setting. The lighting is soft and even, highlighting the subtle brushed texture of the enclosure and the precise geometric edges. The style is ultra-modern, editorial product photography that emphasizes high-end acoustic engineering and minimalist design within a light-mode color palette."
+                src="images/products/martin-logan-powered-subwoofer-low-end.jpg"
+              />
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >1800W Peak</span
+              >
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >15-inch Woofer</span
+              >
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >ARC Enabled</span
+              >
+            </div>
+            <h3 class="font-title-lg text-title-lg text-on-background mb-1">
+              MartinLogan Dynamo 1600X
+            </h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+              Sealed Enclosure Subwoofer
+            </p>
+            <div class="mt-auto">
+              <div class="flex justify-between items-end mb-6">
+                <div class="flex flex-col">
+                  <span
+                    class="font-label-md text-label-md text-outline line-through"
+                    >$2,499.00</span
+                  >
+                  <span class="font-title-lg text-title-lg text-on-background"
+                    >$2,199.00</span
+                  >
+                </div>
+              </div>
+              <button
+                class="w-full py-3 border border-primary-container text-primary-container font-label-lg text-label-lg rounded hover:bg-primary-container hover:text-on-primary transition-colors duration-300"
+              >
+                Enquire
+              </button>
+            </div>
+          </article>
+          <!-- Product Card 2 -->
+          <article class="flex flex-col group">
+            <div
+              class="relative w-full aspect-square border border-outline-variant bg-surface-lowest mb-6 overflow-hidden flex items-center justify-center p-8"
+            >
+              <div class="absolute top-4 left-4 z-10">
+                <span
+                  class="bg-surface-variant text-on-surface px-3 py-1 text-[10px] font-label-md uppercase tracking-wider rounded-full"
+                  >Display Model</span
+                >
+              </div>
+              <img
+                alt="MartinLogan Dynamo 1100X"
+                class="w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500 object-cover"
+                data-alt="A highly detailed product shot of a premium, compact black subwoofer positioned centrally on a smooth, reflective white surface. The image utilizes high-key, sophisticated studio lighting to accent the flawless finish and precise construction of the audio component. The overall mood is clinical, clean, and luxurious, fitting an editorial light-mode design language with deep blacks contrasting beautifully against the bright, negative space."
+                src="images/products/martin-logan-powered-subwoofer-low-end-2.jpg"
+              />
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >1300W Peak</span
+              >
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >12-inch Woofer</span
+              >
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >App Controlled</span
+              >
+            </div>
+            <h3 class="font-title-lg text-title-lg text-on-background mb-1">
+              MartinLogan Dynamo 1100X
+            </h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+              Sealed Enclosure Subwoofer
+            </p>
+            <div class="mt-auto">
+              <div class="flex justify-between items-end mb-6">
+                <div class="flex flex-col">
+                  <span class="font-title-lg text-title-lg text-on-background"
+                    >$1,699.00</span
+                  >
+                </div>
+              </div>
+              <button
+                class="w-full py-3 border border-primary-container text-primary-container font-label-lg text-label-lg rounded hover:bg-primary-container hover:text-on-primary transition-colors duration-300"
+              >
+                Enquire
+              </button>
+            </div>
+          </article>
+          <!-- Product Card 3 -->
+          <article class="flex flex-col group">
+            <div
+              class="relative w-full aspect-square border border-outline-variant bg-surface-lowest mb-6 overflow-hidden flex items-center justify-center p-8"
+            >
+              <div class="absolute top-4 left-4 z-10">
+                <span
+                  class="bg-surface-variant text-on-surface px-3 py-1 text-[10px] font-label-md uppercase tracking-wider rounded-full"
+                  >Brand New</span
+                >
+              </div>
+              <img
+                alt="MartinLogan Dynamo 800X"
+                class="w-full h-full mix-blend-multiply group-hover:scale-105 transition-transform duration-500 object-cover"
+                data-alt="An impeccably lit studio photograph of a compact, high-performance black subwoofer against a completely white, seamless background. Soft, diffused lighting reveals the fine details of its textured surface and robust build quality. The composition is stark and minimalist, perfectly aligned with a light-mode, premium editorial layout, focusing the viewer entirely on the elegant geometry of the audio equipment."
+                src="images/products/martin-logan-powered-subwoofer-low-end.jpg"
+              />
+            </div>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >600W Peak</span
+              >
+              <span
+                class="bg-primary-container text-primary-fixed-dim px-2 py-1 text-[11px] font-label-md rounded tracking-wide"
+                >10-inch Woofer</span
+              >
+            </div>
+            <h3 class="font-title-lg text-title-lg text-on-background mb-1">
+              MartinLogan Dynamo 800X
+            </h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+              Ultra-Compact Subwoofer
+            </p>
+            <div class="mt-auto">
+              <div class="flex justify-between items-end mb-6">
+                <div class="flex flex-col">
+                  <span class="font-title-lg text-title-lg text-on-background"
+                    >$999.00</span
+                  >
+                </div>
+              </div>
+              <button
+                class="w-full py-3 border border-primary-container text-primary-container font-label-lg text-label-lg rounded hover:bg-primary-container hover:text-on-primary transition-colors duration-300"
+              >
+                Enquire
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+      <!-- FAQ Section -->
+      <section
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-[96px] max-w-3xl"
+      >
+        <h2 class="font-headline-md text-headline-md mb-8 text-center">
+          Frequently Asked Questions
+        </h2>
+        <div>
+          <details
+            class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+          >
+            <summary
+              class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+            >
+              <span>Do I need a subwoofer?</span>
+              <span
+                class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                data-icon="expand_more"
+                >expand_more</span
+              >
+            </summary>
+            <div class="pb-6 pr-12">
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Even large floor-standing speakers benefit from a dedicated
+                subwoofer. It relieves your main speakers and amplifier from the
+                strenuous task of reproducing the lowest frequencies, resulting
+                in cleaner midrange, greater dynamic headroom, and a more
+                immersive soundstage.
+              </p>
+            </div>
+          </details>
+          <details
+            class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+          >
+            <summary
+              class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+            >
+              <span>One sub or two?</span>
+              <span
+                class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                data-icon="expand_more"
+                >expand_more</span
+              >
+            </summary>
+            <div class="pb-6 pr-12">
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Using dual subwoofers is often highly recommended. It helps
+                smooth out the bass response across the entire room by minimizing
+                nulls and peaks caused by room modes. Two subs working together
+                also require less effort to achieve desired volume levels,
+                resulting in lower distortion.
+              </p>
+            </div>
+          </details>
+          <details
+            class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+          >
+            <summary
+              class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+            >
+              <span>Integrating with my speakers?</span>
+              <span
+                class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                data-icon="expand_more"
+                >expand_more</span
+              >
+            </summary>
+            <div class="pb-6 pr-12">
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Proper integration involves setting the correct crossover
+                frequency, phase, and volume level. Our team at Distinctive Audio
+                specializes in dialing in these parameters, ensuring the
+                subwoofer blends seamlessly with your main speakers so you hear
+                one cohesive musical presentation rather than distinct sound
+                sources.
+              </p>
+            </div>
+          </details>
+          <details
+            class="group border-b border-outline-variant [&amp;_summary::-webkit-details-marker]:hidden"
+          >
+            <summary
+              class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors"
+            >
+              <span>Sealed vs Ported?</span>
+              <span
+                class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180"
+                data-icon="expand_more"
+                >expand_more</span
+              >
+            </summary>
+            <div class="pb-6 pr-12">
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Sealed subwoofers typically offer a tighter, more precise bass
+                response favored for critical two-channel music listening. Ported
+                subwoofers are generally more efficient and can dig deeper at
+                higher output levels, making them excellent choices for dedicated
+                home theater environments requiring massive low-frequency impact.
+              </p>
+            </div>
+          </details>
+        </div>
+      </section>
+      <!-- Final CTA Section -->
+      <section class="py-24 bg-accent-gold text-on-secondary-fixed text-center mb-[96px]">
+        <div class="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop">
+          <h2 class="font-headline-md text-display-lg-mobile md:text-display-lg mb-8">
+            Ready to Hear the Difference?
           </h2>
           <a
-            class="inline-flex justify-center items-center bg-accent-gold text-on-surface px-10 py-5 rounded font-label-lg uppercase tracking-wide hover:opacity-90 transition-opacity mb-16 shadow-lg shadow-tertiary-fixed-dim/20"
+            class="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-lg px-8 py-4 rounded transition-colors duration-300"
             href="contact.html"
           >
             Book a Listening Demo
           </a>
-          <div class="pt-12 border-t border-outline-variant">
-            <p
-              class="font-label-md text-outline uppercase tracking-widest mb-6 text-center"
-            >
-              Explore Further
-            </p>
-            <div class="flex flex-wrap justify-center gap-3">
-              <a
-                class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background"
-                href="lines-we-carry.html"
-                >Lines We Carry</a
-              >
-              <a
-                class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background"
-                href="about.html"
-                >About</a
-              >
-              <a
-                class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background"
-                href="contact.html"
-                >Listening Demos</a
-              >
-              <a
-                class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background"
-                href="cables-power.html"
-                >Custom Cables</a
-              >
-              <a
-                class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background"
-                href="contact.html"
-                >Contact</a
-              >
-            </div>
-          </div>
+        </div>
+      </section>
+      <!-- Related Exploration -->
+      <section
+        class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-24"
+      >
+        <h3
+          class="font-label-lg text-label-lg text-outline uppercase tracking-widest mb-6 text-center"
+        >
+          Explore More
+        </h3>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="loudspeakers.html"
+            >Speakers</a>
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="floorstanding-speakers.html"
+            >Floor Standing</a>
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="bookshelf-speakers.html"
+            >Bookshelf</a>
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="power-line-conditioners.html"
+            >Power Line Conditioner</a>
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="contact.html"
+            >Listening Demos</a>
+          <a
+            class="px-5 py-2 border border-outline-variant rounded-full text-on-surface-variant hover:border-primary-container hover:text-primary-container transition-colors font-label-md text-label-md"
+            href="contact.html"
+            >Contact</a>
         </div>
       </section>
     </main>

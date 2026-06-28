@@ -1,546 +1,1131 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
-    <head>
-        <!-- Mobile Specific Meta -->
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--[if IE]>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		 <![endif]-->
-        <!-- Author Meta -->
-        <meta name="author" content="Muhammad Morshed">
-        <!-- Meta Description -->
-        <meta name="description" content="">
-        <!-- Meta Keyword -->
-        <meta name="keywords" content="">
-        <!-- meta character set -->
-        <meta charset="utf-8">
+<!doctype html>
+<html lang="en-CA" style="">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Distinctive Audio | Ottawa's High-End Audio Store</title>
+    <meta
+      content="Refining the art of listening for the Ottawa–Gatineau region for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support."
+      name="description"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+      type="module"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#00263d",
+              "on-primary": "#ffffff",
+              "primary-container": "#003d5e",
+              "on-primary-container": "#B4D2EB",
+              "primary-fixed": "#cce5ff",
+              "primary-fixed-dim": "#9ecbf3",
+              "on-primary-fixed": "#001e31",
+              "on-primary-fixed-variant": "#174a6c",
+              secondary: "#7d5700",
+              "on-secondary": "#ffffff",
+              "secondary-container": "#fec96f",
+              "on-secondary-container": "#775300",
+              "secondary-fixed": "#ffdeaa",
+              "secondary-fixed-dim": "#f1be65",
+              "on-secondary-fixed": "#271900",
+              "on-secondary-fixed-variant": "#5f4100",
+              tertiary: "#332100",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#4f3500",
+              "on-tertiary-container": "#d89700",
+              "tertiary-fixed": "#ffdeac",
+              "tertiary-fixed-dim": "#ffba36",
+              "on-tertiary-fixed": "#281900",
+              "on-tertiary-fixed-variant": "#5f4100",
+              error: "#ba1a1a",
+              "on-error": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              background: "#f8f9ff",
+              "on-background": "#0b1c30",
+              surface: "#f8f9ff",
+              "on-surface": "#0b1c30",
+              "surface-variant": "#d3e3ff",
+              "on-surface-variant": "#41474e",
+              "surface-dim": "#cbdbf6",
+              "surface-bright": "#f8f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-low": "#eff4ff",
+              "surface-container": "#e6eeff",
+              "surface-container-high": "#dde9ff",
+              "surface-container-highest": "#d3e3ff",
+              "surface-tint": "#346285",
+              "inverse-surface": "#213146",
+              "inverse-on-surface": "#ebf1ff",
+              "inverse-primary": "#9ecbf3",
+              outline: "#72787e",
+              "outline-variant": "#c1c7ce",
+              "accent-gold": "#f0aa10",
+              "accent-teal": "#005581",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "container-max": "1280px",
+              gutter: "24px",
+              "margin-mobile": "20px",
+              "margin-desktop": "80px",
+              unit: "8px",
+              "stack-sm": "0.5rem",
+              "stack-md": "1.5rem",
+              "stack-lg": "4rem",
+            },
+            fontFamily: {
+              "headline-lg": ["Newsreader", "serif"],
+              "headline-lg-mobile": ["Newsreader", "serif"],
+              "headline-md": ["Newsreader", "serif"],
+              "display-lg": ["Newsreader", "serif"],
+              "title-lg": ["Manrope", "sans-serif"],
+              "body-lg": ["Manrope", "sans-serif"],
+              "body-md": ["Manrope", "sans-serif"],
+              "label-lg": ["Inter", "sans-serif"],
+              "label-md": ["Inter", "sans-serif"],
+            },
+            fontSize: {
+              "display-lg": [
+                "64px",
+                {
+                  lineHeight: "72px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "400",
+                },
+              ],
+              "display-lg-mobile": [
+                "40px",
+                {
+                  lineHeight: "48px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "400",
+                },
+              ],
+              "headline-lg": [
+                "48px",
+                { lineHeight: "56px", fontWeight: "400" },
+              ],
+              "headline-lg-mobile": [
+                "32px",
+                { lineHeight: "40px", fontWeight: "400" },
+              ],
+              "headline-md": [
+                "32px",
+                { lineHeight: "40px", fontWeight: "400" },
+              ],
+              "title-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-lg": [
+                "14px",
+                {
+                  lineHeight: "20px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Visible keyboard focus indicator (WCAG 2.4.7) */
+      :focus-visible {
+        outline: 2px solid #f0aa10;
+        outline-offset: 2px;
+      }
+      .shadow-ambient {
+        box-shadow: 0px 4px 20px rgba(11, 28, 48, 0.05);
+      }
 
-        <!-- Site Title -->
-        <title>Distinctive Audio – Your High End Products Dealer</title>
-
-
-        <!-- Favicon -->
-        <link rel="shortcut icon" href="img/icons/favicon.png">
-		<link rel="apple-touch-icon" href="img/ico-57.png" sizes="57x57">
-		<link rel="apple-touch-icon" href="img/ico-72.png" sizes="72x72">
-		<link rel="apple-touch-icon" href="img/ico-114.png" sizes="114x114">
-		<link rel="apple-touch-icon" href="img/ico-144.png" sizes="144x144">
-		
-        <!--
-        CSS
-        ============================================= -->
-        <!-- Google Fonts -->
-        <link href="http://fonts.googleapis.com/css?family=Raleway:400,600,800,300,700" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900,400italic" rel="stylesheet" type="text/css">
-        
-        <!-- fontawesone icon -->
-        <link type="text/css" rel="stylesheet" href="css/font-awesome.min.css">
-        <!-- lightbox -->
-        <link type="text/css" rel="stylesheet" href="css/magnific-popup.css">
-        <!-- Bootstrap core -->
-        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
-        <!-- ionic icon -->
-        <link type="text/css" rel="stylesheet" href="css/ionicons.min.css">
-        <!-- Owl.Carousel -->
-        <link type="text/css" rel="stylesheet" href="css/owl.carousel.css">
-        <!-- Animate css -->
-        <link type="text/css" rel="stylesheet" href="css/animate.css">
-        <!-- Main theme style -->
-        <link type="text/css" rel="stylesheet" href="css/main.css">
-        <!-- Main custom style -->
-        <link type="text/css" rel="stylesheet" href="css/custom.css">
-        <!-- Responsive style -->
-        <link type="text/css" rel="stylesheet" href="css/media-queries.css">
-
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-    </head>
-	
-    <body>
-        
-        <!-- 
-        Preloader
-        ==================================== -->
-        <div id="preloader">
-            <ul class="loader">
-                <li>
-                    <div class="circle"></div>
-                    <div class="ball"></div>
-                </li>
-                <li>
-                    <div class="circle"></div>
-                    <div class="ball"></div>
-                </li>
-                <li>
-                    <div class="circle"></div>
-                    <div class="ball"></div>
-                </li>
-                <li>
-                    <div class="circle"></div>
-                    <div class="ball"></div>
-                </li>
-                <li>
-                    <div class="circle"></div>
-                    <div class="ball"></div>
-                </li>
-            </ul>
+      .custom-leader-list {
+        position: relative;
+      }
+      .custom-leader-list li {
+        position: relative;
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 0.5rem;
+      }
+      .custom-leader-list li::before {
+        content: "";
+        flex-grow: 1;
+        border-bottom: 1px dotted #c1c7ce;
+        margin: 0 0.5rem;
+        order: 2;
+      }
+      .custom-leader-list .label {
+        order: 1;
+      }
+      .custom-leader-list .value {
+        order: 3;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container"
+  >
+    <a
+      class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
+      href="#main-content"
+      >Skip to main content</a
+    >
+    <header>
+      <nav
+        class="relative bg-primary-container shadow dark:bg-gray-800/50 dark:shadow-none dark:after:pointer-events-none dark:after:absolute dark:after:inset-x-0 dark:after:bottom-0 dark:after:h-px dark:after:bg-white/10"
+      >
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div class="flex h-16 justify-between">
+            <div class="flex flex-1">
+              <div class="flex shrink-0 items-center">
+                <a href="index.html">
+                  <img
+                    src="images/distinctive-audio-logo.png"
+                    alt="Distinctive Audio"
+                    class="h-14 w-auto dark:hidden"
+                  />
+                  <img
+                    src="images/distinctive-audio-logo.png"
+                    alt="Distinctive Audio"
+                    class="hidden h-8 w-auto dark:block"
+                  />
+                </a>
+              </div>
+              <div class="hidden sm:ml-auto sm:flex sm:space-x-8">
+                <!-- Current: "border-indigo-600 text-gray-900 dark:border-indigo-500 dark:text-white", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white" -->
+                <a
+                  href="index.html"
+                  class="inline-flex items-center border-b-2 border-accent-gold px-1 pt-1 text-sm font-medium text-accent-gold dark:border-accent-gold dark:text-accent-gold"
+                  >Home</a
+                >
+                <a
+                  href="about.html"
+                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                  >About</a
+                >
+                <a
+                  href="lines-we-carry.html"
+                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                  >Lines We Carry</a
+                >
+                <a
+                  href="products.html"
+                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                  >Products</a
+                >
+                <a
+                  href="contact.html"
+                  class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80 dark:text-gray-300 dark:hover:border-white/20 dark:hover:text-white"
+                  >Contact</a
+                >
+              </div>
+            </div>
+            <div class="-mr-2 flex items-center sm:hidden">
+              <!-- Mobile menu button -->
+              <button
+                type="button"
+                command="--toggle"
+                commandfor="mobile-menu"
+                class="relative inline-flex items-center justify-center rounded-md p-2 text-white/80 hover:bg-white/10 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-gold"
+              >
+                <span class="absolute -inset-0.5"></span>
+                <span class="sr-only">Open main menu</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-slot="icon"
+                  aria-hidden="true"
+                  class="size-6 [[aria-expanded='true']_&]:hidden"
+                >
+                  <path
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  data-slot="icon"
+                  aria-hidden="true"
+                  class="size-6 [&:not([aria-expanded='true']_*)]:hidden"
+                >
+                  <path
+                    d="M6 18 18 6M6 6l12 12"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <!-- 
-        Preloader
-        ==================================== -->
 
-        <!-- 
-        Fixed Navigation
-        ==================================== -->
-        <header id="masthead" class="site-header navigation navbar-default">
-            <div class="header-bottom">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <!-- site logo -->
-                        <a class="navbar-brand" href="#">
-                            <h3>Distinctive Audio</h3>
-                        </a>
-                        <!-- // site logo -->
-                    </div>
-
-                    <nav class="collapse navbar-collapse navbar-right main-nav" id="navigation">
-                        <ul class="nav navbar-nav">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="products.html">Products</a></li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
-                        </ul>
-                    </nav>
-                </div>
+        <el-disclosure
+          id="mobile-menu"
+          hidden
+          class="sm:hidden [&:not([hidden])]:block"
+        >
+          <div class="space-y-1 pb-3 pt-2">
+            <!-- Current: "bg-indigo-50 border-indigo-600 text-indigo-700 dark:border-indigo-500 dark:bg-indigo-600/10 dark:text-indigo-400", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:border-white/20 dark:hover:bg-white/5 dark:hover:text-white" -->
+            <a
+              href="index.html"
+              class="block border-l-4 border-accent-gold bg-accent-gold/10 py-2 pl-3 pr-4 text-base font-medium text-accent-gold dark:border-accent-gold dark:bg-accent-gold/10 dark:text-accent-gold"
+              >Home</a
+            >
+            <a
+              href="about.html"
+              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
+              >About</a
+            >
+            <a
+              href="lines-we-carry.html"
+              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
+              >Lines We Carry</a
+            >
+            <a
+              href="products.html"
+              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
+              >Products</a
+            >
+            <a
+              href="contact.html"
+              class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white"
+              >Contact</a
+            >
+          </div>
+        </el-disclosure>
+      </nav>
+    </header>
+    <main id="main-content">
+      <!-- 2. HERO -->
+      <section class="pt-6 lg:pb-0 overflow-hidden bg-surface-bright">
+        <div
+          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
+        >
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
+            <!-- Content (top on medium, left on desktop) -->
+            <div
+              class="order-2 md:order-1 w-full lg:w-1/2 bg-primary-container p-8 lg:p-16 rounded-xl shadow-ambient text-on-primary z-10 lg:-mr-12 lg:mt-0 relative"
+            >
+              <div
+                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-gold to-transparent rounded-t-xl opacity-50"
+              ></div>
+              <div class="flex items-center space-x-4 mb-6">
+                <span class="w-8 h-px bg-accent-gold"></span>
+                <span
+                  class="font-label-md text-label-md tracking-widest uppercase text-secondary-fixed"
+                  >ESTABLISHED 1986</span
+                >
+              </div>
+              <h1
+                class="font-display-lg text-headline-lg-mobile lg:text-display-lg mb-6 leading-tight"
+              >
+                Ottawa's
+                <span class="text-accent-gold italic">High-End</span> Audio
+                Store
+              </h1>
+              <p
+                class="font-body-lg text-body-lg text-primary-fixed-dim mb-10 max-w-md"
+              >
+                Refining the art of listening for the Ottawa–Gatineau region for
+                nearly 40 years.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  class="inline-flex justify-center items-center bg-accent-gold text-on-background font-label-lg text-label-lg py-3 px-8 rounded transition-transform hover:opacity-90 scale-95 active:scale-90"
+                  href="contact.html"
+                >
+                  Book a Showroom Demo
+                </a>
+                <a
+                  class="inline-flex justify-center items-center border border-primary-fixed-dim text-primary-fixed font-label-lg text-label-lg py-3 px-8 rounded hover:bg-primary-fixed-dim/10 transition-colors scale-95 active:scale-90"
+                  href="products.html"
+                >
+                  Explore Products
+                </a>
+              </div>
             </div>
-        </header>
-        <!--
-        End Fixed Navigation
-        ==================================== -->
-        
-        <div id="content" class="site-content">
-            <div id="primary" class="content-area">
-                <main id="main" class="site-main" role="main">
-                    <!-- Home Slider -->
-                    <section id="start">
-                        <!-- slide item -->
-                        <div style="background-image: url(img/slider/slide5.jpg)">
-                            <div class="slide-content container">
-                                <div class="inner-content home-header text-">
-                                    <h1>Welcome to Distinctive Audio</h1>
-                                    <h4>We help you achieve a superior music listening experience by providing a range of high quality <br class="hidden-xs"> audio components and accessories. Our products allow listeners to engage with their music at an intimate level.</h4>
-                                    <div class="btn-set">
-                                        <span class="btn1">
-                                            <a href="products.html" class="btn btn-shadow btn-main shutter-both">View Products</a>
-                                        </span>
-                                        <span class="btn2">
-                                            <a href="contact.html" class="btn btn-shadow btn-dark shutter-both">Contact Us</a>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- // slide item -->
-                    </section>
-                    <!-- // Home Slider -->
-
-                    <!--
-                    Start About Section
-                    ==================================== -->
-                    <section id="about" class="section">
-                        <div class="container">
-                            <div class="row">
-                                <!-- section title -->
-                                <div class="col-sm-12 col-md-12">
-                                    <div class="sec-head text-left wow fadeIn">
-                                        <h2>About Us</h2>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta eligendi officiis<br class="hidden-xs"> rerum voluptas impedit  ducimus nesciunt,  nam beatae mollitia, <br class="hidden-xs">sint culpa deserunt voluptate enim. Reiciendis nulla </p>
-                                    </div>
-                                </div>
-                                <!-- /section title -->
-
-                                <div class="col-xs-12 col-sm-3 wow fadeInLeft">
-                                    <div class="about-block">
-                                        <div class="icon-block">
-                                            <i class="ion-ios-paperplane-outline"></i>
-                                        </div>
-                                        <h4>New Arrivals</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
-                                        <a href="new-arrivals.html" class="btn btn-border-white shutter-both">New Arrivals</a>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-3 wow fadeInLeft" data-wow-delay="0.3s">
-                                    <div class="about-block">
-                                        <div class="icon-block">
-                                            <i class="ion-ios-settings"></i>
-                                        </div>
-                                        <h4>Trades and Specials</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
-                                        <a href="trades-and-specials.html" class="btn btn-border-white shutter-both">Trades &amp; Specials</a>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-3 wow fadeInLeft" data-wow-delay="0.3s">
-                                    <div class="about-block">
-                                        <div class="icon-block">
-                                            <i class="ion-ios-clock-outline"></i>
-                                        </div>
-                                        <h4>Location and Hours</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
-                                        <a href="contact.html" class="btn btn-border-white shutter-both">Store Hours</a>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-3 wow fadeInLeft" data-wow-delay="0.6s">
-                                    <div class="about-block hiring">
-                                        <div class="icon-block">
-                                            <i class="ion-ios-mic-outline"></i>
-                                        </div>
-                                        <h4>Our Product Line</h4>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,</p>
-                                        <a href="products.html" class="btn btn-border-white shutter-both">Product Line</a>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </section>
-                    <!--
-                    end About Section
-                    ==================================== -->
-
-                    <!--
-                    Start Service Section
-                    ==================================== -->
-                    <section id="service" class="section bg-one">
-                        <div class="container">
-                            <div class="row">
-                                <!-- section title -->
-                                <div class="col-sm-12 col-md-12">
-                                    <div class="sec-head text-left wow fadeIn">
-                                        <h2>Our Services</h2>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta eligendi officiis<br class="hidden-xs"> rerum voluptas impedit  ducimus nesciunt,  nam beatae mollitia, <br class="hidden-xs">sint culpa deserunt voluptate enim. Reiciendis nulla </p>
-                                    </div>
-                                </div>
-                                <!-- /section title -->
-                                
-                                <!-- Service item -->
-                                <div class="col-sm-6 col-md-3 text-center wow fadeInUp">
-                                    <div class="service-item">                            
-                                        <div class="icon-box">
-                                            <i class="ion-ios-musical-notes"></i>
-                                        </div>                  
-                                        <!-- Express Service Yourself -->
-                                        <div class="service-text text-center">
-                                            <h4>Live Demos</h4>                   
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati odio quidem nostrum sit? Quidem, accusantium.</p>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- End Service item -->
-                                
-                                <!-- Service item -->
-                                <div class="col-sm-6 col-md-3 text-center wow fadeInUp" data-wow-delay="0.3s">
-                                    <div class="service-item">
-                                        <div class="icon-box">
-                                            <i class="ion-ios-gear-outline"></i>
-                                        </div>
-                                        <!-- Express Service Yourself -->
-                                        <div class="service-text text-center">
-                                            <h4>Equipment Repair</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere quaerat, nulla, ea amet quasi necessitatibus!</p>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- End Service item -->
-                                
-                                <!-- Service item -->
-                                <div class="col-sm-6 col-md-3 text-center wow fadeInUp" data-wow-delay="0.6s">
-                                    <div class="service-item">
-                                        <div class="icon-box">
-                                            <i class="ion-ios-barcode-outline"></i>
-                                        </div>
-                                        <!-- Express Service Yourself -->
-                                        <div class="service-text text-center">
-                                            <h4>Custom Cables</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere quaerat, nulla, ea amet quasi necessitatibus!</p>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- End Service item -->
-                                
-                                <!-- Service item -->
-                                <div class="col-sm-6 col-md-3 text-center wow fadeInUp" data-wow-delay="0.9s">
-                                    <div class="service-item">
-                                        <div class="icon-box">
-                                            <i class="ion-ios-personadd-outline"></i>
-                                        </div>
-                                        <!-- Express Service Yourself -->
-                                        <div class="service-text text-center">
-                                            <h4>Customer Support</h4>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere quaerat, nulla, ea amet quasi necessitatibus!</p>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- End Service item -->
-                                
-                            </div>      <!-- End row -->
-                        </div>      <!-- End container -->
-                    </section>
-                    <!--
-                    end Service Section
-                    ==================================== -->
-
-                    <!--
-                    Start Team Section
-                    ==================================== -->
-                    <section id="team" class="section">
-                        <div class="container">
-                            <div class="row">
-                                <!-- section title -->
-                                <div class="col-sm-12 col-md-12">
-                                    <div class="sec-head text-left wow fadeIn" >
-                                        <h2>Meet the Team</h2>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta eligendi officiis<br class="hidden-xs"> rerum voluptas impedit  ducimus nesciunt,  nam beatae mollitia, <br class="hidden-xs">sint culpa deserunt voluptate enim. Reiciendis nulla </p>
-                                    </div>
-                                </div>
-                                <!-- /section title -->
-                                
-                                <!-- team member -->
-                                <div class="col-sm-6 col-md-3 wow fadeInUp">
-                                    <div class="team-mate">
-                                        <figure class="member-photo">
-                                            <!-- member photo -->
-                                            <img alt="" src="img/team/team1.jpg" class="img-responsive">
-                                            <!-- /member photo -->
-                                            <!-- member social profile -->
-                                            <div class="hover">
-                                                <div class="hover-inner">
-                                                    <!-- about member -->
-                                                    <div class="member-info">
-                                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur necessitatibus ullam, culpa odio.</p>
-                                                    </div>
-                                                    <!-- /about member -->
-                                                    <ul class="list-inline text-center">
-                                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                    </ul>
-                                                    <!-- /member social profile -->
-                                                </div>
-                                            </div>
-                                        </figure>
-                                        
-                                        <!-- member name & designation -->
-                                        <div class="member-title">
-                                            <h4>Rheal nadeau</h4>
-                                            <span>Owner</span>
-                                        </div>
-                                        <!-- /member name & designation -->
-                                   </div>
-                                </div>
-                                <!-- // team member -->
-                                
-                                <!-- team member -->
-                                <div class="col-sm-6 col-md-3 wow fadeInUp" data-wow-delay="0.3s">
-                                    <div class="team-mate">
-                                        <figure class="member-photo">
-                                            <!-- member photo -->
-                                            <img alt="" src="img/team/team2.png" class="img-responsive">
-                                            <!-- /member photo -->
-                                            <!-- member social profile -->
-                                            <div class="hover">
-                                                <div class="hover-inner">
-                                                    <!-- about member -->
-                                                    <div class="member-info">
-                                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur necessitatibus ullam, culpa odio.</p>
-                                                    </div>
-                                                    <!-- /about member -->
-                                                    <ul class="list-inline text-center">
-                                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                                    </ul>
-                                                    <!-- /member social profile -->
-                                                </div>
-                                            </div>
-                                        </figure>
-                                        
-                                        <!-- member name & designation -->
-                                        <div class="member-title">
-                                            <h4>Brian</h4>
-                                            <span>Management</span>
-                                        </div>
-                                        <!-- /member name & designation -->
-                                   </div>
-                                </div>
-                                <!-- // team member -->
-
-                            </div>
-                        </div>
-                    </section>
-                    <!--
-                    end Team Section
-                    ==================================== -->
-
-                    <!--
-                    call to action
-                    ==================================== -->
-                    <section class="section call-to-action">
-                        <div class="container">
-                            <div class="cta">
-                                <h2>Interested in Learning More About Distinctive Audio?</h2>
-                                <div class="btn-set">
-                                    <a href="contact.html" class="btn btn-main">Get in Touch</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <!--
-                    end call to action
-                    ==================================== -->
-
-                    <a href="javascript:;" id="back-top">
-                        <i class="fa fa-angle-up"></i>
-                    </a>
-                    
-                </main>
-                <!-- // #main -->
+            <!-- Image (first on mobile, below text on medium, right on desktop) -->
+            <div class="order-1 md:order-2 w-full lg:w-1/2">
+              <img
+                src="images/products/audio-physics-floor-standing-speakers-high-end.jpg"
+                alt="Audio Physic high-end floor-standing speakers"
+                class="w-full h-auto rounded-xl shadow-ambient object-cover"
+              />
             </div>
-            <!-- // #primary -->
+          </div>
         </div>
-        <!-- // #content -->
-
-        <!-- Start Footer
-        ========================================== -->
-        <footer class="section footer-top">
-            <div class="container">
-                <div class="footer-logo">
-                    <a href="#">
-                        <h3>Distinctive Audio</h3>
-                    </a>
-                </div>
-                <div class="row">
-                    <div class="col-sm-10 col-md-4">
-                        <div class="footer-item">
-                            <h3 class="title-style">About Us</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos at consequatur culpa facilis saepe, corrupti deleniti soluta numquam, minima magnam ab eius eveniet accusamus rem ipsum repudiandae omnis voluptatem doloribus quasi excepturi reprehenderit dolore illum debitis, corporis? Doloremque dolorum.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-md-4">
-                        <div class="footer-item">
-                            <h3 class="title-style">Recent Posts</h3>
-                            <div class="widget-post">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object" src="img/blog/thumb3.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading"><a href="#">Post Format: Standard</a></h4>
-                                        <p><i class="fa fa-clock-o"></i> <span>April 17, 2015</span></p>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object" src="img/blog/thumb4.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading"><a href="#">Post Format: Gallery</a></h4>
-                                        <p><i class="fa fa-clock-o"></i> <span>April 17, 2015</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-md-4">
-                        <div class="footer-item">
-                            <h3 class="title-style">New Products</h3>
-                            <div class="widget-post">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object" src="img/blog/thumb3.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading"><a href="#">Post Format: Standard</a></h4>
-                                        <p><i class="fa fa-clock-o"></i> <span>April 17, 2015</span></p>
-                                    </div>
-                                </div>
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object" src="img/blog/thumb4.jpg" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading"><a href="#">Post Format: Gallery</a></h4>
-                                        <p><i class="fa fa-clock-o"></i> <span>April 17, 2015</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="copyright text-center">
-                    <p>Copyright &copy; 2016 Distinctive Audio - All Rights Reserved.</p>
-                </div>
+      </section>
+      <!-- 3. THE DISTINCTIVE APPROACH -->
+      <section
+        class="py-20 bg-surface-bright border-t border-outline-variant/30"
+      >
+        <div
+          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
+        >
+          <div class="mb-12 text-center md:text-left">
+            <h2
+              class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary"
+            >
+              The <span class="text-accent-gold">Distinctive</span> Approach
+            </h2>
+            <p
+              class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl"
+            >
+              We don't just sell boxes; we design experiences. Our philosophy is
+              rooted in finding the perfect synergy for your unique listening
+              environment.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            <!-- Card 1 -->
+            <div
+              class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/50 shadow-ambient group hover:border-primary-fixed-dim transition-colors"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary-container mb-6 group-hover:bg-primary-container group-hover:text-surface-container transition-colors"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-variation-settings: &quot;FILL&quot; 0"
+                  >tune</span
+                >
+              </div>
+              <h3 class="font-title-lg text-title-lg text-primary mb-3">
+                Tailored Synergy
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                Matching components that complement each other perfectly is an
+                art form we've perfected over decades.
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >Component matching</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >System architecture</span
+                  >
+                </li>
+              </ul>
             </div>
-        </footer>
-        <!-- END Footer
-        ========================================== -->
-		
-        <!--
-        JavaScripts
-        ========================== -->
-        <!-- Core jQuery -->
-        <script src="js/vendor/jquery-1.11.2.min.js"></script>
-        <!-- Bootstrap Core -->
-        <script src="js/bootstrap.min.js"></script>
-        <!-- sticky nav -->
-        <script src="js/jquery.sticky.js"></script>
-        <!-- one page scrolling -->
-        <script src="js/singlepagenav.js"></script>
-        <!-- owl.careouse -->
-        <script src="js/owl.carousel.min.js"></script>
-        <!-- isotope / portfolio filter -->
-        <script src="js/isotope.pkgd.min.js"></script>
-        <!-- jquery lightbox -->
-        <script src="js/jquery.magnific-popup.min.js"></script>
-        <!-- wow js  -->
-        <script src="js/wow.min.js"></script>
-        <!-- easing effect -->
-        <script src="js/jquery.easing-1.3.pack.js"></script>
-        <!-- contact form handler -->
-        <script src="js/jquery.form.min.js"></script>
-        <!-- ajax form validator -->
-        <script src="js/jquery.validate.min.js"></script>
-        <!-- google map api -->
-        <script src="https://maps.googleapis.com/maps/api/js?sensor=false.js"></script>
-        <!-- theme custom script -->
-        <script src="js/main.js"></script>
-    </body>
+            <!-- Card 2 -->
+            <div
+              class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/50 shadow-ambient group hover:border-primary-fixed-dim transition-colors"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary-container mb-6 group-hover:bg-primary-container group-hover:text-surface-container transition-colors"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-variation-settings: &quot;FILL&quot; 0"
+                  >chair_alt</span
+                >
+              </div>
+              <h3 class="font-title-lg text-title-lg text-primary mb-3">
+                Environment First
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                Your room is the most important component. We design systems
+                that perform optimally in your specific space.
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >Acoustic assessment</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >Placement strategy</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <!-- Card 3 -->
+            <div
+              class="bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/50 shadow-ambient group hover:border-primary-fixed-dim transition-colors"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary-container mb-6 group-hover:bg-primary-container group-hover:text-surface-container transition-colors"
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-variation-settings: &quot;FILL&quot; 0"
+                  >handshake</span
+                >
+              </div>
+              <h3 class="font-title-lg text-title-lg text-primary mb-3">
+                Long-Term Support
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                Our relationship begins, not ends, with your purchase. We are
+                committed to your ongoing musical enjoyment.
+              </p>
+              <ul class="space-y-2">
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >Professional setup</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-sm mr-2 mt-1"
+                    >circle</span
+                  >
+                  <span class="font-body-md text-body-md text-on-surface"
+                    >Lifetime advice</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 4. FEATURED CATEGORIES -->
+      <section class="py-20 bg-surface border-t border-outline-variant/30">
+        <div
+          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
+        >
+          <div
+            class="flex flex-col md:flex-row justify-between items-end mb-12"
+          >
+            <div>
+              <div class="flex items-center space-x-4 mb-4">
+                <span class="w-8 h-px bg-accent-gold"></span>
+                <span
+                  class="font-label-md text-label-md tracking-widest uppercase text-on-surface-variant"
+                  >CURATED SELECTION</span
+                >
+              </div>
+              <h2
+                class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary"
+              >
+                Featured <span class="text-accent-gold">Categories</span>
+              </h2>
+            </div>
+            <a
+              class="hidden md:inline-flex items-center font-label-lg text-label-lg text-primary-container hover:text-accent-gold transition-colors mt-6 md:mt-0"
+              href="products.html"
+            >
+              View all products
+              <span class="material-symbols-outlined ml-1 text-sm"
+                >arrow_forward</span
+              >
+            </a>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Category 1 -->
+            <a class="group block" href="turntables.html">
+              <div
+                class="aspect-square bg-surface-container-lowest border border-outline-variant/40 rounded-xl overflow-hidden mb-4 relative shadow-ambient group-hover:shadow-md transition-shadow"
+              >
+                <img
+                  alt="High-end turntable product shot"
+                  class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                  src="images/products/clear-audio-turntable-high-end.jpg"
+                />
+              </div>
+              <h3
+                class="font-title-lg text-title-lg text-primary group-hover:text-accent-gold transition-colors"
+              >
+                Turntables
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Analog perfection
+              </p>
+            </a>
+            <!-- Category 2 -->
+            <a class="group block" href="amplification.html">
+              <div
+                class="aspect-square bg-surface-container-lowest border border-outline-variant/40 rounded-xl overflow-hidden mb-4 relative shadow-ambient group-hover:shadow-md transition-shadow"
+              >
+                <img
+                  alt="High-end audio amplifier front panel"
+                  class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                  src="images/products/unison-research-vacuum-tube-intergrated-amplifier-medium-end.jpg"
+                />
+              </div>
+              <h3
+                class="font-title-lg text-title-lg text-primary group-hover:text-accent-gold transition-colors"
+              >
+                Integrated Amplifiers
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Solid State &amp; Vacuum Tube
+              </p>
+            </a>
+            <!-- Category 3 -->
+            <a class="group block" href="loudspeakers.html">
+              <div
+                class="aspect-square bg-surface-container-lowest border border-outline-variant/40 rounded-xl overflow-hidden mb-4 relative shadow-ambient group-hover:shadow-md transition-shadow"
+              >
+                <img
+                  alt="Pair of high-fidelity floorstanding speakers"
+                  class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                  src="images/products/audio-physics-floor-standing-speakers-high-end.jpg"
+                />
+              </div>
+              <h3
+                class="font-title-lg text-title-lg text-primary group-hover:text-accent-gold transition-colors"
+              >
+                Speakers
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                The voice of the system
+              </p>
+            </a>
+            <!-- Category 4 -->
+            <a class="group block" href="digital-sources.html">
+              <div
+                class="aspect-square bg-surface-container-lowest border border-outline-variant/40 rounded-xl overflow-hidden mb-4 relative shadow-ambient group-hover:shadow-md transition-shadow"
+              >
+                <img
+                  alt="Modern digital audio streamer and DAC"
+                  class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                  src="images/products/eversolo-streamer-high-end.jpg"
+                />
+              </div>
+              <h3
+                class="font-title-lg text-title-lg text-primary group-hover:text-accent-gold transition-colors"
+              >
+                Streaming &amp; DACs
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Digital precision
+              </p>
+            </a>
+          </div>
+          <a
+            class="md:hidden mt-8 inline-flex items-center font-label-lg text-label-lg text-primary-container hover:text-accent-gold transition-colors"
+            href="products.html"
+          >
+            View all products
+            <span class="material-symbols-outlined ml-1 text-sm"
+              >arrow_forward</span
+            >
+          </a>
+        </div>
+      </section>
+      <!-- 5. Founder Strip -->
+      <section
+        class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto border-t border-outline-variant/30"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-center">
+          <div
+            class="aspect-square relative rounded-xl overflow-hidden shadow-sm border border-outline-variant"
+          >
+            <img
+              alt="Rhéal Nadeau, founder of Distinctive Audio, in the Ottawa showroom"
+              class="object-cover w-full h-full absolute inset-0"
+              data-alt="A distinguished gentleman with silver hair wearing a well-tailored suit stands confidently in a high-end audio showroom. The lighting is soft and cinematic, casting a warm glow over vintage amplifiers and pristine speakers in the background. The atmosphere conveys expertise, heritage, and luxury, shot with an editorial minimalism aesthetic."
+              loading="lazy"
+              src="images/rheal-nadeau.jpg"
+            />
+          </div>
+          <div
+            class="flex flex-col items-start space-y-6 md:pl-12 mt-8 md:mt-0"
+          >
+            <div class="flex items-center space-x-4">
+              <span
+                class="font-label-lg text-label-lg text-accent-gold uppercase tracking-widest"
+                >Our Founder</span
+              >
+              <div class="h-px w-12 bg-accent-gold"></div>
+            </div>
+            <h2
+              class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg"
+            >
+              Meet <span class="text-accent-gold">Rhéal</span> Nadeau
+            </h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">
+              As the owner and president since 1988, Rhéal Nadeau has curated an
+              unparalleled collection of high-fidelity audio equipment at our
+              Ottawa location. His deep understanding of analog warmth and
+              acoustic engineering has made Distinctive Audio a destination for
+              audiophiles seeking precision and soul.
+            </p>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">
+              Every system is meticulously selected and auditioned by Rhéal
+              himself, ensuring that our showroom reflects a lifelong dedication
+              to the art of sound.
+            </p>
+            <a
+              class="text-primary-container font-label-lg text-label-lg border-b border-primary-container pb-1 hover:text-on-background hover:border-on-background transition-colors inline-flex items-center gap-2 mt-4"
+              href="about.html"
+            >
+              Read our story
+              <span class="material-symbols-outlined text-[16px]"
+                >arrow_forward</span
+              >
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- 6. Proof Band -->
+      <section
+        class="w-full bg-primary-container text-on-primary py-20 px-margin-mobile md:px-margin-desktop"
+      >
+        <div class="max-w-container-max mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+            <div class="lg:col-span-5 space-y-12">
+              <div class="space-y-10 border-l border-accent-gold pl-6">
+                <div>
+                  <span
+                    class="font-display-lg text-display-lg text-accent-gold block leading-none"
+                    >Est. 1986</span
+                  >
+                  <span
+                    class="font-label-lg text-label-lg text-on-primary/80 uppercase tracking-widest mt-3 block"
+                    >Foundation</span
+                  >
+                </div>
+                <div>
+                  <span
+                    class="font-display-lg text-display-lg text-accent-gold block leading-none"
+                    >40+ Years</span
+                  >
+                  <span
+                    class="font-label-lg text-label-lg text-on-primary/80 uppercase tracking-widest mt-3 block"
+                    >Experience in Hi-Fi &amp; Two-Channel Audio</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-7 mt-12 lg:mt-0 flex flex-col space-y-6">
+              <div
+                class="aspect-[4/3] rounded-xl overflow-hidden border border-outline-variant/30 shadow-sm relative"
+              >
+                <img
+                  alt="Distinctive Audio Storefront"
+                  class="object-cover w-full h-full absolute inset-0"
+                  data-alt="A sleek, modern storefront exterior of a boutique audio store on a sunny day. Large glass windows reveal high-end speaker displays inside. The architecture is clean and minimalist, with a refined color palette of deep navy and crisp white. Shot with a wide architectural lens emphasizing structure and premium retail design."
+                  loading="lazy"
+                  src="images/products/banner.jpg"
+                />
+              </div>
+              <p
+                class="font-title-lg text-title-lg text-on-primary text-center"
+              >
+                Visit us at 903 Carling Avenue, Ottawa
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 7. Services Teaser -->
+      <section
+        class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto border-t border-outline-variant/30"
+      >
+        <div class="flex flex-col items-center mb-16 space-y-4">
+          <div class="flex items-center space-x-4">
+            <div class="h-px w-8 bg-accent-gold"></div>
+            <span
+              class="font-label-lg text-label-lg text-accent-gold uppercase tracking-widest"
+              >Our Expertise</span
+            >
+            <div class="h-px w-8 bg-accent-gold"></div>
+          </div>
+          <h2
+            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-center"
+          >
+            Bespoke <span class="text-accent-gold">Services</span>
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+          <a
+            class="group block p-8 rounded-xl border border-outline-variant hover:border-primary-container transition-colors bg-surface-bright shadow-sm hover:shadow-md relative overflow-hidden"
+            href="contact.html"
+          >
+            <div
+              class="absolute top-0 left-0 w-1 h-full bg-accent-gold scale-y-0 group-hover:scale-y-100 transition-transform origin-top"
+            ></div>
+            <div class="flex items-start space-x-6">
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0 text-primary-container"
+              >
+                <span class="material-symbols-outlined" data-icon="headphones"
+                  >headphones</span
+                >
+              </div>
+              <div class="space-y-4">
+                <h3 class="font-title-lg text-title-lg text-on-background">
+                  Listening Demos
+                </h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                  In-store auditions by appointment. Let us prepare your ideal
+                  system configuration for an immersive evaluation.
+                </p>
+                <span
+                  class="inline-flex items-center text-primary-container font-label-md text-label-md uppercase tracking-wider group-hover:text-accent-gold transition-colors"
+                >
+                  Learn more
+                  <span class="material-symbols-outlined text-[14px] ml-1"
+                    >arrow_forward</span
+                  >
+                </span>
+              </div>
+            </div>
+          </a>
+          <a
+            class="group block p-8 rounded-xl border border-outline-variant hover:border-primary-container transition-colors bg-surface-bright shadow-sm hover:shadow-md relative overflow-hidden"
+            href="cables-power.html"
+          >
+            <div
+              class="absolute top-0 left-0 w-1 h-full bg-accent-gold scale-y-0 group-hover:scale-y-100 transition-transform origin-top"
+            ></div>
+            <div class="flex items-start space-x-6">
+              <div
+                class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0 text-primary-container"
+              >
+                <span class="material-symbols-outlined" data-icon="cable"
+                  >cable</span
+                >
+              </div>
+              <div class="space-y-4">
+                <h3 class="font-title-lg text-title-lg text-on-background">
+                  Custom Cables
+                </h3>
+                <p class="font-body-md text-body-md text-on-surface-variant">
+                  Precision custom interconnects and speaker cables,
+                  meticulously crafted with in-house termination.
+                </p>
+                <span
+                  class="inline-flex items-center text-primary-container font-label-md text-label-md uppercase tracking-wider group-hover:text-accent-gold transition-colors"
+                >
+                  Learn more
+                  <span class="material-symbols-outlined text-[14px] ml-1"
+                    >arrow_forward</span
+                  >
+                </span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+      <!-- 8. Final CTA Band -->
+      <section
+        class="w-full bg-accent-gold text-on-background py-20 px-margin-mobile md:px-margin-desktop text-center"
+      >
+        <div class="max-w-3xl mx-auto space-y-8">
+          <h2
+            class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg"
+          >
+            Hear the difference for yourself
+          </h2>
+          <a
+            class="inline-flex items-center justify-center px-8 py-4 bg-primary-container text-on-primary font-label-lg text-label-lg rounded hover:bg-primary transition-colors shadow-[0px_4px_20px_rgba(11,28,48,0.15)]"
+            href="contact.html"
+          >
+            Book a Showroom Demo
+          </a>
+        </div>
+      </section>
+      <!-- 9. Related -->
+      <section
+        class="py-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto border-t border-outline-variant/30"
+      >
+        <div
+          class="flex flex-col items-center justify-center gap-6"
+        >
+          <span
+            class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest text-center"
+            >Related:</span
+          >
+          <div class="flex flex-wrap justify-center gap-3">
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="about.html"
+              >About</a
+            >
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="products.html"
+              >Products</a
+            >
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="lines-we-carry.html"
+              >Lines We Carry</a
+            >
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="contact.html"
+              >Listening Demos</a
+            >
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="cables-power.html"
+              >Custom Cables</a
+            >
+            <a
+              class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container font-label-md text-label-md transition-colors bg-surface-bright"
+              href="contact.html"
+              >Contact</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="bg-primary">
+      <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+          <div class="space-y-8">
+            <a href="index.html">
+              <img
+                src="images/distinctive-audio-logo.png"
+                alt="Distinctive Audio"
+                class="h-14 w-auto"
+              />
+            </a>
+            <p class="text-balance text-sm/6 text-gray-300">
+              Established in 1986, Distinctive Audio has been providing expert
+              service to our customers for over 40 years. We are a locally owned
+              and operated business serving the Ottawa Gatineau region.
+            </p>
+            <div class="flex gap-x-6">
+              <a href="#" class="text-gray-300 hover:text-white">
+                <span class="sr-only">Facebook</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="size-6"
+                >
+                  <path
+                    d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-300 hover:text-white">
+                <span class="sr-only">Instagram</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="size-6"
+                >
+                  <path
+                    d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-300 hover:text-white">
+                <span class="sr-only">X</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="size-6"
+                >
+                  <path
+                    d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"
+                  />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-300 hover:text-white">
+                <span class="sr-only">YouTube</span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  class="size-6"
+                >
+                  <path
+                    d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            <div class="md:grid md:grid-cols-2 md:gap-8">
+              <div>
+                <h3 class="text-sm/6 font-semibold text-white">Navigation</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <a
+                      href="index.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Home</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="about.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >About</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="lines-we-carry.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Lines We Carry</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="products.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Products</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="contact.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Contact</a
+                    >
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-10 md:mt-0">
+                <h3 class="text-sm/6 font-semibold text-white">Products</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <a
+                      href="analogue.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Analogue</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="amplification.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Amplification</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="loudspeakers.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Loudspeakers</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="digital-sources.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Digital Sources</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="cables-power.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Cables &amp; Power</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="racks-accessories.html"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >Racks &amp; Accessories</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="md:grid md:grid-cols-1 md:gap-8">
+              <div>
+                <h3 class="text-sm/6 font-semibold text-white">New Arrivals</h3>
+                <ul role="list" class="mt-6 space-y-4">
+                  <li>
+                    <a href="digital-to-analogue-converters.html" class="text-sm/6 text-gray-300 hover:text-white"
+                      >PS Audio Model Perfect Wave Direct Stream DAC
+                    </a>
+                  </li>
+                  <li>
+                    <a href="music-streamers.html" class="text-sm/6 text-gray-300 hover:text-white"
+                      >Arcam model ST-75 Streamer
+                    </a>
+                  </li>
+                  <li>
+                    <a href="cd-players-transports.html" class="text-sm/6 text-gray-300 hover:text-white"
+                      >Unison Research Unico PRIMO CD Player
+                    </a>
+                  </li>
+                  <li>
+                    <a href="universal-disc-players.html" class="text-sm/6 text-gray-300 hover:text-white"
+                      >MAGNETAR UDP-800 MKII Universal Player
+                    </a>
+                  </li>
+                  <li>
+                    <a href="music-streamers.html" class="text-sm/6 text-gray-300 hover:text-white"
+                      >ARCAM Model ST-25 Streamer
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
+          <p class="text-sm/6 text-gray-300">
+            &copy; 2026 Distinctive Audio Inc. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
