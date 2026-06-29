@@ -81,6 +81,194 @@
         }
       }
     </script>
+    <style>
+      /* Subtle green status pill with more breathing room */
+      .da-status-pill {
+        display: inline-block;
+        padding: 0.25rem 0.625rem;
+        border-radius: 9999px;
+        border: 1px solid #b9e0c7;
+        background-color: #e9f6ee;
+        color: #2f7d4f;
+        font-family: Inter, sans-serif;
+        font-size: 10.5px;
+        line-height: 1;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      /* Inventory filter bar */
+      .da-filter-bar {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      @media (max-width: 900px) {
+        .da-filter-bar {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 560px) {
+        .da-filter-bar {
+          grid-template-columns: 1fr;
+        }
+      }
+      .da-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .da-filter-label {
+        font-family: Inter, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: rgb(0 85 129);
+      }
+      .da-filter-select {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 100%;
+        font-family: Manrope, sans-serif;
+        font-size: 15px;
+        line-height: 1.4;
+        color: rgb(11 28 48);
+        background-color: #ffffff;
+        border: 1px solid rgb(193 199 206);
+        border-radius: 0.5rem;
+        padding: 0.625rem 2.25rem 0.625rem 0.875rem;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2372787e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 0.85rem;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .da-filter-select:hover {
+        border-color: rgb(0 85 129);
+      }
+      .da-filter-select:focus {
+        outline: none;
+        border-color: rgb(0 85 129);
+        box-shadow: 0 0 0 3px rgba(0, 85, 129, 0.15);
+      }
+      .da-row-hidden {
+        display: none !important;
+      }
+
+      /* ===== Inventory table redesign ===== */
+      .da-inventory-wrap {
+        overflow-x: auto;
+        border: 1px solid rgb(214 222 235);
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(0, 38, 61, 0.04),
+          0 18px 40px -20px rgba(0, 38, 61, 0.18);
+      }
+      #inventory-table {
+        min-width: 720px;
+        font-variant-numeric: tabular-nums;
+      }
+      /* Column headers */
+      #inventory-table thead th {
+        padding: 15px 24px;
+        font-family: Inter, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: rgb(0 85 129);
+        background-color: rgb(239 244 255);
+        border-bottom: 1px solid rgb(204 213 226);
+        white-space: nowrap;
+      }
+      #inventory-table thead th:first-child {
+        padding-left: 32px;
+      }
+      #inventory-table thead th:last-child {
+        padding-right: 32px;
+      }
+      /* Section (group) headers */
+      #inventory-table th[scope="colgroup"] {
+        padding: 30px 32px 13px;
+        font-family: Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: rgb(0 61 94);
+        background-color: #ffffff;
+        border-top: 1px solid rgb(220 227 238);
+        border-bottom: none;
+      }
+      #inventory-table tbody tr:first-child th[scope="colgroup"] {
+        border-top: none;
+      }
+      #inventory-table th[scope="colgroup"]::before {
+        content: "";
+        display: inline-block;
+        width: 18px;
+        height: 3px;
+        border-radius: 2px;
+        margin-right: 12px;
+        vertical-align: middle;
+        background-color: rgb(240 170 16);
+      }
+      /* Body cells */
+      #inventory-table tbody td,
+      #inventory-table tbody th[scope="row"] {
+        padding: 16px 24px;
+        vertical-align: top;
+        border: none;
+      }
+      #inventory-table tbody th[scope="row"] {
+        padding-left: 32px;
+        padding-right: 32px;
+      }
+      #inventory-table tbody td:last-child {
+        padding-right: 32px;
+      }
+      /* Subtle zebra + hover */
+      #inventory-table tbody tr.bg-background th[scope="row"],
+      #inventory-table tbody tr.bg-background td {
+        background-color: rgb(248 249 255);
+      }
+      #inventory-table tbody tr:hover th[scope="row"],
+      #inventory-table tbody tr:hover td {
+        background-color: rgb(235 241 252);
+      }
+      /* Product name + description hierarchy */
+      #inventory-table tbody th[scope="row"] > span:first-child {
+        font-size: 15px;
+        line-height: 1.4;
+        font-weight: 600;
+        color: rgb(11 28 48);
+      }
+      #inventory-table tbody th[scope="row"] > span + span {
+        font-size: 13px;
+        line-height: 1.5;
+        margin-top: 4px;
+        color: rgb(99 105 112);
+      }
+      /* Type column */
+      #inventory-table tbody td:nth-child(2) {
+        font-size: 13.5px;
+        line-height: 1.45;
+        color: rgb(65 71 78);
+      }
+      /* MSRP column */
+      #inventory-table tbody td:nth-child(4) {
+        font-size: 13.5px;
+        color: rgb(124 132 142);
+      }
+      /* Sale price column */
+      #inventory-table tbody td:nth-child(5) {
+        font-size: 15px;
+        font-weight: 600;
+        color: rgb(0 85 129);
+      }
+    </style>
   </head>
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
@@ -557,6 +745,3427 @@
           </div>
         </div>
       </section>
+      <!-- Full Inventory Table -->
+      <section
+        class="bg-surface-container-low py-24 border-b border-outline-variant"
+      >
+        <div
+          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
+        >
+          <div class="mb-12">
+            <h2
+              class="font-display-lg text-headline-md md:text-display-lg text-on-surface"
+            >
+              Products
+            </h2>
+            <p
+              class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl"
+            >
+              Our complete current listing across electronics, analogue,
+              loudspeakers and accessories. All sale prices reflect current
+              pricing &mdash; contact us to inquire on any item.
+            </p>
+          </div>
+          <div class="da-filter-bar">
+            <div class="da-filter-group">
+              <label class="da-filter-label" for="filter-product">Product</label>
+              <select
+                id="filter-product"
+                class="da-filter-select"
+                aria-label="Filter by product type"
+              >
+                <option value="">All Product Types</option>
+                <option>Pre-Amplifier</option>
+                <option>Power Amplifier</option>
+                <option>Integrated Amplifier</option>
+                <option>Turntable</option>
+                <option>Cartridges</option>
+                <option>Phono Pre-Amplifier</option>
+                <option>Analogue Accessories</option>
+                <option>Headphone Pre-Amp</option>
+                <option>CD Player</option>
+                <option>CD Transport</option>
+                <option>Digital to Analogue Converter</option>
+                <option>Streamer</option>
+                <option>Music Center</option>
+                <option>Speakers</option>
+                <option>Speaker Stands</option>
+                <option>Powered Speakers</option>
+                <option>Audio Rack</option>
+                <option>Cables</option>
+                <option>Cones</option>
+                <option>Power Line Conditioner</option>
+                <option>Combo Package</option>
+                <option>Bluetooth Receiver</option>
+                <option>Universal Players</option>
+              </select>
+            </div>
+            <div class="da-filter-group">
+              <label class="da-filter-label" for="filter-status">Status</label>
+              <select
+                id="filter-status"
+                class="da-filter-select"
+                aria-label="Filter by status"
+              >
+                <option value="">All Statuses</option>
+                <option>Brand New</option>
+                <option>Almost New</option>
+                <option>Display</option>
+                <option>Floor Demo</option>
+                <option>Trade In</option>
+                <option>Consignment</option>
+                <option>Used</option>
+              </select>
+            </div>
+            <div class="da-filter-group">
+              <label class="da-filter-label" for="filter-retail"
+                >Retail Price</label
+              >
+              <select
+                id="filter-retail"
+                class="da-filter-select"
+                aria-label="Filter by retail price"
+              >
+                <option value="">Any Retail Price</option>
+                <option value="10-500">$10 &ndash; $500</option>
+                <option value="500-2000">$500 &ndash; $2,000</option>
+                <option value="2000-5000">$2,000 &ndash; $5,000</option>
+                <option value="5000-12000">$5,000 &ndash; $12,000</option>
+              </select>
+            </div>
+            <div class="da-filter-group">
+              <label class="da-filter-label" for="filter-sale">Sale Price</label>
+              <select
+                id="filter-sale"
+                class="da-filter-select"
+                aria-label="Filter by sale price"
+              >
+                <option value="">Any Sale Price</option>
+                <option value="10-500">$10 &ndash; $500</option>
+                <option value="500-2000">$500 &ndash; $2,000</option>
+                <option value="2000-5000">$2,000 &ndash; $5,000</option>
+                <option value="5000-12000">$5,000 &ndash; $12,000</option>
+              </select>
+            </div>
+          </div>
+          <div
+            class="da-inventory-wrap rounded-xl border border-outline-variant shadow-ambient bg-surface-container-lowest"
+          >
+            <table id="inventory-table" class="w-full border-collapse text-left">
+              <caption class="sr-only">
+                Distinctive Audio full product inventory with type, condition,
+                MSRP and sale price
+              </caption>
+              <thead>
+                <tr class="border-b border-outline-variant">
+                  <th
+                    scope="col"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4"
+                  >
+                    Product
+                  </th>
+                  <th
+                    scope="col"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4"
+                  >
+                    Type
+                  </th>
+                  <th
+                    scope="col"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4 text-right"
+                  >
+                    MSRP
+                  </th>
+                  <th
+                    scope="col"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4 text-right"
+                  >
+                    Sale Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Section: Electronics (amplifiers, pre-amplifiers, integrated amplifiers) -->
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colspan="5"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider bg-surface-container-low px-6 pt-8 pb-4 border-y border-outline-variant"
+                  >
+                    Electronics (amplifiers, pre-amplifiers, integrated
+                    amplifiers)
+                  </th>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab D7 Digital to Analogue Converter; Headphone
+                      Amp</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab D7 digital to analogue converter; headphone
+                      amplifier with bluetooth.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Digital to Analogue Converter
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $899.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $749.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab 7000N PLAY Streamer</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab 7000N PLAY streamer; silver finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Streamer
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Display</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,099.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $799.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab 6000A Integrated Amplifier with D/A
+                      Converter</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab 6000A integrated amplifier with digital to
+                      analogue converter built-in, bluetooth, MM phono, silver
+                      finish. Serial number: AH 007150 CJBE 196</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,369.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $899.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab CD-T 7000 CD Transport</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab CD-T 7000 CD transport; black or silver
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Transport
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,069.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $899.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tangent Ampster Series II Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tangent Ampster Series II integrated amplifier, bluetooth
+                      &amp; matching CD player &amp; Unity Audio warrior series
+                      II speaker.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Combo Package
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,398.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $999.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab 6000A Integrated Amplifier with D/A
+                      Converter</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab 6000A 50WPC integrated amplifier with D/A
+                      converter, Bluetooth, 4 inputs including MM phono and
+                      headphone input. Black or silver finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,369.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,049.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Ever Solo Play CD Player &amp; Streamer</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Ever Solo Play CD player &amp; streamer.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Player
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,299.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,049.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art P-Series Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art P-series integrated amplifier black finish with
+                      remote control.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Display</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,585.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,099.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Elipson Music Center All-in-One</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Elipson Music Center all-in-one.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Bluetooth Receiver
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,500.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,199.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Gold Note PSU-10 Optional Power Supply</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Gold Note PSU-10 optional power supply for PH-10 phono
+                      pre-amplifier; silver finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Phono Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,650.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,249.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Parasound 200 Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Parasound 200 110WPC integrated amplifier.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,450.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,499.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audio Space T-88 Vacuum Tube CD Player</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audio Space T-88 vacuum tube CD player; balanced /
+                      un-balanced outputs; fully tested vacuum tubes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Player
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,920.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,499.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Unison Research Unico PRIMO CD Player</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Unison Research Unico PRIMO CD player, vacuum tube output
+                      stage (2 fully tested tubes supplied).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Player
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,800.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,549.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audiolab 7000A Remote Controlled Integrated
+                      Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audiolab 7000A remote controlled integrated amplifier, 70
+                      WPC, bluetooth, MM phono-input, and built-in digital to
+                      analogue converter; anodized black or silver finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,099.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,699.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Shanling A2.1 Special Edition Remote Controlled
+                      Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Shanling A2.1 Special Edition remote controlled
+                      integrated amplifier; balanced input; 100WPC into 8 ohms
+                      and 160 into 4 ohms.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,410.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,849.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >PS Audio Model Perfect Wave Direct Stream DAC</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >PS Audio model Perfect Wave direct stream digital to
+                      analogue converter with the optional bridge series card
+                      installed.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Digital to Analogue Converter
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $9,499.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,899.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Shanling CD Player 2.1 Export Edition</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Shanling CD Player 2.1 Export Edition with optional
+                      Amperex 12AU7A fully tested vacuum tubes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Player
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,450.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,949.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Arcam model ST-75 Streamer</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Arcam model ST-75 Streamer, current product.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Streamer
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,500.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,995.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >ARCAM Model ST-25 Streamer</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >ARCAM Model ST-25 streamer. Current model can play
+                      recorded music from USB stick, used less than 25
+                      hours.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Streamer
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,499.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,999.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Gold Note PH-10 Phono Pre-Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Gold Note PH-10 phono pre-amplifier with silver
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,700.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,999.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >MAGNETAR UDP-800 MKII Universal Player</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >MAGNETAR UDP-800 MKII universal player; plays BlueRay,
+                      DVD, CD, Super Audio CD Disc.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Universal Players
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,700.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,099.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Musical Fidelity ENCORE Connect Server</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Musical Fidelity ENCORE Connect Server / CD Player /
+                      Preamplifier anodized silver finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    CD Player
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $5,499.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,199.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Unison Research Simply Italy Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Unison Research Simply Italy vacuum tube remote control
+                      integrated amplifier; with perfectly matched input /
+                      output fully tested vacuum tubes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,090.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,249.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audio Space Galaxy 34 Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audio Space Galaxy 34 vacuum tube integrated amplifier
+                      with remote control.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,375.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,374.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >MIcromega M-One 100 Remote Controlled Integrated
+                      Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Micromega M-One 100 remote controlled integrated
+                      amplifier, 100 WPC, phono, analogue and digital inputs,
+                      sub woofer and pre-amp outputs built-in DAC, black
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Integrated Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $5,999.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,399.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Modwright SWL 9.0 Pre-Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Modwright SWL 9.0 Pre-Amplifier Anniversary Edition with
+                      3 sets of fully tested upgraded tubes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $5,850.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,499.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Parasound Model JC-2 Top of the Line pre-amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Parasound model JC-2 Top of the Line pre-amplifier.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $6,150.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,849.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >PS Audio BHK Signature Remote Controlled
+                      pre-Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >PS Audio BHK Signature remote controlled pre-amplifier;
+                      fully balanced input to output with fully tested /
+                      perfectly matched vacuum tubes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $8,599.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $4,499.95
+                  </td>
+                </tr>
+                <!-- Section: Analogue Products (turntables, cartridges, and phono pre-amplifiers) -->
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colspan="5"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider bg-surface-container-low px-6 pt-8 pb-4 border-y border-outline-variant"
+                  >
+                    Analogue Products (turntables, cartridges, and phono
+                    pre-amplifiers)
+                  </th>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clearaudio Stroboscope Disc</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clearaudio stroboscope disc.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $129.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $99.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clearaudio Headshell Wires Kit</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clearaudio headshell wires kit.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $169.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $119.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Transparent Audio “The Link” Gen VI PHONO Interconnect
+                      1.0m</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Transparent Audio “The Link” Gen VI PHONO interconnect
+                      1.0m RCA to RCA plugs.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $179.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $144.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >MITKIT for your Turntable</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >MITKIT for your turntable, includes: record mat,
+                      isolation base, and 4 pucks (1″ thick by 3″
+                      diameter).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $174.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $149.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clearaudio Leather Mat</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clearaudio leather mat.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $299.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $174.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Quadlink Five “C” Phono Interconnects</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas 1.25 meter Quadlink Five “C” phono interconnects;
+                      5 pins DIN to male XLR plugs.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $345.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $195.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Iridium 0.75m PHONO Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Iridium 0.75m PHONO Interconnect; RCA to RCA plugs
+                      with ground.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $330.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $274.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art S-Series MM Phono pre-Amplifier with External
+                      Power Supply – Black</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art S-series MM phono pre-amplifier black finish with
+                      external power supply; black finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $510.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $399.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Pro-Ject T1 Turntable Package with Ortofon OM5e</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Pro-Ject T1 turntable package with Ortofon OM5e + acrylic
+                      dustcover – walnut or glossy black piano finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Turntable
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $529.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $399.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Ortofon Concord Elite MM Cartridge for S Shaped
+                      Tonearm</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Ortofon concord elite MM cartridge for S shaped
+                      tonearm.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $593.99
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $474.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Parasound Z-Phono XRM phono pre-amplifier for moving
+                      magnet / moving coil cartridges</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Parasound Z-Phono XRM phono pre-amplifier for moving
+                      magnet / moving coil cartridges; adjustable gain and
+                      loading.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Phono Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $835.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $499.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art B-Series 20″ Real Bamboo Speaker Stands</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art B-series 20″ real bamboo speaker stands with
+                      traded spikes and bamboo cups. 40% Off.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speaker Stands
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $990.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $594.00
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Ortofon Quintet Blue Low Output Moving Coil
+                      Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Ortofon Quintet blue low output moving coil cartridge (a
+                      personal favourite).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $768.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $649.00
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Pro-Ject Debut Carbon EVO Turntable Package</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Pro-Ject debut carbon EVO turntable package satin blue
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Turntable
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $869.99
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $699.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Dynavector DV 10X5 Series II High Output Moving Coil
+                      Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Dynavector DV 10X5 Series II high output moving coil
+                      cartridge.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Almost New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $900.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $699.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Ortofon Quintet Black S Low Output Moving Coil
+                      Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Ortofon Quintet Black S low output moving coil
+                      cartridge.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Used</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,594.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $799.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Pro-Ject DC Carbon Evolution Series II Turntable with
+                      Tonearm</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Pro-Ject DC Carbon Evolution Series II turntable with
+                      carbon fiber tonearm, complete with Ortofon 2M red moving
+                      magnet cartridge. Glossy red finish and Satin red wine
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Turntable
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $999.99
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $849.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Dynavector DV10XA Cartridges</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Dynavector DV10XA low or high output moving coil
+                      cartridges.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,100.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $899.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clearaudio Virtuoso Moving Magnet Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clearaudio Virtuoso version 2 moving magnet cartridge,
+                      factory re-furbished.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,499.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $974.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >HANA SL MK II Moving Coil Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >HANA SL MK II low output moving coil cartridge rated.
+                      Custom installed on your turntable.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,150.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $999.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clearaudio Smart Phono V2 with Headphone
+                      pre-Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clearaudio Smart phono v2 with headphone
+                      pre-amplifier.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,399.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $999.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Dynavector DV20X-A Low or High Output Moving Coil
+                      Cartridge</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Dynavector DV20X-A low or high output moving coil
+                      cartridge.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cartridges
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,550.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,249.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >FOSGATE Signature PHONO Pre-Amplifier Completely Re-Tubed
+                      with NOS</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >FOSGATE Signature phono pre-amplifier, completely and
+                      recently re-tubed with NOS: Amperex, Brimar, EI, RCA,
+                      Siemens, Telefunken, and Tung-Sol fully tested vacuum
+                      tubes. With additional fully tested spare tubes. All
+                      testing results are included.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Phono Pre-Amplifier
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $4,000.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,000.00
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Clear Audio Performance DC Wood + Satisfy Kardan
+                      Tonearm</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Clear audio performance DC wood + Satisfy Kardan carbon
+                      fiber tonearm.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Combo Package
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $8,498.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $4,999.95
+                  </td>
+                </tr>
+                <!-- Section: Loudspeakers (all prices are per pair) -->
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colspan="5"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider bg-surface-container-low px-6 pt-8 pb-4 border-y border-outline-variant"
+                  >
+                    Loudspeakers (all prices are per pair)
+                  </th>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Unity Audio Warrior V2 Bookshelf Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Unity Audio warrior V2 bookshelf loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $700.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $499.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Unity Audio Whitewater Version 2 Bookshelf
+                      Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Unity Audio whitewater version 2 bookshelf
+                      loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,400.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,174.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Martin Logan Motion B10 Bookshelf Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Martin Logan Motion B10 bookshelf loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,499.98
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,174.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Micromega “My Speaker Active” with built-in “My
+                      Amp”</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Micromega “My speaker active” with built-in “My Amp”
+                      class A/B amplifier.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Powered Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Display</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,599.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,199.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Micromega “My System” Speakers + Speaker Cables +
+                      Integrated Amplifier</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Micromega “My System” speakers + speaker cables +
+                      integrated amplifier with built-in DAC bluetooth and 3
+                      analogue inputs.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Combo Package
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Display</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,726.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,299.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Martin Logan Motion XT B100 Bookshelf Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Martin Logan Motion XT B100 bookshelf loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,999.98
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,499.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Martin Logan Motion F20 Floor Standing Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Martin Logan Motion F20 floor standing
+                      loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $4,498.98
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,499.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Audio Physics Classic 15 Floor Standing
+                      Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Audio Physics Classic 15 floor standing
+                      loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $5,700.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,749.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Martin Logan Classic ESL9 Hybrid Loudspeakers</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Martin Logan Classic ESL9 hybrid floor standing
+                      electrostatic loudspeakers.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speakers
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $9,499.98
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $5,999.95
+                  </td>
+                </tr>
+                <!-- Section: Cables &amp; Accessories (interconnects, speaker cables, AC power cords) -->
+                <tr>
+                  <th
+                    scope="colgroup"
+                    colspan="5"
+                    class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider bg-surface-container-low px-6 pt-8 pb-4 border-y border-outline-variant"
+                  >
+                    Cables &amp; Accessories (interconnects, speaker cables, AC
+                    power cords)
+                  </th>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Pro-Ject Carbon Fiber Record Brush</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Pro-Ject carbon fiber record brush.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $24.99
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $19.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Ortofon Carbon Fiber Record Brush</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Ortofon carbon fiber record brush.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $47.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $39.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >LAST Stylus Cleaner</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >LAST stylus cleaner.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $59.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $44.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >PS Audio / Octave Records – 2 Discs</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >PS Audio / octave records – 2 discs.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $64.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $52.75
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Black Diamond Racing Cones (Set of 3)</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Black Diamond racing cones MK IV version (set of
+                      3).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cones
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $110.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $84.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Black Diamond Racing Cones – Kit of 3</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Black Diamond racing cones Mark III or Mark IV versions,
+                      kit of 3.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cones
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $110.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $89.99
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Transparent Audio “The LINK” Gen VI 1.0m RCA to RCA
+                      Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Transparent Audio “The LINK” Gen VI 1.0m RCA to RCA
+                      interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $179.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $134.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Synergistic Research SR Audiophile Fuses</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Synergistic Research SR quantum purple audiophile fuses
+                      in stock. 30% Off.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $250.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $175.00
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Crosslink 1.0 RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Crosslink 1.0 RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $246.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $199.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >PS Audio Statement “PLUS” AC Power Cord</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >PS Audio Statement “PLUS” heavy gauge 5′ AC power
+                      cord.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $400.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $199.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Iridium 1.0m RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Iridium 1.0m RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $390.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $224.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Custom Design from UK FS-102 24″ Speaker Stands</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Custom design from UK model FS-102 24″ speaker stands,
+                      with spikes. Already assembled kit.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speaker Stands
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $300.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $239.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >ISO Acoustics ZAZEN 1 Isolation Platform (up to 40
+                      lbs)</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >ISO Acoustics ZAZEN 1 isolation platform for turntables
+                      and electronics (up to 40 lbs).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $298.99
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $254.15
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Iridium 0.75m RCA Interconnects (pair)</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Crosslink 0.75m RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $330.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $279.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Norstone ESSE 4 Tempered Shelves / Audio Rack</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Norstone esse 4 tempered red shelves / black frame audio
+                      rack.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $349.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $289.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Norstone Loft Audio Rack Extension Side</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Norstone loft audio rack extension side; 2 extra shelves
+                      and frame.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $365.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $289.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Norstone Esse 4 Tempered Glass Audio Rack</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Norstone Esse 4 tempered glass audio rack, black frame
+                      with red shelves.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $349.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $289.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Shunyata Venom 3 AC Power Cord, 20A IEC Connector</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Shunyata Venom 3 HC high current AC power cord, 20A IEC
+                      connector.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $429.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $299.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Iridium 1.0m RCA Interconnects (pair)</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Iridium 1.0m RCA interconnects (pair).</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $390.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $314.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Iridium 1.5m RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Iridium 1.5m RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $462.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $369.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Parsec 0.5m RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Parsec 0.5m RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $536.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $429.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Norstone Loft 3 Shelves Audio Rack</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Norstone Loft 3 shelves audio rack.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $549.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $399.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art B Series 20″ Real Bamboo Speaker Stands</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art B Series 20″ real bamboo speaker stands with
+                      matching speaker spikes.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Speaker Stands
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Consignment</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,098.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $500.00
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art B-Series Amplifier Stand, Distressed Black
+                      Finish</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art B-Series amplifier stand, distressed black
+                      finish.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $760.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $574.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Parsec 1m RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Parsec 1m RCA interconnect, pair.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $724.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $599.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Full Music 845 Power Vacuum Tubes in a Wooden Box</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Full Music 845 power vacuum tubes, match pair in a wooden
+                      box. Used for less than 50 hours; fully re-tested for
+                      plate current and trans-conductance.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Trade In</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,250.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $599.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Golden Presence 1m RCA Interconnect</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Golden Presence 1m RCA interconnect.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Cables
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Consignment</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,125.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $675.00
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas 60 Inch RCA Interconnect Golden Presence</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas 60 inch RCA interconnect golden presence.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Analogue Accessories
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Consignment</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,445.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $750.00
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art P-Series Power Line Conditioner with Adjustable
+                      Vacuum Tube Buffer</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art P-series power line conditioner with adjustable
+                      vacuum tube buffer.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Power Line Conditioner
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,158.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $799.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Tri-Art B-Series Audio Rack with RPRA Anti-Vibration
+                      Technology</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Tri-Art B-series 4-shelf audio rack in bamboo finish with
+                      RPRA anti-vibration technology.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,254.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $899.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Norstone STAABL Audio Rack with Bamboo Shelves</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Norstone STAABL four-shelf audio rack with bamboo
+                      shelves.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Audio Rack
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Brand New</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,199.95
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $974.95
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >Cardas Nautilus Power Strip Power Line Conditioner</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >Cardas Nautilus Power Strip power line conditioner; 1800
+                      watts maximum load, high current design.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Power Line Conditioner
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,898.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $1,495.95
+                  </td>
+                </tr>
+                <tr class="bg-background">
+                  <th scope="row" class="align-top px-6 py-4 max-w-md">
+                    <span
+                      class="block font-body-lg text-body-lg text-on-surface font-semibold"
+                      >PS Audio Power Plant 3 Re-Generated Balanced AC
+                      Power</span
+                    >
+                    <span
+                      class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1"
+                      >PS Audio Power Plant 3 re-generated balanced AC
+                      power.</span
+                    >
+                  </th>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap"
+                  >
+                    Power Line Conditioner
+                  </td>
+                  <td class="align-top px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="da-status-pill"
+                      >Floor Demo</span
+                    >
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $3,299.00
+                  </td>
+                  <td
+                    class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right"
+                  >
+                    $2,499.95
+                  </td>
+                </tr>
+                <tr id="inventory-no-results" class="da-row-hidden">
+                  <td
+                    colspan="5"
+                    class="px-6 py-12 text-center font-body-md text-body-md text-on-surface-variant"
+                  >
+                    No products match the selected filters.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
       <!-- Final CTA & Related Links -->
       <section class="bg-surface py-24 border-b border-outline-variant">
         <div class="max-w-3xl mx-auto text-center px-margin-mobile">
@@ -828,5 +4437,91 @@
       </div>
     </footer>
     <script src="js/script.js"></script>
+    <script>
+      // Inventory table filtering (Product / Status / Retail / Sale)
+      (function () {
+        const table = document.getElementById("inventory-table");
+        if (!table) return;
+        const selects = {
+          type: document.getElementById("filter-product"),
+          status: document.getElementById("filter-status"),
+          retail: document.getElementById("filter-retail"),
+          sale: document.getElementById("filter-sale"),
+        };
+        if (!selects.type || !selects.status || !selects.retail || !selects.sale)
+          return;
+        const noResults = document.getElementById("inventory-no-results");
+        const rows = Array.from(
+          table.querySelectorAll("tbody > tr:not(#inventory-no-results)")
+        );
+
+        function priceToNumber(text) {
+          const n = parseFloat((text || "").replace(/[^0-9.]/g, ""));
+          return isNaN(n) ? null : n;
+        }
+        function inRange(value, rangeStr) {
+          if (!rangeStr) return true;
+          if (value === null) return false;
+          const parts = rangeStr.split("-").map(Number);
+          return value >= parts[0] && value <= parts[1];
+        }
+
+        const data = rows.map((row) => {
+          const groupHeader = row.querySelector('th[scope="colgroup"]');
+          if (groupHeader) return { row, group: true, visible: true };
+          const cells = row.children;
+          const statusEl = cells[2] ? cells[2].querySelector("span") : null;
+          return {
+            row,
+            group: false,
+            visible: true,
+            type: cells[1] ? cells[1].textContent.trim() : "",
+            status: statusEl ? statusEl.textContent.trim() : "",
+            retail: priceToNumber(cells[3] ? cells[3].textContent : ""),
+            sale: priceToNumber(cells[4] ? cells[4].textContent : ""),
+          };
+        });
+
+        function apply() {
+          const f = {
+            type: selects.type.value,
+            status: selects.status.value,
+            retail: selects.retail.value,
+            sale: selects.sale.value,
+          };
+
+          // Product rows
+          data.forEach((d) => {
+            if (d.group) return;
+            d.visible =
+              (!f.type || d.type === f.type) &&
+              (!f.status || d.status === f.status) &&
+              inRange(d.retail, f.retail) &&
+              inRange(d.sale, f.sale);
+            d.row.classList.toggle("da-row-hidden", !d.visible);
+          });
+
+          // Group headers: show only if a row in their section is visible
+          for (let i = 0; i < data.length; i++) {
+            if (!data[i].group) continue;
+            let anyVisible = false;
+            let j = i + 1;
+            for (; j < data.length && !data[j].group; j++) {
+              if (data[j].visible) anyVisible = true;
+            }
+            data[i].row.classList.toggle("da-row-hidden", !anyVisible);
+          }
+
+          const anyVisible = data.some((d) => !d.group && d.visible);
+          if (noResults)
+            noResults.classList.toggle("da-row-hidden", anyVisible);
+        }
+
+        Object.keys(selects).forEach((k) =>
+          selects[k].addEventListener("change", apply)
+        );
+        apply();
+      })();
+    </script>
   </body>
 </html>

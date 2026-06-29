@@ -66,10 +66,20 @@
           "latitude": 45.3934,
           "longitude": -75.7171
         },
-        "openingHoursSpecification": {
-          "@type": "OpeningHoursSpecification",
-          "description": "By appointment only"
-        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Tuesday", "Thursday", "Friday"],
+            "opens": "10:00",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "10:00",
+            "closes": "17:00"
+          }
+        ],
         "priceRange": "$$$$"
       }
     </script>
@@ -259,8 +269,10 @@
             <p
               class="font-body-lg text-body-lg text-accent-teal max-w-2xl leading-relaxed"
             >
-              Book a private showroom demo or request a custom cable quote. Hear
-              your music carefully in a dedicated listening environment.
+              Do you have a question, comment or suggestion? Feel free to use
+              the contact form below to get in touch. Distinctive Audio is
+              centrally located on Carling Avenue close to Dow's lake and Little
+              Italy.
             </p>
           </div>
         </div>
@@ -507,6 +519,137 @@
               </button>
             </form>
           </div>
+        </div>
+      </section>
+      <!-- Store Hours Section -->
+      <section
+        class="mb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto"
+      >
+        <div class="flex items-center gap-4 mb-8">
+          <span class="material-symbols-outlined text-accent-gold"
+            >schedule</span
+          >
+          <h2 class="font-headline-md text-headline-md text-on-background">
+            Store Hours
+          </h2>
+        </div>
+        <div
+          class="rounded-xl overflow-hidden border border-outline-variant shadow-ambient bg-surface-container-lowest"
+        >
+          <table class="w-full border-collapse text-left">
+            <caption class="sr-only">
+              Distinctive Audio store opening hours by day of the week
+            </caption>
+            <thead>
+              <tr class="border-b border-outline-variant">
+                <th
+                  scope="col"
+                  class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4"
+                >
+                  Day of the Week
+                </th>
+                <th
+                  scope="col"
+                  class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4"
+                >
+                  Hours
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-background">
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Monday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  Closed
+                </td>
+              </tr>
+              <tr>
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Tuesday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  10am &ndash; 6pm
+                </td>
+              </tr>
+              <tr class="bg-background">
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Wednesday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  Closed
+                </td>
+              </tr>
+              <tr>
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Thursday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  10am &ndash; 6pm
+                </td>
+              </tr>
+              <tr class="bg-background">
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Friday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  10am &ndash; 6pm
+                </td>
+              </tr>
+              <tr>
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Saturday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  10am &ndash; 5pm
+                </td>
+              </tr>
+              <tr class="bg-background">
+                <th
+                  scope="row"
+                  class="font-body-md text-body-md text-on-background font-medium px-6 py-4"
+                >
+                  Sunday
+                </th>
+                <td
+                  class="font-body-md text-body-md text-accent-teal px-6 py-4"
+                >
+                  Closed
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
       <!-- Details + Map Section -->
