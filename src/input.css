@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ *
+ * Distinctive Audio — custom styles
+ * Source of truth for hand-written CSS. Compiled (with Tailwind) into
+ * css/style.css via `npm run build`. Edit here, never the output file.
+ * ------------------------------------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid #f0aa10;
+  outline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f8f9ff;
+  color: #0b1c30;
+}
+
+/* Material Symbols icon font */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.material-symbols-outlined.fill,
+.material-symbols-outlined[data-weight="fill"],
+.font-variation-fill {
+  font-variation-settings: "FILL" 1;
+}
+
+/* Shadows */
+.shadow-ambient {
+  box-shadow: 0px 4px 20px rgba(11, 28, 48, 0.05);
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 24px -4px rgba(0, 61, 94, 0.06);
+}
+
+.ambient-shadow {
+  box-shadow: 0 16px 24px rgba(0, 61, 94, 0.04);
+}
+
+.ambient-shadow:hover {
+  box-shadow: 0 16px 32px -4px rgba(0, 61, 94, 0.06);
+}
+
+.ambient-shadow-hover:hover {
+  box-shadow: 0 20px 32px rgba(0, 61, 94, 0.08);
+}
+
+.hover-shadow-ambient:hover {
+  box-shadow:
+    0 24px 32px -4px rgba(0, 61, 94, 0.06),
+    0 12px 16px -4px rgba(0, 61, 94, 0.03);
+}
+
+/* Leader lists (spec rows with dotted leaders) */
+.custom-leader-list {
+  position: relative;
+}
+
+.custom-leader-list li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.custom-leader-list li::before {
+  content: "";
+  flex-grow: 1;
+  border-bottom: 1px dotted #c1c7ce;
+  margin: 0 0.5rem;
+  order: 2;
+}
+
+.custom-leader-list .label {
+  order: 1;
+}
+
+.custom-leader-list .value {
+  order: 3;
+  font-weight: 600;
+}
+
+.leader-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leader-list li {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.leader-list li::before {
+  content: "";
+  flex-grow: 1;
+  border-bottom: 1px dotted #c1c7ce;
+  margin: 0 0.5rem;
+  order: 1;
+}
+
+.leader-list .label {
+  order: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1c30;
+}
+
+.leader-list .value {
+  order: 2;
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  color: #41474e;
+}
+
+.leader-list-item {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+}
+
+.leader-list-item::after {
+  content: "";
+  flex-grow: 1;
+  margin: 0 8px;
+  border-bottom: 1px dotted #c1c7ce;
+  position: relative;
+  top: -4px;
+}
+
+.leader-list-label {
+  white-space: nowrap;
+}
+
+.leader-list-dots {
+  flex-grow: 1;
+  border-bottom: 1px dotted theme("colors.outline-variant");
+  margin: 0 8px;
+  opacity: 0.5;
+}
+
+.leader-list-value {
+  white-space: nowrap;
+}
+
+.leader-dots {
+  background-image: radial-gradient(circle, #c1c7d0 1px, transparent 1.5px);
+  background-position: bottom;
+  background-size: 8px 4px;
+  background-repeat: repeat-x;
+}
+
+.leader-line,
+.spec-leader {
+  border-bottom: 1px dotted #72787e;
+  flex-grow: 1;
+  margin: 0 8px;
+  position: relative;
+  top: -6px;
+}
+
+/* Accent helpers */
+.text-accent-gold {
+  color: #f0aa10;
+}
+
+.bg-accent-gold {
+  background-color: #f0aa10;
+}
+
+.border-accent-gold {
+  border-color: #f0aa10;
+}
+
+.hover\:bg-gold-dark:hover {
+  background-color: #d6980e;
+}
+
+.gold-rule {
+  height: 2px;
+  background-color: #fec96f;
+  width: 40px;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #fec96f;
+  color: #00263d;
+  border-radius: 0.125rem;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #f1be65;
+}
+
+.btn-secondary {
+  border: 1px solid #003d5e;
+  color: #003d5e;
+  border-radius: 0.125rem;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #eff4ff;
+}
+
+.btn-secondary-inverse {
+  background-color: transparent;
+  color: #f0aa10;
+  border: 1px solid #f0aa10;
+  border-radius: 2px;
+  padding: 12px 24px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary-inverse:hover {
+  background-color: rgba(240, 170, 16, 0.05);
+}
+
+.btn-tertiary {
+  color: #003d5e;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.btn-tertiary:hover {
+  border-bottom-color: #003d5e;
+}
+
+/* Cards & chips */
+.product-card {
+  border: 1px solid #c1c7ce;
+  background-color: #f8f9ff;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 4px 20px rgba(11, 28, 48, 0.05);
+}
+
+.spec-chip {
+  background-color: #003d5e;
+  color: #9ecbf3;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 0.125rem;
+}
+
+/* Layout helpers */
+.section-spacing {
+  margin-top: 96px;
+  margin-bottom: 96px;
+}
+
+.fluid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .fluid-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+/* Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9ff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #003d5e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00263d;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "distinctive-audio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Distinctive Audio — Ottawa high-end audio store static site",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./css/style.css --minify",
+    "watch": "tailwindcss -i ./src/input.css -o ./css/style.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "tailwindcss": "^3.4.17"
+  }
+}

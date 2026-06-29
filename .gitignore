@@ -1,0 +1,8 @@
+# Dependencies
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+
+# Editor local history
+.history/

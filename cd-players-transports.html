@@ -22,154 +22,11 @@
       rel="stylesheet"
     />
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
       type="module"
     ></script>
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary": "#00263d",
-              "on-primary": "#ffffff",
-              "primary-container": "#003d5e",
-              "on-primary-container": "#B4D2EB",
-              "primary-fixed": "#cce5ff",
-              "primary-fixed-dim": "#9ecbf3",
-              "on-primary-fixed": "#001e31",
-              "on-primary-fixed-variant": "#174a6c",
-              "secondary": "#7d5700",
-              "on-secondary": "#ffffff",
-              "secondary-container": "#fec96f",
-              "on-secondary-container": "#775300",
-              "secondary-fixed": "#ffdeaa",
-              "secondary-fixed-dim": "#f1be65",
-              "on-secondary-fixed": "#271900",
-              "on-secondary-fixed-variant": "#5f4100",
-              "tertiary": "#332100",
-              "on-tertiary": "#ffffff",
-              "tertiary-container": "#4f3500",
-              "on-tertiary-container": "#d89700",
-              "tertiary-fixed": "#ffdeac",
-              "tertiary-fixed-dim": "#ffba36",
-              "on-tertiary-fixed": "#281900",
-              "on-tertiary-fixed-variant": "#5f4100",
-              "error": "#ba1a1a",
-              "on-error": "#ffffff",
-              "error-container": "#ffdad6",
-              "on-error-container": "#93000a",
-              "background": "#f8f9ff",
-              "on-background": "#0b1c30",
-              "surface": "#f8f9ff",
-              "on-surface": "#0b1c30",
-              "surface-variant": "#d3e3ff",
-              "on-surface-variant": "#41474e",
-              "surface-dim": "#cbdbf6",
-              "surface-bright": "#f8f9ff",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-low": "#eff4ff",
-              "surface-container": "#e6eeff",
-              "surface-container-high": "#dde9ff",
-              "surface-container-highest": "#d3e3ff",
-              "surface-tint": "#346285",
-              "inverse-surface": "#213146",
-              "inverse-on-surface": "#ebf1ff",
-              "inverse-primary": "#9ecbf3",
-              "outline": "#72787e",
-              "outline-variant": "#c1c7ce",
-              "accent-gold": "#f0aa10",
-              "accent-teal": "#005581",
-            },
-            borderRadius: {
-              DEFAULT: "0.125rem",
-              lg: "0.25rem",
-              xl: "0.5rem",
-              full: "0.75rem",
-            },
-            spacing: {
-              "container-max": "1280px",
-              gutter: "24px",
-              "margin-mobile": "20px",
-              "margin-desktop": "80px",
-              unit: "8px",
-              "stack-sm": "0.5rem",
-              "stack-md": "1.5rem",
-              "stack-lg": "4rem",
-            },
-            fontFamily: {
-              "headline-lg": ["Newsreader", "serif"],
-              "headline-lg-mobile": ["Newsreader", "serif"],
-              "headline-md": ["Newsreader", "serif"],
-              "display-lg": ["Newsreader", "serif"],
-              "title-lg": ["Manrope", "sans-serif"],
-              "body-lg": ["Manrope", "sans-serif"],
-              "body-md": ["Manrope", "sans-serif"],
-              "label-lg": ["Inter", "sans-serif"],
-              "label-md": ["Inter", "sans-serif"],
-            },
-            fontSize: {
-              "display-lg": [
-                "64px",
-                { lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "400" },
-              ],
-              "display-lg-mobile": [
-                "40px",
-                { lineHeight: "48px", letterSpacing: "-0.01em", fontWeight: "400" },
-              ],
-              "headline-lg": [
-                "48px",
-                { lineHeight: "56px", fontWeight: "400" },
-              ],
-              "headline-lg-mobile": [
-                "32px",
-                { lineHeight: "40px", fontWeight: "400" },
-              ],
-              "headline-md": [
-                "32px",
-                { lineHeight: "40px", fontWeight: "400" },
-              ],
-              "title-lg": ["20px", { lineHeight: "28px", fontWeight: "600" }],
-              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
-              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
-              "label-lg": [
-                "14px",
-                { lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "600" },
-              ],
-              "label-md": ["12px", { lineHeight: "16px", fontWeight: "500" }],
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      /* Visible keyboard focus indicator (WCAG 2.4.7) */
-      :focus-visible {
-        outline: 2px solid #f0aa10;
-        outline-offset: 2px;
-      }
-      .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
-      }
-      .hover\:bg-gold-dark:hover {
-        background-color: #d6980e;
-      }
-      .custom-shadow {
-        box-shadow: 0 4px 24px -4px rgba(0, 61, 94, 0.06);
-      }
-
-      /* Smooth scrolling for anchor links */
-      html {
-        scroll-behavior: smooth;
-      }
-
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body
     class="bg-background text-on-background font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container"
@@ -1053,5 +910,6 @@
         </div>
       </div>
     </footer>
+    <script src="js/script.js"></script>
   </body>
 </html>
