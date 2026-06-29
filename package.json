@@ -4,7 +4,7 @@
   "private": true,
   "description": "Distinctive Audio — Ottawa high-end audio store static site",
   "scripts": {
-    "build": "vite build --minify",
+    "build": "vite build",
     "watch": "tailwindcss -i ./src/input.css -o ./css/style.css --watch"
   },
   "devDependencies": {
