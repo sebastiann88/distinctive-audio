@@ -33,28 +33,118 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
       rel="stylesheet"
     />
-    <!-- JSON-LD -->
+    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
+        "@graph": [
           {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://www.distinctiveaudio.ca/"
+            "@type": "CollectionPage",
+            "name": "Cones & Isolation in Ottawa",
+            "description": "Premium audio cones, isolation feet, and platforms in Ottawa from Tri-Art Audio, curated by Distinctive Audio.",
+            "url": "https://distinctiveaudio.ca/cones-isolation.html",
+            "dateModified": "2026-06-29",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "Distinctive Audio",
+              "url": "https://distinctiveaudio.ca/"
+            }
           },
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Products",
-            "item": "https://www.distinctiveaudio.ca/products"
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://distinctiveaudio.ca/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Products",
+                "item": "https://distinctiveaudio.ca/products.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Racks & Accessories",
+                "item": "https://distinctiveaudio.ca/racks-accessories.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Cones & Isolation",
+                "item": "https://distinctiveaudio.ca/cones-isolation.html"
+              }
+            ]
           },
           {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Cones & Isolation"
+            "@type": "ItemList",
+            "name": "Cones & Isolation",
+            "itemListElement": [
+              {
+                "@type": "Product",
+                "position": 1,
+                "name": "Tri-Art Audio B-Series Isolation Feet",
+                "brand": { "@type": "Brand", "name": "Tri-Art Audio" },
+                "category": "Audio Isolation",
+                "material": "Bamboo"
+              },
+              {
+                "@type": "Product",
+                "position": 2,
+                "name": "Tri-Art Audio Bamboo Isolation Platform",
+                "brand": { "@type": "Brand", "name": "Tri-Art Audio" },
+                "category": "Audio Isolation",
+                "material": "Bamboo"
+              },
+              {
+                "@type": "Product",
+                "position": 3,
+                "name": "Tri-Art Audio Brass Cones",
+                "brand": { "@type": "Brand", "name": "Tri-Art Audio" },
+                "category": "Audio Isolation",
+                "material": "Solid brass"
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Do isolation feet really help?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Even micro-vibrations can affect sensitive electronic components. Capacitors and circuit boards can act microphonically, turning mechanical vibration into electrical noise. High-quality isolation feet drain these resonances away, resulting in improved clarity, a lower noise floor, and a more stable soundstage."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Cones vs. feet vs. platforms?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Cones act as mechanical diodes, designed to drain vibration efficiently in one direction (usually away from the component). Softer isolation feet are designed for decoupling—absorbing airborne and structural vibrations before they reach the gear. Platforms offer a combination of both, providing a rigid, damped surface that entirely replaces standard shelving."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What should I isolate first?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We recommend starting with mechanical source components, specifically turntables and CD transports, as they are most susceptible to physical vibration. After sources, DACs and pre-amplifiers benefit greatly, followed by large power amplifiers where heavy transformers can generate internal vibrations."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Using isolation under a turntable?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Turntables require critical decoupling. Because a stylus measures microscopic grooves, any external vibration (like footfalls or deep bass from speakers) creates a feedback loop that smears the sound. A dedicated isolation platform under a turntable is often one of the most cost-effective upgrades you can make to an analog system."
+                }
+              }
+            ]
           }
         ]
       }
@@ -65,6 +155,10 @@
       type="module"
     ></script>
     <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://distinctiveaudio.ca/cones-isolation.html"
+      rel="canonical"
+    />
   </head>
   <body
     class="bg-background text-on-surface font-body-md antialiased flex flex-col min-h-screen"
@@ -281,7 +375,6 @@
             </h1>
             <p
               class="font-body-lg text-body-lg max-w-xl leading-relaxed text-on-primary"
-              style="opacity: 0"
             >
               Feet, cones and platforms that drain vibration away from sensitive
               components. Expertly designed geometry to channel mechanical
@@ -318,6 +411,121 @@
         <div
           class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3 pointer-events-none"
         ></div>
+      </section>
+      <!-- Overview + Quick Comparison (answer-first) -->
+      <section
+        class="py-stack-lg bg-surface-container-lowest border-b border-surface-variant"
+      >
+        <div
+          class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop"
+        >
+          <div class="max-w-3xl">
+            <p
+              class="font-label-md text-label-md text-outline uppercase tracking-widest mb-4"
+            >
+              Buying Guide
+            </p>
+            <h2
+              class="font-headline-md text-headline-md md:text-headline-lg text-on-surface mb-6"
+            >
+              What do audio cones and isolation feet do?
+            </h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">
+              Audio cones and isolation feet are vibration-control accessories
+              placed under hi-fi components to drain mechanical resonance out of
+              the signal path. Cones couple and channel energy in one direction;
+              softer feet and platforms decouple, absorbing footfalls and
+              speaker-borne vibration before it reaches sensitive electronics.
+              Distinctive Audio stocks Tri-Art Audio isolation in Ottawa, in
+              bamboo and solid brass.
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Start under your most vibration-sensitive source — a turntable or
+              CD transport — then move to DACs and amplifiers. Pair isolation
+              with a dedicated
+              <a
+                class="text-primary underline underline-offset-4 hover:text-secondary transition-colors"
+                href="racks.html"
+                >equipment rack</a
+              >, or
+              <a
+                class="text-primary underline underline-offset-4 hover:text-secondary transition-colors"
+                href="contact.html"
+                >book a listening demo</a
+              >
+              to hear the difference in your own system.
+            </p>
+          </div>
+          <div class="mt-10 overflow-x-auto">
+            <table class="w-full text-left border border-outline-variant">
+              <caption class="sr-only">
+                Audio cones, isolation feet, and platforms available at
+                Distinctive Audio in Ottawa, with material, maximum load, type,
+                and price in Canadian dollars.
+              </caption>
+              <thead class="bg-surface-container">
+                <tr>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Product
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Material
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Max Load
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Type
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Price (CAD)
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="font-body-md text-body-md text-on-surface-variant"
+              >
+                <tr class="border-b border-outline-variant">
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Tri-Art Audio B-Series Isolation Feet
+                  </td>
+                  <td class="px-4 py-3">Bamboo</td>
+                  <td class="px-4 py-3">50 lb</td>
+                  <td class="px-4 py-3">Set of 3 feet</td>
+                  <td class="px-4 py-3">$180</td>
+                </tr>
+                <tr class="border-b border-outline-variant">
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Tri-Art Audio Bamboo Isolation Platform
+                  </td>
+                  <td class="px-4 py-3">Bamboo</td>
+                  <td class="px-4 py-3">150 lb</td>
+                  <td class="px-4 py-3">Platform</td>
+                  <td class="px-4 py-3">Contact for pricing</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Tri-Art Audio Brass Cones
+                  </td>
+                  <td class="px-4 py-3">Solid brass</td>
+                  <td class="px-4 py-3">200 lb</td>
+                  <td class="px-4 py-3">Cones</td>
+                  <td class="px-4 py-3">$120</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
       <!-- Benefits Section -->
       <section

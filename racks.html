@@ -37,29 +37,122 @@
     ></script>
     <!-- Tailwind Config -->
     <link rel="stylesheet" href="css/style.css" />
-    <!-- JSON-LD -->
+    <link
+      href="https://distinctiveaudio.ca/racks.html"
+      rel="canonical"
+    />
+    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
+        "@graph": [
           {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://distinctiveaudio.com/"
+            "@type": "CollectionPage",
+            "name": "Hi-Fi Equipment Racks in Ottawa",
+            "description": "Rigid, resonance-controlled hi-fi equipment racks in Ottawa from Norstone and Tri-Art Audio, curated by Distinctive Audio.",
+            "url": "https://distinctiveaudio.ca/racks.html",
+            "dateModified": "2026-06-29",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "Distinctive Audio",
+              "url": "https://distinctiveaudio.ca/"
+            }
           },
           {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Products",
-            "item": "https://distinctiveaudio.com/products"
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://distinctiveaudio.ca/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Products",
+                "item": "https://distinctiveaudio.ca/products.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Racks & Accessories",
+                "item": "https://distinctiveaudio.ca/racks-accessories.html"
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "name": "Equipment Racks",
+                "item": "https://distinctiveaudio.ca/racks.html"
+              }
+            ]
           },
           {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Equipment Racks",
-            "item": "https://distinctiveaudio.com/products/equipment-racks"
+            "@type": "ItemList",
+            "name": "Hi-Fi Equipment Racks",
+            "itemListElement": [
+              {
+                "@type": "Product",
+                "position": 1,
+                "name": "Norstone Esse Hi-Fi",
+                "brand": { "@type": "Brand", "name": "Norstone" },
+                "category": "Equipment Racks",
+                "material": "Powder-coated steel and tempered glass"
+              },
+              {
+                "@type": "Product",
+                "position": 2,
+                "name": "Tri-Art Audio Bamboo Rack",
+                "brand": { "@type": "Brand", "name": "Tri-Art Audio" },
+                "category": "Equipment Racks",
+                "material": "Bamboo"
+              },
+              {
+                "@type": "Product",
+                "position": 3,
+                "name": "Norstone Spider",
+                "brand": { "@type": "Brand", "name": "Norstone" },
+                "category": "Equipment Racks",
+                "material": "Bamboo and tempered glass"
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Why a dedicated rack?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Standard furniture is not designed to handle the mechanical vibrations created by transformers or acoustic feedback from speakers. A dedicated hi-fi rack uses dense materials and decoupling techniques (like spikes or isolation pads) to prevent these vibrations from reaching sensitive components, resulting in a cleaner, more focused sound."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How many shelves do I need?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Count your primary components (amp, preamp, DAC, turntable, streamer) and add one extra shelf for future expansion or for storing a power conditioner. It's crucial to give heat-generating components like Class-A amplifiers their own shelf with plenty of overhead clearance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Wood vs Metal: which is better?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Both have acoustic merits. Solid woods (like bamboo) naturally absorb high-frequency micro-vibrations, giving a slightly warmer presentation. Heavy metals (steel or aluminum) provide immense rigidity and bass focus but require proper damping. Many top-tier racks combine metal frames with wooden or composite shelves to get the best of both worlds."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the weight capacity?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Capacity varies greatly by model. Entry-level glass racks typically support 40-50 lbs per shelf. Heavy-duty modular systems designed for large monoblock amplifiers can support 100-150+ lbs per shelf. Always check the specifications for the bottom shelf specifically, as it usually holds the heaviest gear."
+                }
+              }
+            ]
           }
         ]
       }
@@ -205,7 +298,7 @@
         </el-disclosure>
       </nav>
     </header>
-    <main id="main-content" class="flex-grow pt-[73px]">
+    <main id="main-content" class="flex-grow">
       <!-- Breadcrumb -->
       <div
         class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4"
@@ -319,6 +412,110 @@
           </div>
         </div>
         <!-- Decorative background element -->
+      </section>
+      <!-- Overview + Quick Comparison (answer-first) -->
+      <section
+        class="py-16 md:py-24 bg-surface-container-lowest border-b border-surface-container px-6"
+      >
+        <div class="max-w-[1280px] mx-auto">
+          <div class="max-w-3xl">
+            <p
+              class="font-label-md text-label-md text-outline uppercase tracking-widest mb-4"
+            >
+              Buying Guide
+            </p>
+            <h2
+              class="font-headline-md text-headline-md md:text-headline-lg text-on-surface mb-6"
+            >
+              What does a hi-fi equipment rack actually do?
+            </h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant mb-4">
+              A hi-fi equipment rack is a purpose-built, resonance-controlling
+              support that holds your components on rigid, decoupled shelves —
+              draining vibration away from turntables, amplifiers, and source
+              gear so they perform as their designers intended. Distinctive
+              Audio stocks modular racks in Ottawa, from open-pore bamboo to
+              powder-coated steel and tempered glass.
+            </p>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+              Match the shelf count and weight capacity to your system, give
+              heat-generating amplifiers their own ventilated tier, and pair the
+              rack with dedicated
+              <a
+                class="text-primary underline underline-offset-4 hover:text-secondary transition-colors"
+                href="cones-isolation.html"
+                >cones &amp; isolation</a
+              >
+              under sensitive sources.
+              <a
+                class="text-primary underline underline-offset-4 hover:text-secondary transition-colors"
+                href="contact.html"
+                >Book a listening demo</a
+              >
+              to compare them in our showroom.
+            </p>
+          </div>
+          <div class="mt-10 overflow-x-auto">
+            <table class="w-full text-left border border-outline-variant">
+              <caption class="sr-only">
+                Hi-fi equipment racks available at Distinctive Audio in Ottawa,
+                with material, configuration, and best use.
+              </caption>
+              <thead class="bg-surface-container">
+                <tr>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Model
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Material
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Configuration
+                  </th>
+                  <th
+                    class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant"
+                  >
+                    Best For
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                class="font-body-md text-body-md text-on-surface-variant"
+              >
+                <tr class="border-b border-outline-variant">
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Norstone Esse Hi-Fi
+                  </td>
+                  <td class="px-4 py-3">Powder-coated steel &amp; tempered glass</td>
+                  <td class="px-4 py-3">4 fixed shelves</td>
+                  <td class="px-4 py-3">Contemporary listening rooms</td>
+                </tr>
+                <tr class="border-b border-outline-variant">
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Tri-Art Audio Bamboo Rack
+                  </td>
+                  <td class="px-4 py-3">Open-pore bamboo</td>
+                  <td class="px-4 py-3">Modular</td>
+                  <td class="px-4 py-3">Analog-focused systems</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-3 font-semibold text-on-surface">
+                    Norstone Spider
+                  </td>
+                  <td class="px-4 py-3">Bamboo &amp; tempered glass</td>
+                  <td class="px-4 py-3">Modular, heavy-duty</td>
+                  <td class="px-4 py-3">Large power amps &amp; source components</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
       <!-- BENEFITS Section -->
       <section class="py-16 md:py-24 bg-surface px-6">
