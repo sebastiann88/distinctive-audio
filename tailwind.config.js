@@ -2,22 +2,24 @@
 module.exports = {
   // Scan all HTML pages and the shared JS (script.js adds classes at runtime,
   // e.g. shadow-[…], h-20/h-24, shadow-md/sm — they must survive purge).
-  content: ["./*.html", "./js/**/*.js"],
+  // The classic pages live in experience/site/ (beside the immersive index,
+  // which has its own Tailwind build — experience/tailwind.config.cjs).
+  content: ["./*.html", "./experience/site/*.html", "./js/**/*.js"],
   darkMode: "class",
   theme: {
     extend: {
       colors: {
-        primary: "#00263d",
+        primary: "#003d5e",
         "on-primary": "#ffffff",
-        "primary-container": "#003d5e",
-        "on-primary-container": "#B4D2EB",
+        "primary-container": "#005581",
+        "on-primary-container": "#8ec9fb",
         "primary-fixed": "#cce5ff",
         "primary-fixed-dim": "#9ecbf3",
         "on-primary-fixed": "#001e31",
         "on-primary-fixed-variant": "#174a6c",
         secondary: "#7d5700",
         "on-secondary": "#ffffff",
-        "secondary-container": "#fec96f",
+        "secondary-container": "#ffba2f",
         "on-secondary-container": "#775300",
         "secondary-fixed": "#ffdeaa",
         "secondary-fixed-dim": "#f1be65",
@@ -52,8 +54,10 @@ module.exports = {
         "inverse-surface": "#213146",
         "inverse-on-surface": "#ebf1ff",
         "inverse-primary": "#9ecbf3",
-        outline: "#72787e",
-        "outline-variant": "#c1c7ce",
+        outline: "#71787f",
+        "outline-variant": "#c1c7d0",
+        accent: "#f0aa10",
+        "accent-hover": "#d8980e",
         "accent-gold": "#f0aa10",
         "accent-teal": "#005581",
       },

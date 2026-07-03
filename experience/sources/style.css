@@ -1,0 +1,88 @@
+/*
+ * Scoped to the mount element ONLY. Bruno's original sets overflow:hidden on
+ * html/body and pins the canvas to the full viewport — that is correct for a
+ * standalone SPA but wrong here, because it would break the scrollable,
+ * content-rich page the site renders. Everything below stays inside [data-experience].
+ */
+
+/*
+ * position is a low-specificity DEFAULT (:where() = specificity 0) so the host
+ * page's own positioning always wins. Without this, `position: relative` here
+ * overrides the host's `fixed inset-0` (this stylesheet loads after the site
+ * CSS), the mount collapses to a 0-height box — its only children are
+ * absolutely positioned — and overflow: hidden clips the canvas to nothing.
+ */
+:where([data-experience]) {
+    position: relative;
+}
+
+[data-experience] {
+    overflow: hidden;
+}
+
+/* The canvas is absolutely positioned inside the mount (see Renderer.js). */
+[data-experience] canvas {
+    display: block;
+}
+
+/*
+ * Minimalist loader: a pale field matching the scene's clear color, with one
+ * thin line swept by the brand's scarce gold accent. It covers the mount from
+ * first paint (pure HTML/CSS — no JS needed to show it) until the scene's
+ * first rendered frame, then crossfades out (index.js adds .is-live).
+ */
+[data-experience] .experience__loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f7fb; /* = sceneConfig.clearColor, so the fade is seamless */
+    /* Above the canvas (z auto, appended later) so the crossfade actually
+       reveals the scene — at z 0 the canvas covers the loader on boot and the
+       page hard-cuts to the clear color instead of fading. */
+    z-index: 1;
+    transition: opacity 0.8s ease;
+}
+
+[data-experience] .experience__loader-line {
+    position: relative;
+    width: 140px;
+    height: 2px;
+    overflow: hidden;
+    background: rgba(11, 28, 48, 0.12); /* ink at whisper strength */
+}
+
+[data-experience] .experience__loader-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #f0aa10; /* the gold accent — the only loud element */
+    transform: translateX(-101%);
+    animation: experience-loader-sweep 1.4s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@keyframes experience-loader-sweep {
+    0%   { transform: translateX(-101%); }
+    55%  { transform: translateX(0); }
+    100% { transform: translateX(101%); }
+}
+
+[data-experience].is-live .experience__loader {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* No WebGL: nothing will ever replace the loader, so don't strand a spinner —
+   hide it and leave the mount as a quiet pale background behind the content. */
+[data-experience].no-webgl .experience__loader {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-experience] .experience__loader-line::after {
+        animation: none;
+        transform: translateX(0);
+        opacity: 0.5;
+    }
+}

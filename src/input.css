@@ -18,8 +18,8 @@ html {
 }
 
 body {
-  background-color: #f8f9ff;
-  color: #0b1c30;
+  background-color: #f4f7fb;
+  color: #005581;
 }
 
 /* Material Symbols icon font */
@@ -79,7 +79,7 @@ body {
 .custom-leader-list li::before {
   content: "";
   flex-grow: 1;
-  border-bottom: 1px dotted #c1c7ce;
+  border-bottom: 1px dotted #c1c7d0;
   margin: 0 0.5rem;
   order: 2;
 }
@@ -108,7 +108,7 @@ body {
 .leader-list li::before {
   content: "";
   flex-grow: 1;
-  border-bottom: 1px dotted #c1c7ce;
+  border-bottom: 1px dotted #c1c7d0;
   margin: 0 0.5rem;
   order: 1;
 }
@@ -138,7 +138,7 @@ body {
   content: "";
   flex-grow: 1;
   margin: 0 8px;
-  border-bottom: 1px dotted #c1c7ce;
+  border-bottom: 1px dotted #c1c7d0;
   position: relative;
   top: -4px;
 }
@@ -167,7 +167,7 @@ body {
 
 .leader-line,
 .spec-leader {
-  border-bottom: 1px dotted #72787e;
+  border-bottom: 1px dotted #71787f;
   flex-grow: 1;
   margin: 0 8px;
   position: relative;
@@ -188,20 +188,20 @@ body {
 }
 
 .hover\:bg-gold-dark:hover {
-  background-color: #d6980e;
+  background-color: #d8980e;
 }
 
 .gold-rule {
   height: 2px;
-  background-color: #fec96f;
+  background-color: #f0aa10;
   width: 40px;
   margin-top: 8px;
 }
 
 /* Buttons */
 .btn-primary {
-  background-color: #fec96f;
-  color: #00263d;
+  background-color: #f0aa10;
+  color: #0b1c30;
   border-radius: 0.125rem;
   font-family: "Inter", sans-serif;
   font-size: 14px;
@@ -212,7 +212,7 @@ body {
 }
 
 .btn-primary:hover {
-  background-color: #f1be65;
+  background-color: #d8980e;
 }
 
 .btn-secondary {
@@ -267,7 +267,7 @@ body {
 
 /* Cards & chips */
 .product-card {
-  border: 1px solid #c1c7ce;
+  border: 1px solid #c1c7d0;
   background-color: #f8f9ff;
   transition:
     transform 0.3s ease,

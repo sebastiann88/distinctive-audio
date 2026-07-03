@@ -1,0 +1,232 @@
+import Experience from './Experience.js'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+// Register the plugin once, at module load, before any ScrollTrigger is created.
+gsap.registerPlugin(ScrollTrigger)
+
+/**
+ * Motion — the choreography layer for the Distinctive Audio homepage.
+ *
+ * GSAP owns animation VALUES; the Experience's render loop owns drawing. Motion
+ * tweens the shared `sceneState.scrollProgress` (and DOM elements); World reads
+ * that state each frame. One render loop, never two.
+ *
+ * The beat table maps five frame beats onto contiguous progress ranges
+ * (95/145/95/90/90 of 515vh). This extends the template's single scrollProgress
+ * tween into one scrubbed tween PER FRAME BEAT, each bound to its section
+ * (`[data-beat]`) — so the dom-only sections between them (address band,
+ * services, quick-links) hold the scene still exactly as the CSV specifies
+ * ("No camera move; continue prior alignment").
+ *
+ * DOM choreography follows each row's dom_choreography column: copy pins via
+ * CSS sticky inside the tall beat sections; reveals are scrubbed timelines
+ * positioned in the settled portion of each beat. Content is authored VISIBLE —
+ * every tween here is a `.from()`, so with reduced motion (or no JS) the page
+ * reads complete.
+ */
+export default class Motion
+{
+    constructor()
+    {
+        this.experience = new Experience()
+        this.targetElement = this.experience.targetElement
+        this.sceneState = this.experience.sceneState
+        this.sceneConfig = this.experience.sceneConfig
+        this.resources = this.experience.resources
+
+        this.beats = this.sceneConfig.beats ?? []
+
+        // Web fonts shift trigger boundaries; recalc once they resolve.
+        if(document.fonts?.ready)
+        {
+            document.fonts.ready.then(() => ScrollTrigger.refresh())
+        }
+
+        this.mm = gsap.matchMedia()
+
+        this.mm.add(
+            {
+                isDesktop: '(min-width: 800px)',
+                reduceMotion: '(prefers-reduced-motion: reduce)'
+            },
+            (context) =>
+            {
+                const { reduceMotion } = context.conditions
+
+                if(reduceMotion)
+                {
+                    // Calm path: hold the opening frame; the page reads as a
+                    // complete static document (all copy authored visible).
+                    this.sceneState.scrollProgress = 0
+                    return
+                }
+
+                this.setBeatScrub()
+                this.setFrameBeatReveals()
+                this.setDomOnlyReveals()
+            }
+        )
+    }
+
+    /**
+     * One scrubbed tween per frame beat, on the shared sceneState value.
+     * Each beat section is (span + 100)vh tall with a sticky full-viewport
+     * stage inside: 'top top' → 'bottom bottom' is exactly the CSV's
+     * scroll_span_vh of scripted scroll while the stage stays pinned.
+     */
+    setBeatScrub()
+    {
+        for(const beat of this.beats)
+        {
+            const section = document.querySelector(`[data-beat="${beat.id}"]`)
+            if(!section)
+                continue
+
+            gsap.fromTo(this.sceneState,
+                { scrollProgress: beat.from },
+                {
+                    scrollProgress: beat.to,
+                    ease: 'none',
+                    immediateRender: false,
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: 0.8
+                    }
+                }
+            )
+        }
+    }
+
+    /**
+     * Scrubbed DOM reveals inside each frame beat, positioned so body text is
+     * read while the camera is settled (per the beat table's dom_choreography).
+     * Timelines are 1 unit long; tween positions are fractions of the beat.
+     */
+    setFrameBeatReveals()
+    {
+        const reveal = (beatId, steps) =>
+        {
+            const section = document.querySelector(`[data-beat="${beatId}"]`)
+            if(!section)
+                return
+
+            const tl = gsap.timeline({
+                defaults: { ease: 'power2.out' },
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top top',
+                    end: 'bottom bottom',
+                    scrub: 0.8
+                }
+            })
+
+            for(const step of steps)
+            {
+                const targets = section.querySelectorAll(step.sel)
+                if(!targets.length)
+                    continue
+                tl.from(targets, {
+                    autoAlpha: 0,
+                    y: step.y ?? 28,
+                    x: step.x ?? 0,
+                    stagger: step.stagger ?? 0,
+                    duration: step.duration ?? 0.12
+                }, step.at)
+            }
+
+            // Ease the pinned copy away as the beat departs, so text never
+            // rides the camera move into the next room.
+            tl.to(section.querySelectorAll('[data-stage-content]'), {
+                autoAlpha: 0,
+                y: -20,
+                duration: 0.1
+            }, 0.9)
+        }
+
+        // frame-index-01: hero copy is visible from the first paint (a scrubbed
+        // .from would hold it invisible at scroll 0), entering on load; CTAs
+        // enter after the first 35vh (35/95 ≈ 0.37) without covering the subject.
+        gsap.from('[data-reveal="hero-copy"]', {
+            autoAlpha: 0, x: -24, duration: 0.9, ease: 'power2.out', delay: 0.15
+        })
+        reveal('frame-index-01', [
+            { sel: '[data-reveal="hero-ctas"]', at: 0.37, duration: 0.1 }
+        ])
+
+        // frame-index-02 (signature): heading + paragraph pin upper-left; the
+        // three service ideas stagger lower-left as the gold alignment completes
+        // behind them (glint resolves ~0.5–0.75 of the beat).
+        reveal('frame-index-02', [
+            { sel: '[data-reveal="approach-heading"]', at: 0.05, duration: 0.1 },
+            { sel: '[data-reveal="approach-card"]', at: 0.48, stagger: 0.09, duration: 0.1 }
+        ])
+
+        // frame-index-03: category links occupy negative space in sequence.
+        reveal('frame-index-03', [
+            { sel: '[data-reveal="categories-heading"]', at: 0.05, duration: 0.1 },
+            { sel: '[data-reveal="category"]', at: 0.22, stagger: 0.1, duration: 0.1 },
+            { sel: '[data-reveal="categories-cta"]', at: 0.66, duration: 0.08 }
+        ])
+
+        // frame-index-04: biography floats in the open wall area; the read-more
+        // link appears after the tabletop objects settle (camera settles ~0.25).
+        reveal('frame-index-04', [
+            { sel: '[data-reveal="founder-heading"]', at: 0.08, duration: 0.1 },
+            { sel: '[data-reveal="founder-copy"]', at: 0.24, stagger: 0.08, duration: 0.1 },
+            { sel: '[data-reveal="founder-cta"]', at: 0.6, duration: 0.08 }
+        ])
+
+        // frame-index-07: closing heading pins above the empty chair zone; the
+        // booking CTA lands in the clear central negative space.
+        reveal('frame-index-07', [
+            { sel: '[data-reveal="closing-heading"]', at: 0.12, duration: 0.12 },
+            { sel: '[data-reveal="closing-cta"]', at: 0.42, duration: 0.1 }
+        ])
+    }
+
+    /**
+     * dom-only rows (05 address band, 06 services, 08 quick-links): ordinary
+     * entrance motion over open space — play once, no scrub, no scene change.
+     */
+    setDomOnlyReveals()
+    {
+        for(const section of document.querySelectorAll('[data-dom-beat]'))
+        {
+            const items = section.querySelectorAll('[data-reveal-item]')
+            if(!items.length)
+                continue
+
+            gsap.from(items, {
+                autoAlpha: 0,
+                y: 32,
+                duration: 0.7,
+                ease: 'power2.out',
+                stagger: 0.12,
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 78%',
+                    toggleActions: 'play none none none'
+                }
+            })
+        }
+    }
+
+    /**
+     * Recalculate ScrollTrigger positions. Call after a layout change that moves
+     * trigger boundaries — new content, web-fonts finishing, etc. (Viewport
+     * resize is auto-handled by ScrollTrigger, debounced.)
+     */
+    refresh()
+    {
+        ScrollTrigger.refresh()
+    }
+
+    destroy()
+    {
+        // Reverts every tween + ScrollTrigger created inside matchMedia.
+        this.mm?.revert()
+    }
+}

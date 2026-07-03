@@ -1,0 +1,50 @@
+/*
+ * Tailwind v3 input for the UI LAYER. Built to dist/site.css (npm run build:css).
+ * This styles every non-canvas element — nav, beat overlays, dom-only sections,
+ * loader — so the interface shares one visual system with the scene. It is
+ * SEPARATE from sources/style.css, which is scoped to [data-experience] and
+ * styles only the poster/canvas mount. Keep the two layers apart.
+ *
+ * v3 directive syntax (v4 replaces all three with `@import "tailwindcss";`).
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ground text-body-text font-body antialiased;
+  }
+  ::selection {
+    @apply bg-secondary-container text-on-surface;
+  }
+  :focus-visible {
+    outline: 2px solid theme('colors.accent.DEFAULT');
+    outline-offset: 2px;
+  }
+}
+
+/* Brand components (brand-system UI habits: gold rule + uppercase Inter
+   eyebrow above section titles; solid-gold primary CTA with dark text;
+   outline secondary CTA; cards rounded-xl with outline-variant border). */
+@layer components {
+  .eyebrow {
+    @apply inline-flex items-center gap-4 font-label text-xs font-semibold uppercase tracking-[0.2em];
+  }
+  .eyebrow::before {
+    content: '';
+    @apply block h-px w-8 bg-accent;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center rounded px-8 py-3 font-label text-sm font-semibold tracking-[0.05em] transition-colors;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-on-surface hover:bg-accent-hover;
+  }
+  .btn-secondary {
+    @apply btn border border-primary text-primary hover:bg-primary/5;
+  }
+  .card {
+    @apply rounded-xl border border-outline-variant bg-surface/90 p-8 shadow-[0_4px_20px_rgba(11,28,48,0.05)] backdrop-blur-sm;
+  }
+}

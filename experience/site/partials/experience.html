@@ -1,0 +1,57 @@
+<!--
+  THE EXPERIENCE MOUNT (copy-paste into the host page — kept in sync with
+  site/index.html).
+
+  It renders three things inside one element:
+    1. A minimalist loader — a pale field (matches sceneConfig.clearColor) with
+       a thin gold sweep line. It covers the mount from first paint until the
+       scene's first rendered frame, then crossfades out (index.js adds
+       .is-live). Without WebGL it hides (.no-webgl) and the mount stays a
+       quiet pale background.
+    2. The mount box the canvas attaches to (data-experience marks it for index.js).
+    3. A JSON manifest — the DATA that configures the scene. Change the DATA here;
+       the JS bundle never changes. Its shape matches sources/Experience/assets.js,
+       which is what makes a later CMS port mechanical (Craft emits the same JSON).
+
+  First pass ships an empty items list (the gallery is primitive geometry built
+  in World.js). When production GLBs arrive they are added as items: models get
+  `name` + `source` only; color textures add `type: "texture", colorSpace:
+  "srgb"`; data maps (normal/roughness/AO) add `type: "texture"` with NO
+  colorSpace. `sceneConfig.beats` carries the approved beat-table ranges
+  (95/145/95/90/90 of 515vh).
+
+  Tailwind classes on the wrapper shape only the BOX; the loader's layout and
+  animation come from the scoped island CSS (sources/style.css), not Tailwind.
+-->
+<div class="experience fixed inset-0 z-0" data-experience>
+  <div class="experience__loader" aria-hidden="true">
+    <span class="experience__loader-line"></span>
+  </div>
+
+  <script type="application/json" data-experience-manifest>
+  {
+    "assets": [
+      { "name": "base", "data": {}, "items": [] }
+    ],
+    "sceneConfig": {
+      "clearColor": "#f4f7fb",
+      "colors": {
+        "ground": "#f4f7fb",
+        "surface": "#f8f9ff",
+        "teal": "#003d5e",
+        "tealDeep": "#005581",
+        "ink": "#0b1c30",
+        "accent": "#f0aa10"
+      },
+      "scrollEnd": "bottom top",
+      "beats": [
+        { "id": "frame-index-01", "from": 0,     "to": 0.184 },
+        { "id": "frame-index-02", "from": 0.184, "to": 0.466 },
+        { "id": "frame-index-03", "from": 0.466, "to": 0.650 },
+        { "id": "frame-index-04", "from": 0.650, "to": 0.825 },
+        { "id": "frame-index-07", "from": 0.825, "to": 1.0 }
+      ]
+    }
+  }
+  </script>
+</div>

@@ -1,0 +1,79 @@
+<!--
+  HEAD PARTIAL (copy-paste into each page's <head>) — kept in sync with
+  site/index.html.
+
+  Everything a crawler needs — title, description, canonical, Open Graph, JSON-LD
+  — is in the initial HTML with zero JavaScript. The experience bundle is
+  deferred (`type="module"` is async by nature) and enhances the page after
+  content paints.
+
+  Canonical URL: replace https://example.com/ with the production URL when known
+  (not present in any pipeline asset). Phone is omitted from JSON-LD for the
+  same reason.
+
+  On a CMS port, these values come from entry fields instead of being
+  hand-authored; the shape stays identical.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Distinctive Audio | Ottawa's High-End Audio Store</title>
+<meta name="description" content="Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.">
+<link rel="canonical" href="https://example.com/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Distinctive Audio | Ottawa's High-End Audio Store">
+<meta property="og:description" content="Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.">
+<meta property="og:url" content="https://example.com/">
+<meta property="og:image" content="/assets/poster.jpg">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Distinctive Audio | Ottawa's High-End Audio Store">
+<meta name="twitter:description" content="Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.">
+<meta name="twitter:image" content="/assets/poster.jpg">
+
+<!--
+  JSON-LD. Because the 3D lives in an opaque <canvas> crawlers can't read,
+  structured data is how you tell search engines what the page is about.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "name": "Distinctive Audio",
+      "description": "Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.",
+      "url": "https://example.com/",
+      "image": "/assets/poster.jpg",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "903 Carling Avenue",
+        "addressLocality": "Ottawa",
+        "addressRegion": "ON",
+        "addressCountry": "CA"
+      },
+      "openingHours": "By appointment",
+      "foundingDate": "1986"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://example.com/" }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- Brand faces (mirror of tailwind.config.js fontFamily). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+<!-- Two stylesheets: Tailwind v3 for the page, scoped island CSS for the mount.
+     Relative paths so the page works from any base/subpath. -->
+<link rel="stylesheet" href="../dist/site.css">
+<link rel="stylesheet" href="../dist/experience.css">

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--
+  Distinctive Audio — immersive homepage (index.html).
+
+  The Three.js + GSAP experience is the product: a full-viewport canvas is
+  fixed behind the page; the Tailwind v3 overlay scrolls over it, choreographed
+  WITH the scene by GSAP (sources/Experience/Motion.js).
+
+  Choreography authority: pipeline/assets/distinctive-audio-beat-table.csv
+  (5 frame beats + 3 dom-only rows, 515vh of scripted scroll). Content
+  authority: the production index.html — every heading, paragraph, link label,
+  and CTA below is verbatim from it. Style authority: brand-system.md, encoded
+  once in tailwind.config.js.
+
+  Frame-beat sections are (scroll_span_vh + 100)vh tall with a sticky
+  full-viewport stage inside: the +100vh is the viewport itself, so the pinned
+  portion equals the CSV's span exactly.
+
+  Graceful fallback: the mount holds a minimalist loader (pale field + gold
+  sweep line) that crossfades into the scene's first rendered frame. Without
+  WebGL or JS the loader hides / never animates and the mount stays a quiet
+  pale background; the page still reads as a complete document.
+-->
+<html lang="en-CA" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Distinctive Audio | Ottawa's High-End Audio Store</title>
+  <meta name="description" content="Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.">
+  <!-- Canonical: replace with the production URL when known (not present in any pipeline asset). -->
+  <link rel="canonical" href="https://example.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Distinctive Audio | Ottawa's High-End Audio Store">
+  <meta property="og:description" content="Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:image" content="https://example.com/assets/poster.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "LocalBusiness",
+        "name": "Distinctive Audio",
+        "description": "Helping the Ottawa–Gatineau region listen better for nearly 40 years. High-end audio store offering tailored synergy, environment-first solutions, and long-term support.",
+        "url": "https://example.com/",
+        "image": "https://example.com/assets/poster.jpg",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "903 Carling Avenue",
+          "addressLocality": "Ottawa",
+          "addressRegion": "ON",
+          "addressCountry": "CA"
+        },
+        "openingHours": "By appointment",
+        "foundingDate": "1986"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://example.com/" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Resolves at the deployed site root (images/ ships beside this page);
+       404s harmlessly when previewing from experience/ alone. -->
+  <link rel="icon" href="images/distinctive-audio-logo.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <!-- Relative paths so the page works from any base (local server, subpath
+       deploys like GitHub project pages) — root-relative /dist/ only resolves
+       when the server root is exactly experience/. -->
+  <link rel="stylesheet" href="../dist/site.css">        <!-- Tailwind v3 (the UI) -->
+  <link rel="stylesheet" href="../dist/experience.css">  <!-- scoped island CSS (the mount) -->
+</head>
+
+<body>
+  <a class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
+
+  <!-- ── the experience: fixed full-viewport canvas + minimalist loader + manifest ── -->
+  <div class="experience fixed inset-0 z-0" data-experience>
+    <div class="experience__loader" aria-hidden="true">
+      <span class="experience__loader-line"></span>
+    </div>
+    <script type="application/json" data-experience-manifest>
+    {
+      "assets": [
+        { "name": "base", "data": {}, "items": [] }
+      ],
+      "sceneConfig": {
+        "clearColor": "#f4f7fb",
+        "colors": {
+          "ground": "#f4f7fb",
+          "surface": "#f8f9ff",
+          "teal": "#003d5e",
+          "tealDeep": "#005581",
+          "ink": "#0b1c30",
+          "accent": "#f0aa10"
+        },
+        "scrollEnd": "bottom top",
+        "beats": [
+          { "id": "frame-index-01", "from": 0,     "to": 0.184 },
+          { "id": "frame-index-02", "from": 0.184, "to": 0.466 },
+          { "id": "frame-index-03", "from": 0.466, "to": 0.650 },
+          { "id": "frame-index-04", "from": 0.650, "to": 0.825 },
+          { "id": "frame-index-07", "from": 0.825, "to": 1.0 }
+        ]
+      }
+    }
+    </script>
+  </div>
+
+  <!-- ── sticky teal header (brand habit) ── -->
+  <header class="fixed inset-x-0 top-0 z-50 bg-primary">
+    <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-8" aria-label="Primary">
+      <a href="index.html" class="font-headline text-xl tracking-tight text-surface">Distinctive <span class="text-accent">Audio</span></a>
+      <div class="hidden gap-8 sm:flex">
+        <a href="index.html" class="border-b-2 border-accent pt-0.5 font-label text-sm font-medium text-accent">Home</a>
+        <a href="about.html" class="border-b-2 border-transparent pt-0.5 font-label text-sm font-medium text-surface hover:border-surface/40 hover:text-surface/80">About</a>
+        <a href="lines-we-carry.html" class="border-b-2 border-transparent pt-0.5 font-label text-sm font-medium text-surface hover:border-surface/40 hover:text-surface/80">Lines We Carry</a>
+        <a href="products.html" class="border-b-2 border-transparent pt-0.5 font-label text-sm font-medium text-surface hover:border-surface/40 hover:text-surface/80">Products</a>
+        <a href="contact.html" class="border-b-2 border-transparent pt-0.5 font-label text-sm font-medium text-surface hover:border-surface/40 hover:text-surface/80">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="relative z-10">
+
+    <!-- section 01 · frame-index-01 · 95vh scripted -->
+    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative h-[195vh]">
+      <div class="sticky top-0 flex h-screen items-center" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <!-- Copy pins over the empty left half; the speaker holds the right. -->
+          <div class="max-w-xl rounded-xl bg-primary-container/95 p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] backdrop-blur-sm lg:p-14" data-reveal="hero-copy">
+            <p class="eyebrow text-secondary-container">ESTABLISHED 1986</p>
+            <h1 class="mt-6 font-headline text-4xl leading-tight lg:text-6xl">
+              Ottawa's <span class="italic text-accent">High-End</span> Audio Store
+            </h1>
+            <p class="mt-6 max-w-md text-lg text-on-primary-container">
+              Helping the Ottawa–Gatineau region listen better for nearly 40 years.
+            </p>
+            <div class="mt-10 flex flex-col gap-4 sm:flex-row" data-reveal="hero-ctas">
+              <a class="btn-primary" href="contact.html">Book a Showroom Demo</a>
+              <a class="btn border border-on-primary-container text-on-primary-container hover:bg-on-primary-container/10" href="products.html">Explore Products</a>
+            </div>
+          </div>
+        </div>
+        <span class="absolute bottom-8 left-1/2 -translate-x-1/2 text-primary" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="animate-bounce"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </section>
+
+    <!-- section 02 · frame-index-02 (signature) · 145vh scripted -->
+    <section id="the-distinctive-approach" data-beat="frame-index-02" data-section-ref="index.html section 02" class="relative h-[245vh]">
+      <div class="sticky top-0 flex h-screen flex-col justify-between py-24" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <!-- Heading + paragraph pin upper-left while the gold signal path aligns behind. -->
+          <div class="max-w-xl" data-reveal="approach-heading">
+            <h2 class="font-headline text-3xl text-on-surface md:text-5xl">
+              The <span class="text-accent">Distinctive</span> Approach
+            </h2>
+            <p class="mt-4 max-w-prose text-lg">
+              We don't just sell boxes; we design experiences. Our philosophy is rooted in finding the right synergy for your unique listening environment.
+            </p>
+          </div>
+        </div>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <!-- The three service ideas stagger over the lower-left as the alignment completes. -->
+          <div class="grid max-w-3xl grid-cols-1 gap-5 sm:grid-cols-3">
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Tailored Synergy</h3>
+              <p class="mt-3 text-sm">Matching components that complement each other well is an approach we've refined over the years.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Component matching</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>System architecture</li>
+              </ul>
+            </div>
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Environment First</h3>
+              <p class="mt-3 text-sm">Your room is a critical component. We design systems that perform well in your specific space.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Acoustic assessment</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Placement strategy</li>
+              </ul>
+            </div>
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Long-Term Support</h3>
+              <p class="mt-3 text-sm">Our relationship begins, not ends, with your purchase. We are committed to your ongoing musical enjoyment.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Professional setup</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Expert advice</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 03 · frame-index-03 · 95vh scripted -->
+    <section id="featured-categories" data-beat="frame-index-03" data-section-ref="index.html section 03" class="relative h-[195vh]">
+      <div class="sticky top-0 flex h-screen flex-col justify-between py-24" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <div class="max-w-xl" data-reveal="categories-heading">
+            <p class="eyebrow text-on-surface/70">CURATED SELECTION</p>
+            <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl">
+              Featured <span class="text-accent">Categories</span>
+            </h2>
+          </div>
+        </div>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <!-- Category links occupy the left and lower negative space in sequence. -->
+          <div class="grid max-w-4xl grid-cols-2 gap-4 lg:grid-cols-4">
+            <a class="card group block !p-6" href="turntables.html" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Turntables</h3>
+              <p class="mt-1 text-sm">Analog sound</p>
+            </a>
+            <a class="card group block !p-6" href="amplification.html" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Integrated Amplifiers</h3>
+              <p class="mt-1 text-sm">Solid State &amp; Vacuum Tube</p>
+            </a>
+            <a class="card group block !p-6" href="loudspeakers.html" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Speakers</h3>
+              <p class="mt-1 text-sm">The voice of the system</p>
+            </a>
+            <a class="card group block !p-6" href="digital-sources.html" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Streaming &amp; DACs</h3>
+              <p class="mt-1 text-sm">Digital precision</p>
+            </a>
+          </div>
+          <a class="mt-8 inline-flex items-center gap-1 font-label text-sm font-semibold text-primary-container transition-colors hover:text-accent" href="products.html" data-reveal="categories-cta">
+            View all products
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 04 · frame-index-04 · 90vh scripted -->
+    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative h-[190vh]">
+      <div class="sticky top-0 flex h-screen items-start pt-32 md:pt-40" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <!-- Biography floats in the open wall area above the audition table. -->
+          <div class="max-w-2xl">
+            <div data-reveal="founder-heading">
+              <p class="eyebrow text-accent">Our Founder</p>
+              <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl">
+                Meet <span class="text-accent">Rhéal</span> Nadeau
+              </h2>
+            </div>
+            <p class="mt-6 max-w-prose text-lg" data-reveal="founder-copy">
+              As the owner and president since 1988, Rhéal Nadeau has curated a wide-ranging collection of high-fidelity audio equipment at our Ottawa location. His deep understanding of analog warmth and acoustic engineering has made Distinctive Audio a destination for audiophiles seeking precision and soul.
+            </p>
+            <p class="mt-4 max-w-prose text-lg" data-reveal="founder-copy">
+              Every system is meticulously selected and auditioned by Rhéal himself, ensuring that our showroom reflects a lifelong dedication to the art of sound.
+            </p>
+            <a class="mt-8 inline-flex items-center gap-2 border-b border-primary-container pb-1 font-label text-sm font-semibold text-primary-container transition-colors hover:border-on-surface hover:text-on-surface" href="about.html" data-reveal="founder-cta">
+              Read our story
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 05 · dom-index-05 · address band, 0vh scripted (colour band; no parallax) -->
+    <section id="proof-band" data-dom-beat="dom-index-05" data-section-ref="index.html section 05" class="relative bg-primary-container py-20 text-surface">
+      <div class="mx-auto max-w-6xl px-5 md:px-8">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
+          <div class="space-y-10 border-l border-accent pl-6">
+            <div data-reveal-item>
+              <span class="block font-headline text-5xl leading-none text-accent md:text-6xl">Est. 1986</span>
+              <span class="mt-3 block font-label text-sm font-semibold uppercase tracking-[0.2em] text-surface/80">Foundation</span>
+            </div>
+            <div data-reveal-item>
+              <span class="block font-headline text-5xl leading-none text-accent md:text-6xl">Nearly 40 Years</span>
+              <span class="mt-3 block font-label text-sm font-semibold uppercase tracking-[0.2em] text-surface/80">Experience in Hi-Fi &amp; Two-Channel Audio</span>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <p class="font-headline text-2xl text-surface md:text-3xl" data-reveal-item>
+              Visit us at 903 Carling Avenue, Ottawa
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 06 · dom-index-06 · Bespoke Services, 0vh scripted (DOM-led cards) -->
+    <section id="bespoke-services" data-dom-beat="dom-index-06" data-section-ref="index.html section 06" class="relative bg-ground/90 py-20 backdrop-blur-sm md:py-24">
+      <div class="mx-auto max-w-6xl px-5 md:px-8">
+        <div class="mb-14 flex flex-col items-center space-y-4 text-center" data-reveal-item>
+          <p class="eyebrow text-accent">Our Expertise</p>
+          <h2 class="font-headline text-3xl text-on-surface md:text-5xl">
+            Bespoke <span class="text-accent">Services</span>
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <!-- Two equal card CTAs, deliberately no single primary. -->
+          <a class="card group block" href="contact.html" data-reveal-item>
+            <h3 class="font-label text-lg font-semibold text-on-surface">Listening Demos</h3>
+            <p class="mt-3 text-base">In-store auditions are available, however a better listening experience can be had by booking a demo.</p>
+            <span class="mt-5 inline-flex items-center gap-1 font-label text-xs font-semibold uppercase tracking-wider text-primary-container transition-colors group-hover:text-accent">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+          <a class="card group block" href="cables-power.html" data-reveal-item>
+            <h3 class="font-label text-lg font-semibold text-on-surface">Custom Cables</h3>
+            <p class="mt-3 text-base">Custom cables of a specific length and termination can be ordered from our suppliers for specific needs.</p>
+            <span class="mt-5 inline-flex items-center gap-1 font-label text-xs font-semibold uppercase tracking-wider text-primary-container transition-colors group-hover:text-accent">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 07 · frame-index-07 · 90vh scripted -->
+    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative h-[190vh]">
+      <div class="sticky top-0 flex h-screen flex-col items-center justify-start pt-32 text-center md:pt-40" data-stage-content>
+        <div class="mx-auto max-w-3xl px-5 md:px-8">
+          <!-- Closing heading pins above the empty chair zone. -->
+          <h2 class="font-headline text-3xl text-on-surface md:text-5xl" data-reveal="closing-heading">
+            Hear the difference for yourself
+          </h2>
+          <!-- Booking CTA lands in the clear central negative space. -->
+          <div class="mt-10" data-reveal="closing-cta">
+            <a class="btn-primary shadow-[0_4px_20px_rgba(11,28,48,0.15)]" href="contact.html">Book a Showroom Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- section 08 · dom-index-08 · quick-links, 0vh scripted (scene has ended) -->
+    <section id="related-links" data-dom-beat="dom-index-08" data-section-ref="index.html section 08" class="relative bg-surface py-20">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-6 px-5 md:px-8">
+        <span class="font-label text-xs font-semibold uppercase tracking-[0.2em] text-on-surface/70" data-reveal-item>Related:</span>
+        <div class="flex flex-wrap justify-center gap-3" data-reveal-item>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="about.html">About</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="products.html">Products</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="lines-we-carry.html">Lines We Carry</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="contact.html">Listening Demos</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="cables-power.html">Custom Cables</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="contact.html">Contact</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Black-teal footer treatment (the beat table's closing hold). -->
+  <footer class="relative z-10 bg-primary py-16 text-surface">
+    <div class="mx-auto max-w-6xl px-5 md:px-8">
+      <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+        <div class="max-w-md space-y-4">
+          <p class="font-headline text-xl tracking-tight">Distinctive <span class="text-accent">Audio</span></p>
+          <p class="text-sm text-surface/80">
+            Established in 1986, Distinctive Audio has been providing expert service to our customers for nearly 40 years. We are a locally owned and operated business serving the Ottawa Gatineau region.
+          </p>
+        </div>
+        <nav class="flex flex-col gap-3" aria-label="Footer">
+          <a href="index.html" class="text-sm text-surface/80 hover:text-surface">Home</a>
+          <a href="about.html" class="text-sm text-surface/80 hover:text-surface">About</a>
+          <a href="lines-we-carry.html" class="text-sm text-surface/80 hover:text-surface">Lines We Carry</a>
+          <a href="products.html" class="text-sm text-surface/80 hover:text-surface">Products</a>
+          <a href="contact.html" class="text-sm text-surface/80 hover:text-surface">Contact</a>
+        </nav>
+      </div>
+      <div class="mt-12 border-t border-surface/10 pt-8">
+        <p class="text-sm text-surface/70">&copy; 2026 Distinctive Audio Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Deferred module — boots the experience after parse; never blocks paint. -->
+  <script type="module" src="../dist/experience.js"></script>
+</body>
+</html>

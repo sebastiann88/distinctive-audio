@@ -5,6 +5,8 @@
   "description": "Distinctive Audio — Ottawa high-end audio store static site",
   "scripts": {
     "build": "vite build",
+    "build:site": "node build-site.mjs",
+    "dev": "npm run build:site && python3 -m http.server 8000 --directory _site",
     "watch": "tailwindcss -i ./src/input.css -o ./css/style.css --watch"
   },
   "devDependencies": {
