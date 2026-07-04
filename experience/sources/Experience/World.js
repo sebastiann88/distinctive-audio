@@ -561,7 +561,7 @@ export default class World
     {
         const x = VIGNETTE_X[0] + 1.6
 
-        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.9, x, z: 0.4, rotY: -0.35 })
+        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.9, x, z: 0.4, rotY: -0.42 })
         if(speaker)
         {
             this.reflectModel(speaker)
