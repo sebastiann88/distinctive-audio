@@ -12,10 +12,12 @@
     "watch:css": "tailwindcss -i ./site/src/site.css -o ./dist/site.css --watch"
   },
   "dependencies": {
+    "@threepipe/webgi-plugins": "^0.6.4",
     "gsap": "^3.13.0",
     "lil-gui": "^0.19.2",
     "stats.js": "^0.17.0",
-    "three": "^0.169.0"
+    "three": "^0.169.0",
+    "threepipe": "^0.5.1"
   },
   "devDependencies": {
     "@gltf-transform/core": "^4.4.1",

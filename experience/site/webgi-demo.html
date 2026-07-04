@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+  WebGI (Threepipe) product-viewer demo.
+
+  Shows the reusable viewer bundle (dist/webgi.js, source: sources/webgi.js) on
+  one of the production GLBs — the same models the immersive homepage uses,
+  exported from the WebGI editor with WEBGI_* extensions this viewer honors.
+
+  Drop-in usage on any page (or a Craft template — the data attribute is where
+  `{{ entry.speaker3d.one().getUrl() }}` goes):
+
+    <canvas data-webgi-model="…/model.glb" style="width:650px;height:950px"></canvas>
+    <script type="module" src="…/dist/webgi.js"></script>
+-->
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebGI Viewer Demo | Distinctive Audio</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="images/distinctive-audio-logo.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../dist/site.css">
+</head>
+
+<body>
+  <main class="mx-auto max-w-6xl px-5 py-16 md:px-8">
+    <p class="eyebrow text-accent">WEBGI PRODUCT VIEWER</p>
+    <h1 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl">
+      Floorstanding <span class="text-accent">Loudspeaker</span>
+    </h1>
+    <p class="mt-4 max-w-prose text-lg">
+      Drag to rotate. This viewer is the WebGI (Threepipe) implementation from the
+      product pages — GBuffer, SSAA, SSAO and Bloom, with reduced settings on
+      older devices.
+    </p>
+
+    <div id="threepipe-canvas-container" class="mt-10">
+      <canvas
+        id="three-canvas"
+        class="hidden md:block"
+        data-webgi-model="../dist/assets/models/floorstanding-loudspeaker.glb"
+        data-webgi-background="#F8FBFF"
+        style="width: 650px; height: 950px; max-width: 100%;"
+      ></canvas>
+      <p class="text-sm text-on-surface/70 md:hidden">The 3D viewer is available on larger screens.</p>
+    </div>
+  </main>
+
+  <script type="module" src="../dist/webgi.js"></script>
+</body>
+</html>

@@ -72,16 +72,44 @@ export default class Motion
     /**
      * One scrubbed tween per frame beat, on the shared sceneState value.
      * Each beat section is (span + 100)vh tall with a sticky full-viewport
-     * stage inside: 'top top' → 'bottom bottom' is exactly the CSV's
-     * scroll_span_vh of scripted scroll while the stage stays pinned.
+     * stage inside; 'top top' → 'bottom bottom' is the pinned range.
+     *
+     * The scrub END, however, extends past the pin to wherever the NEXT
+     * section begins (capped at +50vh): the beat sections overlap with
+     * negative margins, and without the extension the entire 16-unit
+     * room-to-room camera dolly crammed into the last few vh of the pin and
+     * then FROZE through the structural gap — transitions read as a lurch
+     * then a dead hold. With it, the dolly rides the whole gap.
+     *
+     * World needs to know how much each span was stretched so settle/hold
+     * timings stay anchored to the PIN (text is read against a still camera,
+     * exactly as before): sceneState.beatScales[i] = pinSpan / extendedSpan,
+     * kept fresh by onRefresh.
      */
     setBeatScrub()
     {
-        for(const beat of this.beats)
+        const scales = this.sceneState.beatScales = []
+
+        this.beats.forEach((beat, i) =>
         {
             const section = document.querySelector(`[data-beat="${beat.id}"]`)
             if(!section)
-                continue
+                return
+
+            const endPos = () =>
+            {
+                const pinEnd = section.offsetTop + section.offsetHeight - window.innerHeight
+                const nextTop = section.nextElementSibling?.offsetTop ?? pinEnd
+                const cap = pinEnd + window.innerHeight * 0.5
+                return Math.round(Math.min(Math.max(nextTop, pinEnd), cap))
+            }
+
+            // The LAST beat's scrub starts 30vh BEFORE its pin: the sections
+            // before it are opaque bands, so the approach dolly plays while
+            // the band is still lifting off the canvas — the speakers glide
+            // in beneath it and the room is already composed when the section
+            // pins. No bare-gallery beat on arrival.
+            const isLast = i === this.beats.length - 1
 
             gsap.fromTo(this.sceneState,
                 { scrollProgress: beat.from },
@@ -91,13 +119,18 @@ export default class Motion
                     immediateRender: false,
                     scrollTrigger: {
                         trigger: section,
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: 0.8
+                        start: isLast ? 'top 70%' : 'top top',
+                        end: endPos,
+                        scrub: 0.8,
+                        onRefresh: (self) =>
+                        {
+                            const pin = section.offsetHeight - window.innerHeight
+                            scales[i] = Math.min(1, pin / Math.max(self.end - self.start, 1))
+                        }
                     }
                 }
             )
-        }
+        })
     }
 
     /**
@@ -107,7 +140,7 @@ export default class Motion
      */
     setFrameBeatReveals()
     {
-        const reveal = (beatId, steps) =>
+        const reveal = (beatId, steps, departAt = 0.9) =>
         {
             const section = document.querySelector(`[data-beat="${beatId}"]`)
             if(!section)
@@ -143,25 +176,34 @@ export default class Motion
                 autoAlpha: 0,
                 y: -20,
                 duration: 0.1
-            }, 0.9)
+            }, departAt)
+
+            // Pin the timeline's length to exactly 1 so tween positions are
+            // true fractions of the beat even when departAt ends before 1.
+            tl.set({}, {}, 1)
         }
 
-        // frame-index-01: hero copy is visible from the first paint (a scrubbed
-        // .from would hold it invisible at scroll 0), entering on load; CTAs
-        // enter after the first 35vh (35/95 ≈ 0.37) without covering the subject.
+        // frame-index-01: hero copy — CTAs included — is visible from the first
+        // paint and enters once on load (no scroll-scrubbed reveal; the buttons
+        // must be actionable immediately). Copy sits on the LEFT (speaker
+        // right), so it slides in from the left.
         gsap.from('[data-reveal="hero-copy"]', {
             autoAlpha: 0, x: -24, duration: 0.9, ease: 'power2.out', delay: 0.15
         })
-        reveal('frame-index-01', [
-            { sel: '[data-reveal="hero-ctas"]', at: 0.37, duration: 0.1 }
-        ])
+        // Depart fade only (no scrubbed entrances): the card and the scroll
+        // arrow leave at 0.5 — before the camera starts its (now longer,
+        // gentler) dolly toward room 2 at 0.62 — so the speaker gets the whole
+        // second half of the beat to transition out on its own.
+        reveal('frame-index-01', [], 0.5)
 
         // frame-index-02 (signature): heading + paragraph pin upper-left; the
-        // three service ideas stagger lower-left as the gold alignment completes
-        // behind them (glint resolves ~0.5–0.75 of the beat).
+        // three service ideas stagger into the viewport centre as the camera
+        // settles (0.55) and the gold axis line resolves beneath the trio.
+        // Earlier positions than the CSV because the section's scroll span was
+        // shortened — the full set must be readable well before the depart fade.
         reveal('frame-index-02', [
             { sel: '[data-reveal="approach-heading"]', at: 0.05, duration: 0.1 },
-            { sel: '[data-reveal="approach-card"]', at: 0.48, stagger: 0.09, duration: 0.1 }
+            { sel: '[data-reveal="approach-card"]', at: 0.26, stagger: 0.08, duration: 0.1 }
         ])
 
         // frame-index-03: category links occupy negative space in sequence.
@@ -179,11 +221,12 @@ export default class Motion
             { sel: '[data-reveal="founder-cta"]', at: 0.6, duration: 0.08 }
         ])
 
-        // frame-index-07: closing heading pins above the empty chair zone; the
-        // booking CTA lands in the clear central negative space.
+        // frame-index-07: the speakers glide in and settle first (camera
+        // settle at 0.22); ONLY THEN does the closing heading drop down from
+        // above (negative y), the booking CTA following the same way.
         reveal('frame-index-07', [
-            { sel: '[data-reveal="closing-heading"]', at: 0.12, duration: 0.12 },
-            { sel: '[data-reveal="closing-cta"]', at: 0.42, duration: 0.1 }
+            { sel: '[data-reveal="closing-heading"]', at: 0.3, y: -36, duration: 0.12 },
+            { sel: '[data-reveal="closing-cta"]', at: 0.5, y: -24, duration: 0.1 }
         ])
     }
 

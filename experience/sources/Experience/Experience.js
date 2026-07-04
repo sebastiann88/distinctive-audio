@@ -50,6 +50,13 @@ export default class Experience
         // the animation values, the Experience owns the drawing.
         this.sceneState = { scrollProgress: 0 }
 
+        // Render-on-demand: the scene is entirely scroll-driven, so a GPU frame
+        // is only needed when scrollProgress moved (or something asked for one
+        // via needsRender — resize, world build). The rAF loop keeps ticking
+        // cheaply; only renderer.update() is skipped.
+        this.needsRender = true
+        this.lastRenderedProgress = -1
+
         if(!this.targetElement)
         {
             console.warn('Missing \'targetElement\' property')
@@ -88,7 +95,7 @@ export default class Experience
         this.config.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
         // Pixel ratio — clamp to 2 so retina phones don't render 3x and tank FPS
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.75)
 
         // Width and height come from the mount element, NOT the window. The mount
         // may be full-viewport (fixed inset-0) or a box; either way the canvas
@@ -152,13 +159,27 @@ export default class Experience
         if(this.stats)
             this.stats.update()
 
-        this.camera.update()
-
+        // World first: it positions the camera rig from scrollProgress. Camera
+        // then copies the rig into the render camera the SAME frame — with
+        // render-on-demand there may be no "next frame" render to catch up.
         if(this.world)
             this.world.update()
 
-        if(this.renderer)
+        this.camera.update()
+
+        // Debug mode renders every frame (orbit controls move the camera outside
+        // sceneState); production renders only when the scroll-driven state
+        // changed or a render was explicitly requested.
+        const dirty = this.needsRender
+            || this.config.debug
+            || this.sceneState.scrollProgress !== this.lastRenderedProgress
+
+        if(this.renderer && dirty)
+        {
             this.renderer.update()
+            this.lastRenderedProgress = this.sceneState.scrollProgress
+            this.needsRender = false
+        }
 
         this.animationFrame = window.requestAnimationFrame(() =>
         {
@@ -173,7 +194,7 @@ export default class Experience
         this.config.width = boundings.width
         this.config.height = boundings.height
 
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 2)
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.75)
 
         if(this.camera)
             this.camera.resize()
@@ -183,6 +204,8 @@ export default class Experience
 
         if(this.world)
             this.world.resize()
+
+        this.needsRender = true
     }
 
     destroy()

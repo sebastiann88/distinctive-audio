@@ -37,6 +37,8 @@ function devIslandRewrite()
             return html
                 // The island bundle -> the real entry module (HMR).
                 .replace('../dist/experience.js', '/sources/index.js')
+                // The WebGI product-viewer bundle -> its source module.
+                .replace('../dist/webgi.js', '/sources/webgi.js')
                 // Tailwind page CSS -> compiled on the fly by Vite/PostCSS.
                 .replace('../dist/site.css', '/site/src/site.css')
                 // Island CSS -> the source stylesheet. Must stay a <link> (not
@@ -114,6 +116,19 @@ export default defineConfig(({ command }) =>
         // Relative base: emitted asset URLs resolve from wherever dist/ is served,
         // so the site works at any subpath (e.g. GitHub project pages).
         base: './',
+        resolve: {
+            alias: {
+                // threepipe's default `import` export points at its UNBUNDLED
+                // lib/, which imports bare 'three' — that would resolve to THIS
+                // project's three (a different version than the fork threepipe
+                // is built against, breaking the build). Its dist/ bundle embeds
+                // the right fork, so route every 'threepipe' import (ours and
+                // the one inside @threepipe/webgi-plugins) to the self-contained
+                // bundle. The immersive island never imports threepipe, so the
+                // two entries stay fully isolated.
+                threepipe: path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'node_modules/threepipe/dist/index.mjs')
+            }
+        },
         server: {
             open: '/site/index.html'
         },
@@ -124,9 +139,15 @@ export default defineConfig(({ command }) =>
             emptyOutDir: false,
             sourcemap: true,
             rollupOptions: {
-                input: 'sources/index.js',
+                // Two independent islands: the immersive homepage experience and
+                // the WebGI product viewer. They share no modules, so each entry
+                // emits one self-contained file with a predictable name.
+                input: {
+                    experience: 'sources/index.js',
+                    webgi: 'sources/webgi.js'
+                },
                 output: {
-                    entryFileNames: 'experience.js',
+                    entryFileNames: '[name].js',
                     assetFileNames: 'experience.[ext]'
                 }
             }

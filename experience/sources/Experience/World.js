@@ -18,9 +18,9 @@ import Experience from './Experience.js'
  * Art direction (style-ref TAKE list + register):
  *  - cool pale ground (#f4f7fb family), soft skylight pools, no hard shadows
  *  - matte-black objects defined by silhouette, brass micro-details only
- *  - gold (#f0aa10) is a scarce scripted event: signal-path glint in beat 02,
- *    floor catch at the listening spot in beat 07 — edge catches elsewhere,
- *    never ambient, never a wash.
+ *  - gold (#f0aa10) is a scarce scripted event: the signal-path line resolving
+ *    on the floor in beat 02, the floor catch at the listening spot in beat 07
+ *    — edge catches elsewhere, never ambient, never a wash.
  */
 
 const VIGNETTE_X = [0, 16, 32, 48, 64]
@@ -60,17 +60,28 @@ export default class World
         // (the CSV's "body text is never read during a camera move" rule);
         // beat 02's long travel window IS the beat (the signature dolly).
         this.beatCams = [
-            { a: { pos: [-1.7, 1.15, 7.6], tgt: [0.9, 1.10, 0] },   s: { pos: [-0.7, 1.13, 7.1], tgt: [1.2, 1.05, 0] },    settle: 0.30, depart: 0.80 },
-            { a: { pos: [14.2, 1.08, 7.9], tgt: [15.3, 0.90, 0] },  s: { pos: [16.0, 1.06, 7.0], tgt: [16.0, 0.85, 0] },   settle: 0.70, depart: 0.88 },
-            { a: { pos: [29.0, 1.35, 8.8], tgt: [32.2, 0.75, -0.6] }, s: { pos: [30.2, 1.30, 8.0], tgt: [32.6, 0.70, -0.8] }, settle: 0.30, depart: 0.82 },
+            // 01: speaker RIGHT of frame, large (the copy card sits left in the
+            // DOM) — target is offset left of the speaker so it holds the right.
+            { a: { pos: [-0.35, 1.20, 7.4], tgt: [0.64, 1.02, 0] }, s: { pos: [0.5, 1.08, 5.8], tgt: [0.75, 0.92, 0] },    settle: 0.30, depart: 0.62 },
+            // 02: low sources trio — camera drops and closes in; settles earlier
+            // (0.55) since the section's scroll span was shortened.
+            { a: { pos: [14.3, 1.10, 7.0], tgt: [15.4, 0.78, 0] },  s: { pos: [16.0, 1.00, 5.6], tgt: [16.0, 0.62, 0] },   settle: 0.55, depart: 0.88 },
+            // 03: three plinths — target recentred on the tighter diagonal.
+            { a: { pos: [29.2, 1.35, 8.6], tgt: [31.6, 0.75, -0.3] }, s: { pos: [30.4, 1.25, 7.6], tgt: [31.9, 0.70, -0.4] }, settle: 0.30, depart: 0.82 },
             { a: { pos: [48.0, 1.05, 7.8], tgt: [48.0, 0.90, 0] },  s: { pos: [48.0, 1.05, 7.5], tgt: [48.0, 0.88, 0] },   settle: 0.25, depart: 0.84 },
-            { a: { pos: [64.0, 1.15, 9.2], tgt: [64.0, 1.00, 0] },  s: { pos: [64.0, 1.12, 8.4], tgt: [64.0, 0.98, 0] },   settle: 0.30, depart: 1.01 }
+            // 07: the ARRIVAL waits just left of the listening room (empty
+            // gallery in frame — the speakers must NOT loom in the canvas
+            // slivers behind the address/services bands), then a long lateral
+            // dolly brings the stereo pair gliding in from the right, settling
+            // tight on it. The chair reads small at the bottom.
+            { a: { pos: [58.2, 1.15, 7.8], tgt: [59.0, 0.95, -0.4] }, s: { pos: [64.0, 1.08, 6.2], tgt: [64.0, 0.85, -0.5] }, settle: 0.22, depart: 1.01 }
         ]
 
         this.disposables = { geometries: [], materials: [], textures: [] }
         this.trackedModels = new Set()
         this.camPos = new THREE.Vector3()
         this.camTgt = new THREE.Vector3()
+        this.tmp = new THREE.Vector3()
 
         this.resources.on('groupEnd', (_group) =>
         {
@@ -218,20 +229,44 @@ export default class World
         return clone
     }
 
-    /** Soft circular skylight pool on the floor under a vignette. */
+    /** Radial white glow texture (bright core, feathered to transparent) —
+     *  the skylight pools and any soft light catch. Built once, shared. */
+    radialGlowTexture()
+    {
+        if(this._radialGlow)
+            return this._radialGlow
+
+        const canvas = document.createElement('canvas')
+        canvas.width = canvas.height = 256
+        const ctx = canvas.getContext('2d')
+        const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128)
+        gradient.addColorStop(0, 'rgba(255,255,255,0.9)')
+        gradient.addColorStop(0.4, 'rgba(255,255,255,0.45)')
+        gradient.addColorStop(1, 'rgba(255,255,255,0)')
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, 256, 256)
+
+        this._radialGlow = new THREE.CanvasTexture(canvas)
+        this._radialGlow.colorSpace = THREE.SRGBColorSpace
+        this.disposables.textures.push(this._radialGlow)
+        return this._radialGlow
+    }
+
+    /** Soft circular skylight pool on the floor under a vignette — a radial
+     *  gradient (not a flat disc), so it reads as the oculus light landing. */
     skylightPool(x, radius)
     {
         const mesh = new THREE.Mesh(
-            this.geo(new THREE.CircleGeometry(radius, 48)),
+            this.geo(new THREE.PlaneGeometry(radius * 2, radius * 2)),
             this.mat(new THREE.MeshBasicMaterial({
-                color: '#ffffff',
+                map: this.radialGlowTexture(),
                 transparent: true,
-                opacity: 0.30,
+                opacity: 0.5,
                 depthWrite: false
             }))
         )
         mesh.rotation.x = -Math.PI / 2
-        mesh.position.set(x, 0.008, 0.4)
+        mesh.position.set(x, 0.006, 0.4)
         this.scene.add(mesh)
     }
 
@@ -249,7 +284,25 @@ export default class World
         this.setVignette04()
         this.setVignette07()
 
+        // Freeze static transforms: every mesh in the gallery is stationary
+        // (only the camera rig and the key/fill lights move), so skip the
+        // per-frame local-matrix recomposition for the whole mesh population.
+        // Materials still animate (gold opacities) — that doesn't touch matrices.
+        this.scene.traverse((child) =>
+        {
+            if(child.isMesh)
+            {
+                child.updateMatrix()
+                child.matrixAutoUpdate = false
+            }
+        })
+
         this.built = true
+        // First frame of the built scene must render even if the user has not
+        // scrolled (render-on-demand skips unchanged frames), and the throttled
+        // shadow map needs its first bake.
+        this.experience.needsRender = true
+        this.experience.renderer.instance.shadowMap.needsUpdate = true
     }
 
     setEnvironment()
@@ -268,7 +321,7 @@ export default class World
         {
             this.envMap = pmrem.fromEquirectangular(hdr).texture
             hdr.dispose()
-            this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.6
+            this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.45
         }
         else
         {
@@ -276,11 +329,14 @@ export default class World
             this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.25
         }
         pmrem.dispose()
+        this.envBase = this.scene.environmentIntensity
 
         this.disposables.textures.push(this.envMap)
         this.scene.environment = this.envMap
 
-        this.scene.fog = new THREE.Fog(this.colors.ground, 14, 34)
+        // Fog pulled in so floor and wall converge to the same tone where they
+        // meet (~12+ units out) — part of erasing the hard horizon line.
+        this.scene.fog = new THREE.Fog(this.colors.ground, 11, 30)
     }
 
     setMaterials()
@@ -297,37 +353,49 @@ export default class World
         this.brass = this.mat(new THREE.MeshStandardMaterial({
             color: '#b98f47', roughness: 0.3, metalness: 0.95
         }))
-        // Pale plinths / table.
-        this.plinth = this.mat(new THREE.MeshStandardMaterial({
-            color: '#e8edf4', roughness: 0.85, metalness: 0
+        // Pale plinths / table: lacquered museum finish. Clearcoat picks up the
+        // HDR environment so every face shades with the same skylight response
+        // (the flat Lambert-ish boxes previously read inconsistently lit), and
+        // an injected vertical gradient grounds each box — darker toward the
+        // floor, lifting toward the lit top edge.
+        this.plinth = this.mat(new THREE.MeshPhysicalMaterial({
+            color: '#e8edf4', roughness: 0.32, metalness: 0,
+            clearcoat: 0.6, clearcoatRoughness: 0.22
         }))
+        this.plinth.onBeforeCompile = (shader) =>
+        {
+            shader.vertexShader = shader.vertexShader
+                .replace('#include <common>', '#include <common>\nvarying float vPlinthY;')
+                .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPlinthY = (modelMatrix * vec4(transformed, 1.0)).y;')
+            shader.fragmentShader = shader.fragmentShader
+                .replace('#include <common>', '#include <common>\nvarying float vPlinthY;')
+                .replace('#include <color_fragment>', '#include <color_fragment>\n{\n\tfloat plinthH = smoothstep(0.0, 0.55, vPlinthY);\n\tdiffuseColor.rgb *= mix(0.82, 1.06, plinthH);\n}')
+        }
         // White cotton gloves.
         this.glove = this.mat(new THREE.MeshStandardMaterial({
             color: '#f5f2ea', roughness: 0.95, metalness: 0
         }))
         // Shared reflection material (mirrored clones). DoubleSide because the
         // y-flip reverses triangle winding, which would cull front-side faces.
+        // Opacity raised with the glossier floor — the reference's polished
+        // gallery shows a clearly readable (still soft) reflection.
         this.reflection = this.mat(new THREE.MeshBasicMaterial({
-            color: '#3a4250', transparent: true, opacity: 0.06, depthWrite: false,
+            color: '#3a4250', transparent: true, opacity: 0.16, depthWrite: false,
             side: THREE.DoubleSide
-        }))
-        // Gold luminous material — beats 02 and 07 ONLY. Unlit so it reads as a
-        // scripted light event against the pale gallery.
-        this.gold = this.mat(new THREE.MeshBasicMaterial({
-            color: this.colors.accent, transparent: true, opacity: 0
         }))
     }
 
     setGallery()
     {
-        // Polished pale concrete floor. A touch of emissive lifts the pale
-        // ground toward its albedo (no tone mapping to recover a dim render)
-        // without brightening the lights that shape the black objects.
+        // POLISHED pale concrete floor — low roughness so it picks up a real
+        // environment sheen (the reference's glossy museum floor); envMap
+        // intensity restrained so the pale ground doesn't blow out. The
+        // mirrored reflection clones read against this sheen.
         const floor = new THREE.Mesh(
             this.geo(new THREE.PlaneGeometry(120, 32)),
             this.mat(new THREE.MeshStandardMaterial({
-                color: '#edf1f7', roughness: 0.9,
-                emissive: '#edf1f7', emissiveIntensity: 0.25
+                color: '#e2e8f1', roughness: 0.56, metalness: 0,
+                envMapIntensity: 0.22
             }))
         )
         floor.rotation.x = -Math.PI / 2
@@ -335,25 +403,95 @@ export default class World
         floor.receiveShadow = true
         this.scene.add(floor)
 
-        // Back wall, blending into the ground color (soft cove via fog).
+        // Back wall, shaped in the SHADER (two injections):
+        //  1. Cove blend — the base fades into the floor color over ~2 units,
+        //     so the floor/wall junction reads as a soft cove, not a seam.
+        //  2. Oculus falloff — per 16-unit room, albedo falls away radially
+        //     from the skylight centre (x = room centre, y ≈ 3.2). This bakes
+        //     the reference's bright-centre / receding-corner grade into the
+        //     wall itself, so it survives any light-rig trim (unlike the unlit
+        //     glow planes, which the trims can't darken).
+        const wallMat = this.mat(new THREE.MeshStandardMaterial({
+            color: '#f4f7fb', roughness: 1
+        }))
+        const floorTone = new THREE.Color('#e6ebf3')
+        wallMat.onBeforeCompile = (shader) =>
+        {
+            shader.uniforms.uCoveColor = { value: floorTone }
+            shader.vertexShader = shader.vertexShader
+                .replace('#include <common>', '#include <common>\nvarying vec2 vWallXY;')
+                .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWallXY = (modelMatrix * vec4(transformed, 1.0)).xy;')
+            shader.fragmentShader = shader.fragmentShader
+                .replace('#include <common>', '#include <common>\nvarying vec2 vWallXY;\nuniform vec3 uCoveColor;')
+                .replace('#include <color_fragment>', `#include <color_fragment>
+{
+	vec3 wallCol = mix(uCoveColor, diffuseColor.rgb, smoothstep(0.0, 2.2, vWallXY.y));
+	float roomDx = abs(mod(vWallXY.x + 8.0, 16.0) - 8.0);
+	float oculusR = length(vec2(roomDx, (vWallXY.y - 3.2) * 0.85));
+	wallCol *= mix(1.05, 0.78, smoothstep(1.8, 7.5, oculusR));
+	diffuseColor.rgb = wallCol;
+}`)
+        }
         const wall = new THREE.Mesh(
             this.geo(new THREE.PlaneGeometry(120, 12)),
-            this.mat(new THREE.MeshStandardMaterial({
-                color: this.colors.ground, roughness: 1,
-                emissive: this.colors.ground, emissiveIntensity: 0.4
-            }))
+            wallMat
         )
+
+        // Oculus wall-wash: a soft radial glow high on the wall over every
+        // vignette — the visible bloom of the skylight the camera can never
+        // look up at. Brightens the upper wall exactly where the section
+        // headings sit; strongest in the final listening room (the reference
+        // image's top-of-frame glow).
+        for(const x of VIGNETTE_X)
+        {
+            const wash = new THREE.Mesh(
+                this.geo(new THREE.PlaneGeometry(8.5, 4)),
+                this.mat(new THREE.MeshBasicMaterial({
+                    map: this.radialGlowTexture(),
+                    transparent: true,
+                    opacity: x === VIGNETTE_X[4] ? 0.4 : 0.28,
+                    depthWrite: false
+                }))
+            )
+            wash.position.set(x, 3.1, -4.42)
+            this.scene.add(wash)
+        }
         wall.position.set(32, 6, -4.5)
         wall.receiveShadow = true
         this.scene.add(wall)
 
-        // Room seams between vignettes — the "vertical wall seam" the camera
-        // wipes past in transitions.
-        const seamMat = this.mat(new THREE.MeshStandardMaterial({ color: '#dde5ee', roughness: 1 }))
-        for(const x of [8, 24, 40, 56])
-        {
-            this.box(0.08, 12, 0.06, seamMat, x, 6, -4.44)
-        }
+        // (The old protruding "wall seam" pillars between vignettes are gone —
+        // under the brighter fill + AO they read as distracting vertical lines
+        // and broke the cove glow at their base.)
+
+        // Cove light at the wall base: ONE soft gradient bloom anchored at the
+        // floor line, fading upward — no bright core bar (a solid strip read
+        // as plastic baseboard trim, not emitted light). Unlit so it reads as
+        // glow, opacity kept low enough to melt into the wall.
+        const coveCanvas = document.createElement('canvas')
+        coveCanvas.width = 1
+        coveCanvas.height = 128
+        const coveCtx = coveCanvas.getContext('2d')
+        const coveGradient = coveCtx.createLinearGradient(0, 128, 0, 0)
+        coveGradient.addColorStop(0, 'rgba(255,255,255,0.6)')
+        coveGradient.addColorStop(0.35, 'rgba(255,255,255,0.22)')
+        coveGradient.addColorStop(1, 'rgba(255,255,255,0)')
+        coveCtx.fillStyle = coveGradient
+        coveCtx.fillRect(0, 0, 1, 128)
+        const coveTexture = new THREE.CanvasTexture(coveCanvas)
+        coveTexture.colorSpace = THREE.SRGBColorSpace
+        this.disposables.textures.push(coveTexture)
+
+        const coveGlow = new THREE.Mesh(
+            this.geo(new THREE.PlaneGeometry(120, 1.1)),
+            this.mat(new THREE.MeshBasicMaterial({
+                map: coveTexture, transparent: true, opacity: 0.4, depthWrite: false
+            }))
+        )
+        // Bottom edge exactly at the floor line so there is no visible seam
+        // where the bloom starts.
+        coveGlow.position.set(32, 0.55, -4.45)
+        this.scene.add(coveGlow)
 
         // Skylight pools, one per vignette.
         for(const x of VIGNETTE_X)
@@ -364,37 +502,66 @@ export default class World
 
     setLights()
     {
-        // Cool hemispheric ambient — broad, low-contrast fill. Intensities are
-        // tuned so the pale surfaces sit near their albedo instead of clipping
-        // to white (there is no tone mapping to absorb overexposure).
-        this.hemi = new THREE.HemisphereLight('#f4f7fb', '#d8e0ea', 0.65)
+        // Cool hemispheric ambient — broad, low-contrast fill, kept modest so
+        // the key light's soft shadows survive on the pale floor.
+        this.hemiBase = 0.65
+        this.hemi = new THREE.HemisphereLight('#f4f7fb', '#c5d1e0', this.hemiBase)
         this.scene.add(this.hemi)
 
-        // One dominant soft overhead source (slightly warm-neutral), high-radius
-        // soft shadows. It follows the active vignette so one shadow camera can
-        // stay tight across a 64-unit gallery.
-        this.key = new THREE.DirectionalLight('#fff8ee', 0.9)
+        // Shadowless front fill aimed at the back wall: the overhead key only
+        // grazes vertical surfaces, which left the wall grey and the matte-black
+        // objects reading as flat silhouettes. Tracks the vignette with the key.
+        this.fillBase = 0.95
+        this.fill = new THREE.DirectionalLight('#f4f7fb', this.fillBase)
+        this.fill.position.set(0, 4, 12)
+        this.fill.target.position.set(0, 3.2, -4.5)
+        this.scene.add(this.fill)
+        this.scene.add(this.fill.target)
+
+        // Per-beat exposure trims, eased in update(). Most beats run the rig
+        // as-is; beat 07 goes for the reference atmosphere — the oculus pool
+        // stays at full strength while the ambient terms (fill hits the wall
+        // head-on there, env, hemi) drop and the vignette deepens, so the
+        // stereo pair sits in a bright pool with cool falling-away corners.
+        this.lightTrims = [
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
+            { key: 0.9, fill: 0.22, env: 0.3, hemi: 0.55, vig: 2.6 }
+        ]
+
+        // One dominant overhead OCULUS: a wide, fully-feathered spotlight
+        // (penumbra 1) instead of a uniform directional, so each vignette sits
+        // in a soft circular pool of light that falls away toward the corners —
+        // the reference image's skylight look. decay 0 keeps the level
+        // comparable to the old directional key. It follows the active
+        // vignette so one shadow camera stays tight across the gallery.
+        this.keyBase = 2.1
+        this.key = new THREE.SpotLight('#fff8ee', this.keyBase, 0, 0.36, 1.0, 0)
         this.key.position.set(0, 9, 2.5)
         this.key.target.position.set(0, 0, 0)
         this.key.castShadow = true
+        // 1024px shadows (performance audit: at this PCF softness the 2048 map
+        // was indistinguishable); normalBias (over a large depth bias) avoids
+        // acne without detaching small parts' shadows from their objects.
         this.key.shadow.mapSize.set(1024, 1024)
         this.key.shadow.radius = 8
-        this.key.shadow.bias = -0.0005
-        this.key.shadow.camera.left = -8
-        this.key.shadow.camera.right = 8
-        this.key.shadow.camera.top = 8
-        this.key.shadow.camera.bottom = -8
+        this.key.shadow.bias = -0.0002
+        this.key.shadow.normalBias = 0.03
+        this.key.shadow.camera.near = 0.5
         this.key.shadow.camera.far = 20
         this.scene.add(this.key)
         this.scene.add(this.key.target)
     }
 
-    /** beat 01 — single matte-black floorstander on brass feet, set right. */
+    /** beat 01 — single floorstander, large and impressive in the RIGHT of
+     *  frame (the hero copy holds the left half), angled slightly to camera. */
     setVignette01()
     {
-        const x = VIGNETTE_X[0] + 1.5
+        const x = VIGNETTE_X[0] + 1.6
 
-        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x, z: 0 })
+        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.9, x, z: 0.4, rotY: -0.35 })
         if(speaker)
         {
             this.reflectModel(speaker)
@@ -402,136 +569,125 @@ export default class World
         }
 
         // Primitive fallback (manifest shipped no model).
-        const column = this.box(0.36, 1.18, 0.44, this.matteBlack, x, 0.65, 0)
-        this.brassFeet(x, 0, 0.36, 0.44)
+        const column = this.box(0.5, 1.7, 0.6, this.matteBlack, x, 0.9, 0)
+        this.brassFeet(x, 0, 0.5, 0.6)
 
         // Drivers on the front face.
-        this.cylinder(0.09, 0.09, 0.02, this.blackDetail, x, 1.02, 0.23).rotation.x = Math.PI / 2
-        this.cylinder(0.12, 0.12, 0.02, this.blackDetail, x, 0.66, 0.23).rotation.x = Math.PI / 2
-        this.cylinder(0.12, 0.12, 0.02, this.blackDetail, x, 0.36, 0.23).rotation.x = Math.PI / 2
+        this.cylinder(0.12, 0.12, 0.028, this.blackDetail, x, 1.42, 0.31).rotation.x = Math.PI / 2
+        this.cylinder(0.16, 0.16, 0.028, this.blackDetail, x, 0.92, 0.31).rotation.x = Math.PI / 2
+        this.cylinder(0.16, 0.16, 0.028, this.blackDetail, x, 0.5, 0.31).rotation.x = Math.PI / 2
 
         this.reflect(column)
     }
 
-    /** beat 02 (signature) — source, amplifier, speaker becoming one system. */
+    /** beat 02 (signature) — turntable, amplifier, CD player becoming one
+     *  system. The speakers belong to beats 01 and 07; this beat is about the
+     *  source-and-control chain. */
     setVignette02()
     {
         const cx = VIGNETTE_X[1]
 
-        // Source (low, wide), amplifier (with brass knobs), speaker column —
-        // three separated forms standing directly in the gallery, per the CSV.
+        // Turntable, integrated amplifier, CD player — three separated forms
+        // standing directly in the gallery, at matching real-world component
+        // widths (a full-size hi-fi chassis is ~0.44 m; everything here is
+        // scaled ×1.8 together so the trio carries the frame behind the
+        // centred approach cards without breaking relative proportions).
         // Each swaps to its GLB independently; any missing key keeps its
         // primitive stand-in.
-        const sourceModel = this.placeModel('compact-digital-source', { axis: 'x', size: 0.44, x: cx - 1.4, z: 0 })
-        if(sourceModel)
+        const ttModel = this.placeModel('turntable', { axis: 'x', size: 1.0, x: cx - 1.05, z: 0 })
+        if(ttModel)
         {
-            this.reflectModel(sourceModel)
+            this.reflectModel(ttModel)
         }
         else
         {
-            const source = this.box(0.7, 0.16, 0.42, this.matteBlack, cx - 1.4, 0.08, 0)
-            this.cylinder(0.05, 0.05, 0.01, this.brass, cx - 1.4, 0.165, 0.1)
-            this.reflect(source)
+            const tt = this.box(0.8, 0.14, 0.6, this.matteBlack, cx - 1.05, 0.07, 0)
+            this.cylinder(0.26, 0.26, 0.05, this.blackDetail, cx - 1.6, 0.165, 0)
+            this.cylinder(0.012, 0.012, 0.08, this.brass, cx - 1.6, 0.21, 0)
+            this.reflect(tt)
         }
 
-        const ampModel = this.placeModel('integrated-amplifier', { axis: 'x', size: 0.44, x: cx, z: 0 })
+        const ampModel = this.placeModel('integrated-amplifier', { axis: 'x', size: 0.8, x: cx, z: 0 })
         if(ampModel)
         {
             this.reflectModel(ampModel)
         }
         else
         {
-            const amp = this.box(0.62, 0.24, 0.46, this.matteBlack, cx, 0.12, 0)
-            const knobL = this.cylinder(0.035, 0.035, 0.03, this.brass, cx - 0.16, 0.14, 0.24)
+            const amp = this.box(0.8, 0.31, 0.6, this.matteBlack, cx, 0.155, 0)
+            const knobL = this.cylinder(0.045, 0.045, 0.04, this.brass, cx - 0.2, 0.18, 0.31)
             knobL.rotation.x = Math.PI / 2
-            const knobR = this.cylinder(0.035, 0.035, 0.03, this.brass, cx + 0.16, 0.14, 0.24)
+            const knobR = this.cylinder(0.045, 0.045, 0.04, this.brass, cx + 0.2, 0.18, 0.31)
             knobR.rotation.x = Math.PI / 2
             this.reflect(amp)
         }
 
-        const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: cx + 1.4, z: 0 })
-        if(speakerModel)
+        const cdModel = this.placeModel('cd-player', { axis: 'x', size: 0.8, x: cx + 1.05, z: 0 })
+        if(cdModel)
         {
-            this.reflectModel(speakerModel)
+            this.reflectModel(cdModel)
         }
         else
         {
-            const speaker = this.box(0.34, 1.1, 0.42, this.matteBlack, cx + 1.4, 0.61, 0)
-            this.brassFeet(cx + 1.4, 0, 0.34, 0.42)
-            this.cylinder(0.1, 0.1, 0.02, this.blackDetail, cx + 1.4, 0.9, 0.22).rotation.x = Math.PI / 2
-            this.cylinder(0.12, 0.12, 0.02, this.blackDetail, cx + 1.4, 0.5, 0.22).rotation.x = Math.PI / 2
-            this.reflect(speaker)
+            const cd = this.box(0.8, 0.2, 0.6, this.matteBlack, cx + 1.05, 0.1, 0)
+            this.cylinder(0.06, 0.06, 0.014, this.brass, cx + 1.05, 0.21, 0.14)
+            this.reflect(cd)
         }
 
-        // The scripted gold signal path — THIS BEAT ONLY. A glint travels the
-        // brass edges source → amp → speaker while a thin axis line resolves on
-        // the floor. Opacity is driven per-frame from the beat-02 local progress.
-        this.glintPath = [
-            new THREE.Vector3(cx - 1.4, 0.18, 0.12),
-            new THREE.Vector3(cx - 0.16, 0.15, 0.26),
-            new THREE.Vector3(cx + 0.16, 0.15, 0.26),
-            new THREE.Vector3(cx + 1.4, 0.62, 0.24)
-        ]
-        this.glint = new THREE.Mesh(this.geo(new THREE.SphereGeometry(0.035, 16, 16)), this.gold)
-        this.glint.castShadow = false
-        this.scene.add(this.glint)
-
+        // The scripted gold event — THIS BEAT ONLY. A thin gold line resolves
+        // on the floor beneath the three components as the system aligns (the
+        // signal path made literal; the old travelling dot read as an
+        // unexplained yellow ball and is gone).
         this.goldAxisMat = this.mat(new THREE.MeshBasicMaterial({
             color: this.colors.accent, transparent: true, opacity: 0
         }))
-        this.goldAxis = new THREE.Mesh(this.geo(new THREE.PlaneGeometry(2.8, 0.02)), this.goldAxisMat)
+        this.goldAxis = new THREE.Mesh(this.geo(new THREE.PlaneGeometry(3.1, 0.022)), this.goldAxisMat)
         this.goldAxis.rotation.x = -Math.PI / 2
-        this.goldAxis.position.set(cx, 0.012, 0.3)
+        this.goldAxis.position.set(cx, 0.012, 0.5)
         this.scene.add(this.goldAxis)
     }
 
-    /** beat 03 — four plinths receding diagonally, one silhouette each. */
+    /** beat 03 — three plinths receding diagonally, one component each:
+     *  turntable, integrated amplifier, digital source. The speakers belong to
+     *  beats 01 and 07; fewer, larger pieces read better as a curated set. */
     setVignette03()
     {
         const cx = VIGNETTE_X[2]
         const spots = [
-            [cx - 1.8, 0.9], [cx - 0.6, 0.3], [cx + 0.6, -0.3], [cx + 1.8, -0.9]
+            [cx - 1.7, 0.8], [cx - 0.1, 0.1], [cx + 1.5, -0.6]
         ]
 
         for(const [x, z] of spots)
         {
-            this.box(0.7, 0.5, 0.7, this.plinth, x, 0.25, z)
+            this.box(0.9, 0.5, 0.9, this.plinth, x, 0.25, z)
         }
 
-        // One silhouette per plinth top (y = 0.5), each independently a GLB or
+        // One component per plinth top (y = 0.5), each independently a GLB or
         // its primitive stand-in.
 
         // Turntable: plinth box + platter + brass spindle.
         const [tx, tz] = spots[0]
-        if(!this.placeModel('turntable-platter', { axis: 'x', size: 0.46, x: tx, y: 0.5, z: tz }))
+        if(!this.placeModel('turntable', { axis: 'x', size: 0.88, x: tx, y: 0.5, z: tz }))
         {
-            this.box(0.5, 0.08, 0.4, this.matteBlack, tx, 0.54, tz)
-            this.cylinder(0.16, 0.16, 0.03, this.blackDetail, tx, 0.6, tz)
-            this.cylinder(0.008, 0.008, 0.05, this.brass, tx, 0.63, tz)
+            this.box(0.66, 0.1, 0.5, this.matteBlack, tx, 0.55, tz)
+            this.cylinder(0.2, 0.2, 0.04, this.blackDetail, tx, 0.62, tz)
+            this.cylinder(0.01, 0.01, 0.06, this.brass, tx, 0.66, tz)
         }
 
         // Integrated amplifier face.
         const [ax, az] = spots[1]
-        if(!this.placeModel('integrated-amplifier', { axis: 'x', size: 0.44, x: ax, y: 0.5, z: az }))
+        if(!this.placeModel('integrated-amplifier', { axis: 'x', size: 0.66, x: ax, y: 0.5, z: az }))
         {
-            this.box(0.5, 0.18, 0.4, this.matteBlack, ax, 0.59, az)
-            this.cylinder(0.03, 0.03, 0.03, this.brass, ax + 0.12, 0.6, az + 0.21).rotation.x = Math.PI / 2
-        }
-
-        // Speaker column.
-        const [sx, sz] = spots[2]
-        if(!this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: sx, y: 0.5, z: sz }))
-        {
-            this.box(0.28, 0.9, 0.34, this.matteBlack, sx, 0.45 + 0.5, sz)
-            this.brassFeet(sx, sz, 0.28, 0.34)
+            this.box(0.66, 0.24, 0.5, this.matteBlack, ax, 0.62, az)
+            this.cylinder(0.04, 0.04, 0.035, this.brass, ax + 0.16, 0.64, az + 0.26).rotation.x = Math.PI / 2
         }
 
         // Compact digital source.
-        const [dx, dz] = spots[3]
-        if(!this.placeModel('compact-digital-source', { axis: 'x', size: 0.44, x: dx, y: 0.5, z: dz }))
+        const [dx, dz] = spots[2]
+        if(!this.placeModel('cd-player', { axis: 'x', size: 0.66, x: dx, y: 0.5, z: dz }))
         {
-            this.box(0.34, 0.1, 0.3, this.matteBlack, dx, 0.55, dz)
-            this.cylinder(0.02, 0.02, 0.015, this.brass, dx + 0.1, 0.56, dz + 0.16).rotation.x = Math.PI / 2
+            this.box(0.56, 0.16, 0.46, this.matteBlack, dx, 0.58, dz)
+            this.cylinder(0.03, 0.03, 0.02, this.brass, dx + 0.15, 0.6, dz + 0.24).rotation.x = Math.PI / 2
         }
     }
 
@@ -547,21 +703,23 @@ export default class World
             this.box(0.06, 0.72, 0.06, this.matteBlack, cx + ox, 0.36, oz)
         }
 
-        // Black component mid-audition, seated on the table top (y = 0.75).
-        if(!this.placeModel('turntable-platter', { axis: 'x', size: 0.46, x: cx - 0.4, y: 0.75, z: 0 }))
+        // Turntable mid-audition, seated on the table top (y = 0.75). Sized to
+        // read as a real ~44 cm deck against the 2.2-unit table; kept right of
+        // the table centre so the founder copy above stays clear of it.
+        if(!this.placeModel('turntable', { axis: 'x', size: 0.82, x: cx - 0.05, y: 0.75, z: 0 }))
         {
-            this.box(0.56, 0.18, 0.4, this.matteBlack, cx - 0.4, 0.84, 0)
-            this.cylinder(0.03, 0.03, 0.025, this.brass, cx - 0.24, 0.86, 0.21).rotation.x = Math.PI / 2
+            this.box(0.82, 0.2, 0.56, this.matteBlack, cx - 0.05, 0.85, 0)
+            this.cylinder(0.045, 0.045, 0.035, this.brass, cx + 0.2, 0.88, 0.29).rotation.x = Math.PI / 2
         }
 
         // White cotton gloves, set down beside it.
-        const gloveA = this.box(0.16, 0.02, 0.08, this.glove, cx + 0.25, 0.765, 0.12)
+        const gloveA = this.box(0.16, 0.02, 0.08, this.glove, cx + 0.55, 0.765, 0.12)
         gloveA.rotation.y = 0.4
-        const gloveB = this.box(0.16, 0.02, 0.08, this.glove, cx + 0.38, 0.765, -0.02)
+        const gloveB = this.box(0.16, 0.02, 0.08, this.glove, cx + 0.68, 0.765, -0.02)
         gloveB.rotation.y = -0.25
 
         // Small brass alignment weight.
-        this.cylinder(0.045, 0.055, 0.07, this.brass, cx + 0.75, 0.79, 0.1)
+        this.cylinder(0.045, 0.055, 0.07, this.brass, cx + 0.95, 0.79, 0.1)
 
         // Chair just pulled back from listening position — beside the table so
         // the audition tabletop stays the subject.
@@ -577,34 +735,59 @@ export default class World
         }
     }
 
-    /** beat 07 — the listening position: two speakers, low chair, gold catch. */
+    /** beat 07 — the listening position: a realistic near-field stereo pair,
+     *  toed in toward the listener; the chair reads small and secondary. */
     setVignette07()
     {
         const cx = VIGNETTE_X[4]
 
-        // A stereo pair — each placeModel() call clones the one loaded GLB.
-        for(const ox of [-2.2, 2.2])
+        // The stereo pair carries the frame: closer together (a real ~2.5 m
+        // triangle), larger, toed in toward the listening spot. Each
+        // placeModel() call clones the one loaded GLB.
+        for(const ox of [-1.3, 1.3])
         {
-            const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: cx + ox, z: -0.6 })
+            const toeIn = ox < 0 ? 0.3 : -0.3
+            const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.55, x: cx + ox, z: -0.6, rotY: toeIn })
             if(speakerModel)
             {
                 this.reflectModel(speakerModel)
                 continue
             }
 
-            const speaker = this.box(0.36, 1.18, 0.44, this.matteBlack, cx + ox, 0.65, -0.6)
-            this.brassFeet(cx + ox, -0.6, 0.36, 0.44)
-            this.cylinder(0.09, 0.09, 0.02, this.blackDetail, cx + ox, 1.02, -0.37).rotation.x = Math.PI / 2
-            this.cylinder(0.12, 0.12, 0.02, this.blackDetail, cx + ox, 0.5, -0.37).rotation.x = Math.PI / 2
+            const speaker = this.box(0.46, 1.55, 0.56, this.matteBlack, cx + ox, 0.85, -0.6)
+            this.brassFeet(cx + ox, -0.6, 0.46, 0.56)
+            this.cylinder(0.12, 0.12, 0.026, this.blackDetail, cx + ox, 1.32, -0.31).rotation.x = Math.PI / 2
+            this.cylinder(0.15, 0.15, 0.026, this.blackDetail, cx + ox, 0.66, -0.31).rotation.x = Math.PI / 2
             this.reflect(speaker)
         }
 
-        // Single low chair facing the pair, at the foreground edge but kept
-        // small and low so the central negative space stays clear for the CTA.
-        if(!this.placeModel('low-listening-chair', { axis: 'x', size: 0.80, x: cx, z: 3.4, rotY: Math.PI }))
+        // Single low chair at the apex of the listening triangle, pushed back
+        // and kept small so the speakers stay the subject of the frame, seat
+        // turned toward the pair (the listener's view, not ours).
+        const chairModel = this.placeModel('low-listening-chair', { axis: 'x', size: 0.6, x: cx, z: 2.1, rotY: Math.PI })
+        if(chairModel)
+        {
+            // Haze the chair toward the room tone: its dark rosewood/leather
+            // is by far the highest-contrast object in the pale gallery. An
+            // emissive lift (works over textured materials too) reads as the
+            // room's air catching it, keeping the wood detail but blending it.
+            const roomTone = new THREE.Color('#cdd6e2')
+            chairModel.traverse((child) =>
+            {
+                if(child.isMesh)
+                {
+                    for(const m of Array.isArray(child.material) ? child.material : [child.material])
+                    {
+                        m.emissive = roomTone.clone()
+                        m.emissiveIntensity = 0.16
+                    }
+                }
+            })
+        }
+        else
         {
             const chair = new THREE.Group()
-            chair.position.set(cx, 0, 3.4)
+            chair.position.set(cx, 0, 2.1)
             chair.rotation.y = Math.PI
             this.scene.add(chair)
             this.box(0.44, 0.05, 0.42, this.matteBlack, 0, 0.3, 0, chair)
@@ -615,16 +798,9 @@ export default class World
             }
         }
 
-        // Modest gold floor catch at the exact listening spot — THIS BEAT ONLY.
-        // Placed just ahead of the chair so it reads from the camera position
-        // behind the listener.
-        this.goldCatchMat = this.mat(new THREE.MeshBasicMaterial({
-            color: this.colors.accent, transparent: true, opacity: 0, depthWrite: false
-        }))
-        this.goldCatch = new THREE.Mesh(this.geo(new THREE.CircleGeometry(0.4, 40)), this.goldCatchMat)
-        this.goldCatch.rotation.x = -Math.PI / 2
-        this.goldCatch.position.set(cx, 0.014, 2.6)
-        this.scene.add(this.goldCatch)
+        // (No gold floor catch and no wall niche panels here anymore — the
+        // gold circle read as an unexplained yellow oval around the chair, and
+        // the niche bands read as stray rectangles on the wall.)
     }
 
     // ── per-frame ────────────────────────────────────────────────────────
@@ -649,14 +825,23 @@ export default class World
         const span = Math.max(beat.to - beat.from, 1e-6)
         const t = Math.min(1, Math.max(0, (progress - beat.from) / span))
 
+        // Motion extends each beat's scrub past the pin into the inter-section
+        // gap (see setBeatScrub). settle/depart are authored PIN-relative, so
+        // convert: tPin runs 0→1 across the pinned range only, and the depart
+        // travel maps over everything from the depart point to the extended
+        // end — the room-to-room dolly rides the whole gap instead of
+        // cramming into the pin's tail.
+        const scale = this.experience.sceneState.beatScales?.[i] || 1
+        const tPin = t / scale
+
         const a = cam.a, s = cam.s
-        if(t <= cam.settle)
+        if(tPin <= cam.settle)
         {
-            const k = this.ramp(t, 0, cam.settle)
-            this.camPos.set(...a.pos).lerp(new THREE.Vector3(...s.pos), k)
-            this.camTgt.set(...a.tgt).lerp(new THREE.Vector3(...s.tgt), k)
+            const k = this.ramp(tPin, 0, cam.settle)
+            this.camPos.set(...a.pos).lerp(this.tmp.set(...s.pos), k)
+            this.camTgt.set(...a.tgt).lerp(this.tmp.set(...s.tgt), k)
         }
-        else if(t <= cam.depart || i === this.beatCams.length - 1)
+        else if(tPin <= cam.depart || i === this.beatCams.length - 1)
         {
             this.camPos.set(...s.pos)
             this.camTgt.set(...s.tgt)
@@ -664,9 +849,9 @@ export default class World
         else
         {
             const next = this.beatCams[i + 1]
-            const k = this.ramp(t, cam.depart, 1)
-            this.camPos.set(...s.pos).lerp(new THREE.Vector3(...next.a.pos), k)
-            this.camTgt.set(...s.tgt).lerp(new THREE.Vector3(...next.a.tgt), k)
+            const k = this.ramp(t, cam.depart * scale, 1)
+            this.camPos.set(...s.pos).lerp(this.tmp.set(...next.a.pos), k)
+            this.camTgt.set(...s.tgt).lerp(this.tmp.set(...next.a.tgt), k)
         }
 
         const rig = this.experience.camera.modes.default.instance
@@ -674,39 +859,72 @@ export default class World
         rig.lookAt(this.camTgt)
 
         // Key light + shadow camera track the gallery position so soft shadows
-        // stay crisp near the framed vignette.
+        // stay crisp near the framed vignette; the wall fill follows along.
+        // The shadow map re-renders only when the key actually moved
+        // (shadowMap.autoUpdate is off — the scene's meshes never move).
+        if(Math.abs(this.camTgt.x - (this.lastShadowX ?? Infinity)) > 0.002)
+        {
+            this.lastShadowX = this.camTgt.x
+            this.experience.renderer.instance.shadowMap.needsUpdate = true
+        }
         this.key.position.set(this.camTgt.x, 9, 2.5)
         this.key.target.position.set(this.camTgt.x, 0, 0)
+        this.fill.position.set(this.camTgt.x, 4, 12)
+        this.fill.target.position.set(this.camTgt.x, 2, -4.5)
 
-        return { beatIndex: i, localT: t }
+        // localT stays PIN-relative (clamped) so the gold accents and light
+        // trims keep their authored timing against the pinned copy.
+        return { beatIndex: i, localT: Math.min(tPin, 1) }
     }
 
     updateGoldAccents(beatIndex, t)
     {
-        // Beat 02: glint traces the signal path, axis line resolves, then both
-        // fade back to edge catches only (per transition_out).
-        let glintOpacity = 0
-        let axisOpacity = 0
-        if(beatIndex === 1)
-        {
-            const inRamp = this.ramp(t, 0.12, 0.22)
-            const outRamp = 1 - this.ramp(t, 0.82, 0.96)
-            glintOpacity = inRamp * outRamp
-            axisOpacity = this.ramp(t, 0.5, 0.75) * outRamp * 0.85
-
-            const path = this.glintPath
-            const travel = this.ramp(t, 0.15, 0.72) * (path.length - 1)
-            const seg = Math.min(path.length - 2, Math.floor(travel))
-            this.glint.position.lerpVectors(path[seg], path[seg + 1], travel - seg)
-        }
-        this.gold.opacity = glintOpacity
-        this.goldAxisMat.opacity = axisOpacity
-
-        // Beat 07: modest floor catch at the listening point, arriving with the
-        // settled frame and holding.
-        this.goldCatchMat.opacity = (beatIndex === 4)
-            ? this.ramp(t, 0.25, 0.5) * 0.35
+        // Beat 02: the gold axis line resolves on the floor once the camera
+        // has mostly settled, then fades as the beat departs (transition_out).
+        this.goldAxisMat.opacity = (beatIndex === 1)
+            ? this.ramp(t, 0.4, 0.62) * (1 - this.ramp(t, 0.82, 0.96)) * 0.85
             : 0
+    }
+
+    /** Ease the light rig toward the active beat's exposure trim. Exponential
+     *  smoothing avoids a pop at beat boundaries; the needsRender flag keeps
+     *  frames coming until the ease lands (render-on-demand would otherwise
+     *  freeze a half-trimmed frame when scrolling stops mid-transition). */
+    updateLightTrims(beatIndex)
+    {
+        const trim = this.lightTrims[beatIndex] ?? { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 }
+        const keyTarget = this.keyBase * trim.key
+        const fillTarget = this.fillBase * trim.fill
+        const envTarget = this.envBase * trim.env
+        const hemiTarget = this.hemiBase * trim.hemi
+
+        this.key.intensity += (keyTarget - this.key.intensity) * 0.08
+        this.fill.intensity += (fillTarget - this.fill.intensity) * 0.08
+        this.hemi.intensity += (hemiTarget - this.hemi.intensity) * 0.08
+        this.scene.environmentIntensity += (envTarget - this.scene.environmentIntensity) * 0.08
+
+        // The CSS vignette overlay grades with the beat too (deepest in beat
+        // 07). It's DOM opacity — compositor-only, no WebGL render needed, and
+        // update() runs every rAF so the ease completes on its own.
+        this.vignetteEl ??= this.experience.targetElement?.querySelector('.experience__vignette')
+        if(this.vignetteEl)
+        {
+            this.vigCurrent ??= 0.45
+            const vigTarget = Math.min(1, 0.45 * trim.vig)
+            if(Math.abs(vigTarget - this.vigCurrent) > 0.002)
+            {
+                this.vigCurrent += (vigTarget - this.vigCurrent) * 0.08
+                this.vignetteEl.style.opacity = this.vigCurrent.toFixed(3)
+            }
+        }
+
+        if(Math.abs(keyTarget - this.key.intensity) > 0.005
+            || Math.abs(fillTarget - this.fill.intensity) > 0.005
+            || Math.abs(hemiTarget - this.hemi.intensity) > 0.005
+            || Math.abs(envTarget - this.scene.environmentIntensity) > 0.002)
+        {
+            this.experience.needsRender = true
+        }
     }
 
     resize()
@@ -721,6 +939,7 @@ export default class World
         const progress = this.experience.sceneState.scrollProgress
         const { beatIndex, localT } = this.updateCamera(progress)
         this.updateGoldAccents(beatIndex, localT)
+        this.updateLightTrims(beatIndex)
     }
 
     destroy()

@@ -15,6 +15,7 @@ module.exports = {
     // glob would bloat dist/site.css with their classes. site/brand/ is
     // REFERENCE, not output — don't scan it either.
     './site/index.html',
+    './site/webgi-demo.html',
     './site/partials/**/*.html',
   ],
   theme: {
@@ -33,6 +34,10 @@ module.exports = {
           DEFAULT: '#f0aa10', // exactly ONE word per display heading; primary CTA
           hover: '#d8980e',
         },
+        // Same gold under the CLASSIC site's token name, so the shared
+        // header/footer markup (copied verbatim from the classic pages for
+        // consistency) compiles here too.
+        'accent-gold': '#f0aa10',
         ground: '#f4f7fb',      // page background
         'body-text': '#005581', // default body text
       },

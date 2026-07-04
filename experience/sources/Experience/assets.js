@@ -21,8 +21,8 @@ export default [
             // Intentionally empty: with no items the World builds its primitive
             // gallery, which is the no-asset fallback path. The page manifest
             // (site/partials/experience.html) is what ships the production GLBs:
-            //   floorstanding-loudspeaker, compact-digital-source,
-            //   integrated-amplifier, turntable-platter, low-listening-chair
+            //   floorstanding-loudspeaker, cd-player,
+            //   integrated-amplifier, turntable, low-listening-chair
             // (models take `name` + `source` only). Add them via the page, not here.
         ]
     }

@@ -26,6 +26,20 @@
 }
 
 /*
+ * Vignette as pure CSS — replaces the WebGL vignette pass at zero GPU-scene
+ * cost. Bright center, cool receding corners; World eases `opacity` per story
+ * beat (deepest in the final listening room), which stays compositor-only.
+ */
+[data-experience] .experience__vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 1; /* above the canvas, below the loader */
+    pointer-events: none;
+    opacity: 0.45;
+    background: radial-gradient(120% 90% at 50% 42%, rgba(30, 42, 60, 0) 52%, rgba(30, 42, 60, 0.3) 100%);
+}
+
+/*
  * Minimalist loader: a pale field matching the scene's clear color, with one
  * thin line swept by the brand's scarce gold accent. It covers the mount from
  * first paint (pure HTML/CSS — no JS needed to show it) until the scene's
@@ -38,10 +52,10 @@
     align-items: center;
     justify-content: center;
     background: #f4f7fb; /* = sceneConfig.clearColor, so the fade is seamless */
-    /* Above the canvas (z auto, appended later) so the crossfade actually
-       reveals the scene — at z 0 the canvas covers the loader on boot and the
-       page hard-cuts to the clear color instead of fading. */
-    z-index: 1;
+    /* Above the canvas (z auto, appended later) AND the vignette overlay so
+       the crossfade actually reveals the scene — at z 0 the canvas covers the
+       loader on boot and the page hard-cuts to the clear color. */
+    z-index: 2;
     transition: opacity 0.8s ease;
 }
 
