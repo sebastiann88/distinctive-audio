@@ -1,12 +1,15 @@
 import * as THREE from 'three'
 import Experience from './Experience.js'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 /**
- * Dual-mode camera from the template: a `default` instance driven by your World
- * (scroll, animation, etc.) and a `debug` instance with OrbitControls for
- * inspecting the scene. Switch with `this.mode`. Unchanged from Bruno's original
- * — nothing here touches version-bound Three.js APIs.
+ * Dual-mode camera from the template: a `default` instance driven by the World
+ * (scroll) and — under the #debug hash only — a `debug` instance with
+ * OrbitControls for inspecting the scene.
+ *
+ * Production never constructs the debug rig: OrbitControls arrives with the
+ * dynamically imported debug tooling (see index.js), so its code, its pointer
+ * listeners on the full-viewport mount, and its per-frame damping update all
+ * stay out of the visitor's bundle and render loop.
  */
 export default class Camera
 {
@@ -14,15 +17,8 @@ export default class Camera
     {
         this.experience = new Experience()
         this.config = this.experience.config
-        this.debug = this.experience.debug
-        this.time = this.experience.time
-        this.sizes = this.experience.sizes
         this.targetElement = this.experience.targetElement
         this.scene = this.experience.scene
-
-        // defaultCamera | debugCamera — debug only when the #debug hash is set,
-        // so production always runs the World-driven default camera.
-        this.mode = this.config.debug ? 'debug' : 'default'
 
         this.setInstance()
         this.setModes()
@@ -40,41 +36,46 @@ export default class Camera
     {
         this.modes = {}
 
-        // Default
-        this.modes.default = {}
-        this.modes.default.instance = this.instance.clone()
+        // Default — the World-driven rig (World writes position + lookAt).
+        this.modes.default = { instance: this.instance.clone() }
         this.modes.default.instance.rotation.reorder('YXZ')
 
-        // Debug
-        this.modes.debug = {}
-        this.modes.debug.instance = this.instance.clone()
-        this.modes.debug.instance.rotation.reorder('YXZ')
-        this.modes.debug.instance.position.set(5, 5, 5)
+        // Debug — only when the tooling was dynamically imported (#debug hash).
+        const OrbitControls = this.experience.debugTools?.OrbitControls
+        if(this.config.debug && OrbitControls)
+        {
+            this.modes.debug = { instance: this.instance.clone() }
+            this.modes.debug.instance.rotation.reorder('YXZ')
+            this.modes.debug.instance.position.set(5, 5, 5)
 
-        this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
-        this.modes.debug.orbitControls.enabled = this.modes.debug.active
-        this.modes.debug.orbitControls.screenSpacePanning = true
-        this.modes.debug.orbitControls.zoomSpeed = 0.25
-        this.modes.debug.orbitControls.enableDamping = true
-        this.modes.debug.orbitControls.update()
+            this.modes.debug.orbitControls = new OrbitControls(this.modes.debug.instance, this.targetElement)
+            this.modes.debug.orbitControls.screenSpacePanning = true
+            this.modes.debug.orbitControls.zoomSpeed = 0.25
+            this.modes.debug.orbitControls.enableDamping = true
+            this.modes.debug.orbitControls.update()
+        }
+
+        this.mode = this.modes.debug ? 'debug' : 'default'
     }
 
     resize()
     {
-        this.instance.aspect = this.config.width / this.config.height
+        const aspect = this.config.width / this.config.height
+
+        this.instance.aspect = aspect
         this.instance.updateProjectionMatrix()
 
-        this.modes.default.instance.aspect = this.config.width / this.config.height
-        this.modes.default.instance.updateProjectionMatrix()
-
-        this.modes.debug.instance.aspect = this.config.width / this.config.height
-        this.modes.debug.instance.updateProjectionMatrix()
+        for(const mode of Object.values(this.modes))
+        {
+            mode.instance.aspect = aspect
+            mode.instance.updateProjectionMatrix()
+        }
     }
 
     update()
     {
-        // Update debug orbit controls
-        this.modes.debug.orbitControls.update()
+        // Damping means the debug camera keeps moving between pointer events.
+        this.modes.debug?.orbitControls.update()
 
         // Apply coordinates
         this.instance.position.copy(this.modes[this.mode].instance.position)
@@ -84,6 +85,6 @@ export default class Camera
 
     destroy()
     {
-        this.modes.debug.orbitControls.dispose()
+        this.modes.debug?.orbitControls.dispose()
     }
 }

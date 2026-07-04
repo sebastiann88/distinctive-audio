@@ -61,15 +61,17 @@ async function boot(mountEl)
     const manifest = readManifest(mountEl)
 
     // #debug only: pull the debug tooling BEFORE the experience constructs so
-    // the GUI folders exist from the first frame.
+    // the GUI folders exist from the first frame. OrbitControls rides along —
+    // the Camera builds its debug rig only when this bundle delivered it.
     let debugTools = null
     if(window.location.hash === '#debug')
     {
-        const [{ default: GUI }, { default: Stats }] = await Promise.all([
+        const [{ default: GUI }, { default: Stats }, { OrbitControls }] = await Promise.all([
             import('lil-gui'),
-            import('./Experience/Utils/Stats.js')
+            import('./Experience/Utils/Stats.js'),
+            import('three/addons/controls/OrbitControls.js')
         ])
-        debugTools = { GUI, Stats }
+        debugTools = { GUI, Stats, OrbitControls }
     }
 
     const experience = new Experience({

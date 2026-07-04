@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 
-import Time from './Utils/Time.js'
 import Sizes from './Utils/Sizes.js'
 
 import Resources from './Resources.js'
@@ -64,7 +63,6 @@ export default class Experience
             return
         }
 
-        this.time = new Time()
         this.sizes = new Sizes()
         this.setConfig()
         this.setDebug()
@@ -218,8 +216,7 @@ export default class Experience
         if(this.animationFrame)
             window.cancelAnimationFrame(this.animationFrame)
 
-        this.time?.stop()
-        this.sizes?.off('resize')
+        this.sizes?.destroy()
 
         this.motion?.destroy()
         this.world?.destroy()
