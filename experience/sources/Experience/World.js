@@ -69,12 +69,13 @@ export default class World
             // 03: three plinths — target recentred on the tighter diagonal.
             { a: { pos: [29.2, 1.35, 8.6], tgt: [31.6, 0.75, -0.3] }, s: { pos: [30.4, 1.25, 7.6], tgt: [31.9, 0.70, -0.4] }, settle: 0.30, depart: 0.82 },
             { a: { pos: [48.0, 1.05, 7.8], tgt: [48.0, 0.90, 0] },  s: { pos: [48.0, 1.05, 7.5], tgt: [48.0, 0.88, 0] },   settle: 0.25, depart: 0.84 },
-            // 07: the ARRIVAL waits just left of the listening room (empty
+            // 07: the ARRIVAL waits well left of the listening room (empty
             // gallery in frame — the speakers must NOT loom in the canvas
-            // slivers behind the address/services bands), then a long lateral
+            // slivers behind the address/services bands, even on wide
+            // viewports where the horizontal FOV grows), then a long lateral
             // dolly brings the stereo pair gliding in from the right, settling
             // tight on it. The chair reads small at the bottom.
-            { a: { pos: [58.2, 1.15, 7.8], tgt: [59.0, 0.95, -0.4] }, s: { pos: [64.0, 1.08, 6.2], tgt: [64.0, 0.85, -0.5] }, settle: 0.22, depart: 1.01 }
+            { a: { pos: [55.0, 1.15, 7.8], tgt: [55.8, 0.95, -0.4] }, s: { pos: [64.0, 1.08, 6.2], tgt: [64.0, 0.85, -0.5] }, settle: 0.22, depart: 1.01 }
         ]
 
         this.disposables = { geometries: [], materials: [], textures: [] }

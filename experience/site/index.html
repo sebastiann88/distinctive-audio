@@ -133,8 +133,11 @@
     </script>
   </div>
 
-  <!-- ── shared site header (same markup as the classic pages; Home active) ── -->
-  <header class="relative z-20">
+  <!-- ── shared site header (same markup as the classic pages; Home active).
+       This page is ~7 screens tall, so unlike the classic pages the bar
+       can't just live at the top: it sticks, hides while scrolling down,
+       and slides back on any scroll up (script at the end of <body>). ── -->
+  <header class="sticky top-0 z-40 transition-transform duration-300" data-site-header>
     <nav class="relative bg-primary-container shadow">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
@@ -215,7 +218,7 @@
          Overlapping the sections closes that hold to ~30vh; the beats' scroll
          triggers stay sequential (each ends before the next begins). -->
     <section id="the-distinctive-approach" data-beat="frame-index-02" data-section-ref="index.html section 02" class="relative -mt-[70vh] h-[145vh]">
-      <div class="sticky top-0 h-screen py-24" data-stage-content>
+      <div class="sticky top-0 h-screen pb-24 pt-36" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 md:px-8 md:pt-2">
           <!-- Heading + paragraph pin upper-left while the gold signal path aligns behind. -->
           <div class="max-w-xl" data-reveal="approach-heading">
@@ -227,7 +230,7 @@
             </p>
           </div>
         </div>
-        <div class="absolute inset-x-0 top-[42%] mx-auto w-full max-w-6xl -translate-y-1/2 px-5 md:px-8">
+        <div class="absolute inset-x-0 top-[44%] mx-auto w-full max-w-6xl -translate-y-1/2 px-5 md:px-8">
           <!-- The three service ideas land centred, slightly above mid-viewport,
                as the alignment completes. -->
           <div class="mx-auto grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-3">
@@ -263,7 +266,7 @@
     <!-- section 03 · frame-index-03 · 60vh scripted (shortened from the CSV's
          95vh — the reveals finish early, so the tail was a long empty scroll) -->
     <section id="featured-categories" data-beat="frame-index-03" data-section-ref="index.html section 03" class="relative -mt-[70vh] h-[160vh]">
-      <div class="sticky top-0 flex h-screen flex-col justify-between py-24" data-stage-content>
+      <div class="sticky top-0 flex h-screen flex-col justify-between pb-16 pt-36" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
           <div class="max-w-2xl" data-reveal="categories-heading">
             <p class="eyebrow text-on-surface/70">CURATED SELECTION</p>
@@ -502,5 +505,24 @@
 
   <!-- Deferred module — boots the experience after parse; never blocks paint. -->
   <script type="module" src="../dist/experience.js"></script>
+
+  <!-- Smart header: hides while scrolling down, slides back on any scroll up. -->
+  <script>
+    (function () {
+      var header = document.querySelector('[data-site-header]')
+      if (!header) return
+      var lastY = window.scrollY
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY
+        var menuOpen = !document.getElementById('mobile-menu')?.hidden
+        if (y > lastY && y > header.offsetHeight && !menuOpen) {
+          header.classList.add('-translate-y-full')
+        } else {
+          header.classList.remove('-translate-y-full')
+        }
+        lastY = Math.max(0, y)
+      }, { passive: true })
+    })()
+  </script>
 </body>
 </html>
