@@ -5,9 +5,10 @@
 (function () {
   "use strict";
 
-  // Page loader: the page stays behind a full-screen overlay until EVERY
-  // asset has arrived — all images (none are lazy), the webfonts, the window
-  // 'load' event, and (on the immersive homepage) the WebGL scene's models.
+  // Page loader (homepage only — it's the sole page with the markup): the
+  // page stays behind a full-screen overlay until EVERY asset has arrived —
+  // all images (none are lazy), the webfonts, the window 'load' event, and
+  // (when the immersive experience runs) the WebGL scene's models.
   // A thin progress line reflects real load progress; when complete the
   // overlay slides off to the right and scrolling unlocks.
   const loader = document.querySelector("[data-page-loader]");
