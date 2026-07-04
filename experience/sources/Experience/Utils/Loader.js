@@ -53,14 +53,18 @@ export default class Resources extends EventEmitter
         })
 
         // Draco
-        // Decoder path defaults to a versioned CDN so `npm run dev` works with
-        // zero setup. FOR PRODUCTION, self-host the decoder: copy three's
-        // examples/jsm/libs/draco/ into public/draco/ and set the path to
-        // 'draco/'. Depending on a third-party CDN for a render-blocking decoder
-        // is exactly the kind of thing the SEO/performance guidance warns against.
-        // `type: 'wasm'` (the default) is faster than Bruno's original 'js'.
+        // SELF-HOSTED decoder (no third-party CDN): public/draco/ holds the
+        // decoder files copied from the installed three release
+        // (node_modules/three/examples/jsm/libs/draco/), so versions can never
+        // drift apart. In dev, Vite serves public/ at the root (/draco/); in the
+        // built bundle the decoder sits beside experience.js (Vite copies
+        // public/ into dist/), so resolve it from the module URL — that works
+        // wherever dist/ is deployed. `type: 'wasm'` (the default) is faster
+        // than Bruno's original 'js'.
         const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/')
+        dracoLoader.setDecoderPath(
+            import.meta.env.DEV ? '/draco/' : new URL('draco/', import.meta.url).href
+        )
         dracoLoader.preload()
 
         this.loaders.push({

@@ -16,8 +16,10 @@
   full-viewport stage inside: the +100vh is the viewport itself, so the pinned
   portion equals the CSV's span exactly.
 
-  Graceful fallback: the poster <img> inside the mount is the LCP element and
-  the no-WebGL fallback; with JS off the page reads as a complete document.
+  Graceful fallback: the mount holds a minimalist loader (pale field + gold
+  sweep line) that crossfades into the scene's first rendered frame. Without
+  WebGL or JS the loader hides / never animates and the mount stays a quiet
+  pale background; the page still reads as a complete document.
 -->
 <html lang="en-CA" class="scroll-smooth">
 <head>
@@ -84,19 +86,21 @@
 <body>
   <a class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
 
-  <!-- ── the experience: fixed full-viewport canvas + poster fallback + manifest ── -->
+  <!-- ── the experience: fixed full-viewport canvas + minimalist loader + manifest ── -->
   <div class="experience fixed inset-0 z-0" data-experience>
-    <img
-      class="experience__poster"
-      src="experience/dist/assets/poster.jpg"
-      sizes="100vw"
-      width="918" height="1224"
-      alt="Matte-black floorstanding loudspeaker on brass feet in a pale high-end listening gallery at Distinctive Audio, Ottawa's high-end audio store."
-      fetchpriority="high">
+    <div class="experience__loader" aria-hidden="true">
+      <span class="experience__loader-line"></span>
+    </div>
     <script type="application/json" data-experience-manifest>
     {
       "assets": [
-        { "name": "base", "data": {}, "items": [] }
+        { "name": "base", "data": {}, "items": [
+          { "name": "floorstanding-loudspeaker", "source": "experience/dist/assets/models/floorstanding-loudspeaker.glb" },
+          { "name": "compact-digital-source", "source": "experience/dist/assets/models/compact-digital-source.glb" },
+          { "name": "integrated-amplifier", "source": "experience/dist/assets/models/integrated-amplifier.glb" },
+          { "name": "turntable-platter", "source": "experience/dist/assets/models/turntable-platter.glb" },
+          { "name": "low-listening-chair", "source": "experience/dist/assets/models/low-listening-chair.glb" }
+        ] }
       ],
       "sceneConfig": {
         "clearColor": "#f4f7fb",
@@ -383,11 +387,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Loading state: a small non-blocking pill; Motion fades it out on resources end. -->
-  <div class="pointer-events-none fixed bottom-6 left-6 z-[60] rounded-full bg-primary px-4 py-2 font-label text-xs font-medium text-surface" data-loader>
-    Distinctive Audio
-  </div>
 
   <!-- Deferred module — boots the experience after parse; never blocks paint. -->
   <script type="module" src="experience/dist/experience.js"></script>

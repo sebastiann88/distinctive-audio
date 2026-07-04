@@ -18,8 +18,12 @@ export default [
         data: {},
         items:
         [
-            // First pass: the gallery is primitive geometry — no files to load.
-            // Production GLBs/textures are added via the page manifest, not here.
+            // Intentionally empty: with no items the World builds its primitive
+            // gallery, which is the no-asset fallback path. The page manifest
+            // (site/partials/experience.html) is what ships the production GLBs:
+            //   floorstanding-loudspeaker, compact-digital-source,
+            //   integrated-amplifier, turntable-platter, low-listening-chair
+            // (models take `name` + `source` only). Add them via the page, not here.
         ]
     }
 ]

@@ -43,6 +43,10 @@ function devIslandRewrite()
                 // just the JS import) so the loader is styled from first paint,
                 // before any module loads — that gap is what the loader covers.
                 .replace('../dist/experience.css', '/sources/style.css')
+                // Manifest asset sources (models, textures) -> live public/
+                // (Vite serves it at the root), so dev never reads a stale
+                // build from dist/assets/.
+                .replaceAll('../dist/assets/', '/assets/')
         }
     }
 }

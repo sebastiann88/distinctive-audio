@@ -13,12 +13,20 @@
        the JS bundle never changes. Its shape matches sources/Experience/assets.js,
        which is what makes a later CMS port mechanical (Craft emits the same JSON).
 
-  First pass ships an empty items list (the gallery is primitive geometry built
-  in World.js). When production GLBs arrive they are added as items: models get
-  `name` + `source` only; color textures add `type: "texture", colorSpace:
-  "srgb"`; data maps (normal/roughness/AO) add `type: "texture"` with NO
-  colorSpace. `sceneConfig.beats` carries the approved beat-table ranges
-  (95/145/95/90/90 of 515vh).
+  The items list carries the five production GLBs (name + source only — models
+  never take type/colorSpace; GLTFLoader handles embedded textures itself) plus
+  the `environment` HDR, which World.js turns into the scene's image-based
+  lighting (drop it and the scene falls back to a neutral procedural env map).
+  Ship items EMPTY and World.js falls back to the first-pass primitive gallery
+  automatically. Color textures would add `type: "texture", colorSpace: "srgb"`;
+  data maps (normal/roughness/AO) `type: "texture"` with NO colorSpace.
+  `sceneConfig.beats` carries the approved beat-table ranges (95/145/95/90/90
+  of 515vh).
+
+  Model sources point into ../dist/ (Vite copies public/ there on build): the
+  deploy rewrite in build-site.mjs maps ../dist/ → experience/dist/, and the dev
+  server rewrite in vite.config.js maps ../dist/assets/ → /assets/ (live
+  public/, no rebuild needed).
 
   Tailwind classes on the wrapper shape only the BOX; the loader's layout and
   animation come from the scoped island CSS (sources/style.css), not Tailwind.
@@ -31,7 +39,14 @@
   <script type="application/json" data-experience-manifest>
   {
     "assets": [
-      { "name": "base", "data": {}, "items": [] }
+      { "name": "base", "data": {}, "items": [
+        { "name": "floorstanding-loudspeaker", "source": "../dist/assets/models/floorstanding-loudspeaker.glb" },
+        { "name": "compact-digital-source", "source": "../dist/assets/models/compact-digital-source.glb" },
+        { "name": "integrated-amplifier", "source": "../dist/assets/models/integrated-amplifier.glb" },
+        { "name": "turntable-platter", "source": "../dist/assets/models/turntable-platter.glb" },
+        { "name": "low-listening-chair", "source": "../dist/assets/models/low-listening-chair.glb" },
+        { "name": "environment", "source": "../dist/assets/hdr/environment.hdr" }
+      ] }
     ],
     "sceneConfig": {
       "clearColor": "#f4f7fb",

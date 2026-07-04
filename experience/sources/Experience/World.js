@@ -10,9 +10,10 @@ import Experience from './Experience.js'
  * between them driven by sceneState.scrollProgress (written by Motion/GSAP,
  * read here — one render loop).
  *
- * First-pass geometry is primitive (proportioned per each beat's `canvas`
- * column). Production GLBs swap in later through the manifest only — nothing
- * here hardcodes a geometry path.
+ * Objects are the production GLBs when the page manifest ships them in
+ * resources.items; any vignette whose models are absent falls back to the
+ * first-pass primitive geometry (proportioned per each beat's `canvas`
+ * column). Nothing here hardcodes a geometry path — the manifest is the seam.
  *
  * Art direction (style-ref TAKE list + register):
  *  - cool pale ground (#f4f7fb family), soft skylight pools, no hard shadows
@@ -67,6 +68,7 @@ export default class World
         ]
 
         this.disposables = { geometries: [], materials: [], textures: [] }
+        this.trackedModels = new Set()
         this.camPos = new THREE.Vector3()
         this.camTgt = new THREE.Vector3()
 
@@ -137,6 +139,85 @@ export default class World
         return clone
     }
 
+    /**
+     * Seat a manifest-loaded GLB in the gallery, or return null so the caller
+     * falls back to its primitive stand-in. The exports arrive NORMALIZED
+     * (~1-unit max dimension, center pivot), so authored scale is never
+     * trusted: measure the raw box, scale uniformly so the dominant `axis`
+     * matches the real-world `size`, then lift by -min.y so the model sits on
+     * the local floor `y` (0 for the gallery, plinth/table top otherwise).
+     *
+     * Returns a fresh clone each call — one loaded GLB feeds many placements
+     * (the floorstander appears in four beats). Clones share geometry,
+     * material, and texture, so those are registered for disposal exactly
+     * once per model name.
+     */
+    placeModel(name, { axis, size, x, y = 0, z, rotY = 0 })
+    {
+        const source = this.resources.items[name]?.scene
+        if(!source)
+            return null
+
+        if(!this.trackedModels.has(name))
+        {
+            this.trackedModels.add(name)
+            source.traverse((child) =>
+            {
+                if(child.isMesh)
+                {
+                    this.disposables.geometries.push(child.geometry)
+                    for(const material of Array.isArray(child.material) ? child.material : [child.material])
+                    {
+                        this.disposables.materials.push(material)
+                        if(material.map)
+                            this.disposables.textures.push(material.map)
+                    }
+                }
+            })
+        }
+
+        const model = source.clone()
+
+        const box = new THREE.Box3().setFromObject(model)
+        const dims = box.getSize(new THREE.Vector3())
+        const scale = size / dims[axis]
+        model.scale.setScalar(scale)
+        model.position.set(x, y - box.min.y * scale, z)
+        model.rotation.y = rotY
+
+        model.traverse((child) =>
+        {
+            if(child.isMesh)
+            {
+                child.castShadow = true
+                child.receiveShadow = true
+            }
+        })
+
+        this.scene.add(model)
+        return model
+    }
+
+    /** reflect(), for a placed model group: mirrored clone in the shared
+     *  reflection material. */
+    reflectModel(model)
+    {
+        const clone = model.clone()
+        clone.traverse((child) =>
+        {
+            if(child.isMesh)
+            {
+                child.material = this.reflection
+                child.castShadow = false
+                child.receiveShadow = false
+            }
+        })
+        clone.scale.y *= -1
+        clone.position.y *= -1
+        this.scene.add(clone)
+        return clone
+    }
+
     /** Soft circular skylight pool on the floor under a vignette. */
     skylightPool(x, radius)
     {
@@ -173,15 +254,31 @@ export default class World
 
     setEnvironment()
     {
-        // Neutral procedural env map so matte PBR holds a thin specular edge and
-        // brass reads as metal — no HDR asset needed for the first pass. Kept low
-        // so the cool pale skylight mood governs.
         const renderer = this.experience.renderer.instance
         const pmrem = new THREE.PMREMGenerator(renderer)
-        this.envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+
+        // Prefer the HDR shipped by the page manifest (name: 'environment') —
+        // real image-based lighting gives the matte-black GLBs believable
+        // specular gradients and lets the brass pick up warm reflections.
+        // Without it, fall back to the neutral procedural RoomEnvironment.
+        // Intensity stays restrained either way so the cool pale skylight mood
+        // governs; override per page via sceneConfig.environmentIntensity.
+        const hdr = this.resources.items['environment']
+        if(hdr)
+        {
+            this.envMap = pmrem.fromEquirectangular(hdr).texture
+            hdr.dispose()
+            this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.6
+        }
+        else
+        {
+            this.envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+            this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.25
+        }
+        pmrem.dispose()
+
         this.disposables.textures.push(this.envMap)
         this.scene.environment = this.envMap
-        this.scene.environmentIntensity = 0.25
 
         this.scene.fog = new THREE.Fog(this.colors.ground, 14, 34)
     }
@@ -208,9 +305,11 @@ export default class World
         this.glove = this.mat(new THREE.MeshStandardMaterial({
             color: '#f5f2ea', roughness: 0.95, metalness: 0
         }))
-        // Shared reflection material (mirrored clones).
+        // Shared reflection material (mirrored clones). DoubleSide because the
+        // y-flip reverses triangle winding, which would cull front-side faces.
         this.reflection = this.mat(new THREE.MeshBasicMaterial({
-            color: '#3a4250', transparent: true, opacity: 0.06, depthWrite: false
+            color: '#3a4250', transparent: true, opacity: 0.06, depthWrite: false,
+            side: THREE.DoubleSide
         }))
         // Gold luminous material — beats 02 and 07 ONLY. Unlit so it reads as a
         // scripted light event against the pale gallery.
@@ -295,6 +394,14 @@ export default class World
     {
         const x = VIGNETTE_X[0] + 1.5
 
+        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x, z: 0 })
+        if(speaker)
+        {
+            this.reflectModel(speaker)
+            return
+        }
+
+        // Primitive fallback (manifest shipped no model).
         const column = this.box(0.36, 1.18, 0.44, this.matteBlack, x, 0.65, 0)
         this.brassFeet(x, 0, 0.36, 0.44)
 
@@ -313,23 +420,48 @@ export default class World
 
         // Source (low, wide), amplifier (with brass knobs), speaker column —
         // three separated forms standing directly in the gallery, per the CSV.
-        const source = this.box(0.7, 0.16, 0.42, this.matteBlack, cx - 1.4, 0.08, 0)
-        this.cylinder(0.05, 0.05, 0.01, this.brass, cx - 1.4, 0.165, 0.1)
+        // Each swaps to its GLB independently; any missing key keeps its
+        // primitive stand-in.
+        const sourceModel = this.placeModel('compact-digital-source', { axis: 'x', size: 0.44, x: cx - 1.4, z: 0 })
+        if(sourceModel)
+        {
+            this.reflectModel(sourceModel)
+        }
+        else
+        {
+            const source = this.box(0.7, 0.16, 0.42, this.matteBlack, cx - 1.4, 0.08, 0)
+            this.cylinder(0.05, 0.05, 0.01, this.brass, cx - 1.4, 0.165, 0.1)
+            this.reflect(source)
+        }
 
-        const amp = this.box(0.62, 0.24, 0.46, this.matteBlack, cx, 0.12, 0)
-        const knobL = this.cylinder(0.035, 0.035, 0.03, this.brass, cx - 0.16, 0.14, 0.24)
-        knobL.rotation.x = Math.PI / 2
-        const knobR = this.cylinder(0.035, 0.035, 0.03, this.brass, cx + 0.16, 0.14, 0.24)
-        knobR.rotation.x = Math.PI / 2
+        const ampModel = this.placeModel('integrated-amplifier', { axis: 'x', size: 0.44, x: cx, z: 0 })
+        if(ampModel)
+        {
+            this.reflectModel(ampModel)
+        }
+        else
+        {
+            const amp = this.box(0.62, 0.24, 0.46, this.matteBlack, cx, 0.12, 0)
+            const knobL = this.cylinder(0.035, 0.035, 0.03, this.brass, cx - 0.16, 0.14, 0.24)
+            knobL.rotation.x = Math.PI / 2
+            const knobR = this.cylinder(0.035, 0.035, 0.03, this.brass, cx + 0.16, 0.14, 0.24)
+            knobR.rotation.x = Math.PI / 2
+            this.reflect(amp)
+        }
 
-        const speaker = this.box(0.34, 1.1, 0.42, this.matteBlack, cx + 1.4, 0.61, 0)
-        this.brassFeet(cx + 1.4, 0, 0.34, 0.42)
-        this.cylinder(0.1, 0.1, 0.02, this.blackDetail, cx + 1.4, 0.9, 0.22).rotation.x = Math.PI / 2
-        this.cylinder(0.12, 0.12, 0.02, this.blackDetail, cx + 1.4, 0.5, 0.22).rotation.x = Math.PI / 2
-
-        this.reflect(source)
-        this.reflect(amp)
-        this.reflect(speaker)
+        const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: cx + 1.4, z: 0 })
+        if(speakerModel)
+        {
+            this.reflectModel(speakerModel)
+        }
+        else
+        {
+            const speaker = this.box(0.34, 1.1, 0.42, this.matteBlack, cx + 1.4, 0.61, 0)
+            this.brassFeet(cx + 1.4, 0, 0.34, 0.42)
+            this.cylinder(0.1, 0.1, 0.02, this.blackDetail, cx + 1.4, 0.9, 0.22).rotation.x = Math.PI / 2
+            this.cylinder(0.12, 0.12, 0.02, this.blackDetail, cx + 1.4, 0.5, 0.22).rotation.x = Math.PI / 2
+            this.reflect(speaker)
+        }
 
         // The scripted gold signal path — THIS BEAT ONLY. A glint travels the
         // brass edges source → amp → speaker while a thin axis line resolves on
@@ -366,26 +498,41 @@ export default class World
             this.box(0.7, 0.5, 0.7, this.plinth, x, 0.25, z)
         }
 
+        // One silhouette per plinth top (y = 0.5), each independently a GLB or
+        // its primitive stand-in.
+
         // Turntable: plinth box + platter + brass spindle.
         const [tx, tz] = spots[0]
-        this.box(0.5, 0.08, 0.4, this.matteBlack, tx, 0.54, tz)
-        this.cylinder(0.16, 0.16, 0.03, this.blackDetail, tx, 0.6, tz)
-        this.cylinder(0.008, 0.008, 0.05, this.brass, tx, 0.63, tz)
+        if(!this.placeModel('turntable-platter', { axis: 'x', size: 0.46, x: tx, y: 0.5, z: tz }))
+        {
+            this.box(0.5, 0.08, 0.4, this.matteBlack, tx, 0.54, tz)
+            this.cylinder(0.16, 0.16, 0.03, this.blackDetail, tx, 0.6, tz)
+            this.cylinder(0.008, 0.008, 0.05, this.brass, tx, 0.63, tz)
+        }
 
         // Integrated amplifier face.
         const [ax, az] = spots[1]
-        this.box(0.5, 0.18, 0.4, this.matteBlack, ax, 0.59, az)
-        this.cylinder(0.03, 0.03, 0.03, this.brass, ax + 0.12, 0.6, az + 0.21).rotation.x = Math.PI / 2
+        if(!this.placeModel('integrated-amplifier', { axis: 'x', size: 0.44, x: ax, y: 0.5, z: az }))
+        {
+            this.box(0.5, 0.18, 0.4, this.matteBlack, ax, 0.59, az)
+            this.cylinder(0.03, 0.03, 0.03, this.brass, ax + 0.12, 0.6, az + 0.21).rotation.x = Math.PI / 2
+        }
 
-        // Speaker column (standing on the floor beside its plinth line).
+        // Speaker column.
         const [sx, sz] = spots[2]
-        this.box(0.28, 0.9, 0.34, this.matteBlack, sx, 0.45 + 0.5, sz)
-        this.brassFeet(sx, sz, 0.28, 0.34)
+        if(!this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: sx, y: 0.5, z: sz }))
+        {
+            this.box(0.28, 0.9, 0.34, this.matteBlack, sx, 0.45 + 0.5, sz)
+            this.brassFeet(sx, sz, 0.28, 0.34)
+        }
 
         // Compact digital source.
         const [dx, dz] = spots[3]
-        this.box(0.34, 0.1, 0.3, this.matteBlack, dx, 0.55, dz)
-        this.cylinder(0.02, 0.02, 0.015, this.brass, dx + 0.1, 0.56, dz + 0.16).rotation.x = Math.PI / 2
+        if(!this.placeModel('compact-digital-source', { axis: 'x', size: 0.44, x: dx, y: 0.5, z: dz }))
+        {
+            this.box(0.34, 0.1, 0.3, this.matteBlack, dx, 0.55, dz)
+            this.cylinder(0.02, 0.02, 0.015, this.brass, dx + 0.1, 0.56, dz + 0.16).rotation.x = Math.PI / 2
+        }
     }
 
     /** beat 04 — audition table: component, gloves, brass weight, chair. */
@@ -400,9 +547,12 @@ export default class World
             this.box(0.06, 0.72, 0.06, this.matteBlack, cx + ox, 0.36, oz)
         }
 
-        // Black component mid-audition.
-        this.box(0.56, 0.18, 0.4, this.matteBlack, cx - 0.4, 0.84, 0)
-        this.cylinder(0.03, 0.03, 0.025, this.brass, cx - 0.24, 0.86, 0.21).rotation.x = Math.PI / 2
+        // Black component mid-audition, seated on the table top (y = 0.75).
+        if(!this.placeModel('turntable-platter', { axis: 'x', size: 0.46, x: cx - 0.4, y: 0.75, z: 0 }))
+        {
+            this.box(0.56, 0.18, 0.4, this.matteBlack, cx - 0.4, 0.84, 0)
+            this.cylinder(0.03, 0.03, 0.025, this.brass, cx - 0.24, 0.86, 0.21).rotation.x = Math.PI / 2
+        }
 
         // White cotton gloves, set down beside it.
         const gloveA = this.box(0.16, 0.02, 0.08, this.glove, cx + 0.25, 0.765, 0.12)
@@ -432,8 +582,16 @@ export default class World
     {
         const cx = VIGNETTE_X[4]
 
+        // A stereo pair — each placeModel() call clones the one loaded GLB.
         for(const ox of [-2.2, 2.2])
         {
+            const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.05, x: cx + ox, z: -0.6 })
+            if(speakerModel)
+            {
+                this.reflectModel(speakerModel)
+                continue
+            }
+
             const speaker = this.box(0.36, 1.18, 0.44, this.matteBlack, cx + ox, 0.65, -0.6)
             this.brassFeet(cx + ox, -0.6, 0.36, 0.44)
             this.cylinder(0.09, 0.09, 0.02, this.blackDetail, cx + ox, 1.02, -0.37).rotation.x = Math.PI / 2
@@ -443,15 +601,18 @@ export default class World
 
         // Single low chair facing the pair, at the foreground edge but kept
         // small and low so the central negative space stays clear for the CTA.
-        const chair = new THREE.Group()
-        chair.position.set(cx, 0, 3.4)
-        chair.rotation.y = Math.PI
-        this.scene.add(chair)
-        this.box(0.44, 0.05, 0.42, this.matteBlack, 0, 0.3, 0, chair)
-        this.box(0.44, 0.3, 0.05, this.matteBlack, 0, 0.47, -0.19, chair)
-        for(const [ox, oz] of [[-0.18, -0.17], [0.18, -0.17], [-0.18, 0.17], [0.18, 0.17]])
+        if(!this.placeModel('low-listening-chair', { axis: 'x', size: 0.80, x: cx, z: 3.4, rotY: Math.PI }))
         {
-            this.box(0.035, 0.3, 0.035, this.matteBlack, ox, 0.15, oz, chair)
+            const chair = new THREE.Group()
+            chair.position.set(cx, 0, 3.4)
+            chair.rotation.y = Math.PI
+            this.scene.add(chair)
+            this.box(0.44, 0.05, 0.42, this.matteBlack, 0, 0.3, 0, chair)
+            this.box(0.44, 0.3, 0.05, this.matteBlack, 0, 0.47, -0.19, chair)
+            for(const [ox, oz] of [[-0.18, -0.17], [0.18, -0.17], [-0.18, 0.17], [0.18, 0.17]])
+            {
+                this.box(0.035, 0.3, 0.035, this.matteBlack, ox, 0.15, oz, chair)
+            }
         }
 
         // Modest gold floor catch at the exact listening spot — THIS BEAT ONLY.
