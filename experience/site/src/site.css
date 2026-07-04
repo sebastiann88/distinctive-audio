@@ -16,8 +16,10 @@
     @apply bg-ground text-body-text font-body antialiased;
   }
   /* The five pinned beat stages animate transform+opacity on scroll (GSAP);
-     pre-promoting them keeps the scrubbed reveals compositor-only. */
-  [data-stage-content] {
+     pre-promoting them keeps the scrubbed reveals compositor-only. Scoped to
+     the running experience — on the static document (phones, tablets, low-end
+     hardware) nothing animates, so pre-promoting would just waste memory. */
+  .experience-on [data-stage-content] {
     will-change: transform, opacity;
   }
   ::selection {

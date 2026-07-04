@@ -56,5 +56,14 @@ module.exports = {
       maxWidth: { prose: '65ch' },
     },
   },
-  plugins: [],
+  plugins: [
+    // `xp:` — styles that apply ONLY while the WebGL experience is running
+    // (the page's inline capability gate adds .experience-on to <html> on
+    // capable desktops before injecting the bundle). The base, unprefixed
+    // layout is the static document every other device gets: normal flow,
+    // no pinning, no section overlaps.
+    require('tailwindcss/plugin')(({ addVariant }) => {
+      addVariant('xp', '.experience-on &')
+    }),
+  ],
 }

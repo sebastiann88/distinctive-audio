@@ -43,11 +43,16 @@ export default class Motion
             document.fonts.ready.then(() => ScrollTrigger.refresh())
         }
 
+        // The page's capability gate already keeps this module off phones,
+        // tablets and reduced-motion visitors; the matchMedia guard here only
+        // needs to catch a preference change made mid-session. The two
+        // conditions are complementary so ONE always matches — matchMedia only
+        // runs the callback when at least one condition is true.
         this.mm = gsap.matchMedia()
 
         this.mm.add(
             {
-                isDesktop: '(min-width: 800px)',
+                standard: '(prefers-reduced-motion: no-preference)',
                 reduceMotion: '(prefers-reduced-motion: reduce)'
             },
             (context) =>

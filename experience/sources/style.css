@@ -20,6 +20,16 @@
     overflow: hidden;
 }
 
+/*
+ * The mount only exists for capable desktops: the page's inline gate adds
+ * .experience-on to <html> before it injects the bundle. Everyone else
+ * (phones, tablets, low-end hardware, reduced motion, no JS, no WebGL) gets
+ * the static document — no canvas, no loader, no fixed compositing layer.
+ */
+html:not(.experience-on) [data-experience] {
+    display: none;
+}
+
 /* The canvas is absolutely positioned inside the mount (see Renderer.js). */
 [data-experience] canvas {
     display: block;
@@ -85,12 +95,6 @@
 [data-experience].is-live .experience__loader {
     opacity: 0;
     pointer-events: none;
-}
-
-/* No WebGL: nothing will ever replace the loader, so don't strand a spinner —
-   hide it and leave the mount as a quiet pale background behind the content. */
-[data-experience].no-webgl .experience__loader {
-    display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,24 +2,28 @@
 <!--
   Distinctive Audio — immersive homepage (index.html).
 
-  The Three.js + GSAP experience is the product: a full-viewport canvas is
-  fixed behind the page; the Tailwind v3 overlay scrolls over it, choreographed
-  WITH the scene by GSAP (sources/Experience/Motion.js).
+  TWO LAYOUTS, ONE DOCUMENT:
+
+  · The BASE layout (no class on <html>) is a static, normally-flowing page:
+    auto-height sections, no pinning, no overlaps, poster image in the hero.
+    This is what phones, tablets, low-end hardware, reduced-motion visitors,
+    and no-JS/no-WebGL visitors get — and none of them download the WebGL
+    bundle or the 3D assets at all.
+
+  · The CHOREOGRAPHED layout applies only under html.experience-on (the `xp:`
+    Tailwind variant), added by the inline capability gate in <head> on
+    desktop viewports (≥1024px) with WebGL2 and no low-end signals. It pins
+    each beat section as a full-viewport stage over the fixed Three.js canvas,
+    choreographed by GSAP (sources/Experience/Motion.js).
 
   Choreography authority: pipeline/assets/distinctive-audio-beat-table.csv
-  (5 frame beats + 3 dom-only rows, 515vh of scripted scroll). Content
-  authority: the production index.html — every heading, paragraph, link label,
-  and CTA below is verbatim from it. Style authority: brand-system.md, encoded
-  once in tailwind.config.js.
+  (5 frame beats + 3 dom-only rows). Content authority: the production
+  index.html — every heading, paragraph, link label, and CTA below is verbatim
+  from it. Style authority: brand-system.md, encoded once in tailwind.config.
 
   Frame-beat sections are (scroll_span_vh + 100)vh tall with a sticky
   full-viewport stage inside: the +100vh is the viewport itself, so the pinned
   portion equals the CSV's span exactly.
-
-  Graceful fallback: the mount holds a minimalist loader (pale field + gold
-  sweep line) that crossfades into the scene's first rendered frame. Without
-  WebGL or JS the loader hides / never animates and the mount stays a quiet
-  pale background; the page still reads as a complete document.
 -->
 <html lang="en-CA" class="scroll-smooth">
 <head>
@@ -74,23 +78,44 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
-
-  <!-- Powers the shared header's <el-disclosure> mobile menu (same as the
-       classic pages). -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+  <!-- Only the weights the page actually uses: Inter 500/600 (labels),
+       Manrope 400/500/600 (body), Newsreader 400 + italic (headlines). -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&family=Manrope:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
 
   <!-- Relative paths so the page works from any base (local server, subpath
        deploys like GitHub project pages) — root-relative /dist/ only resolves
        when the server root is exactly experience/. -->
   <link rel="stylesheet" href="experience/dist/site.css">        <!-- Tailwind v3 (the UI) -->
   <link rel="stylesheet" href="experience/dist/experience.css">  <!-- scoped island CSS (the mount) -->
+
+  <!-- Capability gate: the WebGL experience is DESKTOP-ONLY and opts out for
+       constrained hardware. Everyone else keeps the static base layout and
+       never downloads the bundle or the 3D assets. Runs synchronously in
+       <head> so the choreographed layout applies before first paint. -->
+  <script>
+    (function () {
+      try {
+        if (!matchMedia('(min-width: 1024px)').matches) return
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        if (navigator.deviceMemory && navigator.deviceMemory <= 2) return
+        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) return
+        var canvas = document.createElement('canvas')
+        if (!canvas.getContext('webgl2')) return
+        document.documentElement.classList.add('experience-on')
+        var script = document.createElement('script')
+        script.type = 'module'
+        script.src = 'experience/dist/experience.js'
+        document.head.appendChild(script)
+      } catch (error) { /* stay on the static layout */ }
+    })()
+  </script>
 </head>
 
 <body>
   <a class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
 
-  <!-- ── the experience: fixed full-viewport canvas + minimalist loader + manifest ── -->
+  <!-- ── the experience: fixed full-viewport canvas + minimalist loader + manifest.
+       display:none unless html.experience-on (see sources/style.css). ── -->
   <div class="experience fixed inset-0 z-0" data-experience>
     <!-- Zero-cost vignette: a CSS radial gradient over the canvas replaces the
          old post-processing vignette pass; World eases its opacity per beat. -->
@@ -107,7 +132,7 @@
           { "name": "integrated-amplifier", "source": "experience/dist/assets/models/integrated-amplifier.glb" },
           { "name": "turntable", "source": "experience/dist/assets/models/turntable.glb" },
           { "name": "low-listening-chair", "source": "experience/dist/assets/models/low-listening-chair.glb" },
-          { "name": "environment", "source": "experience/dist/assets/hdr/environment.hdr" }
+          { "name": "environment", "source": "experience/dist/assets/exr/environment.exr" }
         ] }
       ],
       "sceneConfig": {
@@ -134,9 +159,8 @@
   </div>
 
   <!-- ── shared site header (same markup as the classic pages; Home active).
-       This page is ~7 screens tall, so unlike the classic pages the bar
-       can't just live at the top: it sticks, hides while scrolling down,
-       and slides back on any scroll up (script at the end of <body>). ── -->
+       Sticks, hides while scrolling down, and slides back on any scroll up
+       (script at the end of <body>). ── -->
   <header class="sticky top-0 z-40 transition-transform duration-300" data-site-header>
     <nav class="relative bg-primary-container shadow">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -156,8 +180,9 @@
             </div>
           </div>
           <div class="-mr-2 flex items-center sm:hidden">
-            <!-- Mobile menu button -->
-            <button type="button" command="--toggle" commandfor="mobile-menu" class="relative inline-flex items-center justify-center rounded-md p-2 text-white/80 hover:bg-white/10 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-gold">
+            <!-- Mobile menu button (plain JS toggle at the end of <body> — no
+                 CDN dependency). -->
+            <button type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" class="relative inline-flex items-center justify-center rounded-md p-2 text-white/80 hover:bg-white/10 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-gold">
               <span class="absolute -inset-0.5"></span>
               <span class="sr-only">Open main menu</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 [[aria-expanded='true']_&]:hidden">
@@ -171,7 +196,7 @@
         </div>
       </div>
 
-      <el-disclosure id="mobile-menu" hidden class="sm:hidden [&:not([hidden])]:block">
+      <div id="mobile-menu" hidden class="sm:hidden">
         <div class="space-y-1 pb-3 pt-2">
           <a href="index.html" class="block border-l-4 border-accent-gold bg-accent-gold/10 py-2 pl-3 pr-4 text-base font-medium text-accent-gold">Home</a>
           <a href="about.html" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">About</a>
@@ -179,19 +204,20 @@
           <a href="products.html" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">Products</a>
           <a href="contact.html" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">Contact</a>
         </div>
-      </el-disclosure>
+      </div>
     </nav>
   </header>
 
   <main id="main-content" class="relative z-10">
 
-    <!-- section 01 · frame-index-01 · 40vh scripted (shortened twice from the
-         CSV's 95vh so the hero hands off to section 2 with minimal scrolling) -->
-    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative h-[140vh]">
-      <div class="sticky top-0 flex h-screen items-center" data-stage-content>
-        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
-          <!-- Copy pins over the left half; the speaker holds the right, large. -->
-          <div class="max-w-xl rounded-xl bg-primary-container/95 p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] backdrop-blur-sm lg:p-14" data-reveal="hero-copy">
+    <!-- section 01 · frame-index-01 · hero.
+         Static: copy card + poster image in normal flow.
+         xp: 40vh scripted pin; copy pins over the left half, the speaker
+         holds the right of the WebGL frame. -->
+    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative xp:h-[140vh]">
+      <div class="xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-center" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 pb-14 pt-10 md:px-8 xp:py-0">
+          <div class="max-w-xl rounded-xl bg-primary-container/95 p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] lg:p-14" data-reveal="hero-copy">
             <p class="eyebrow text-secondary-container">ESTABLISHED 1986</p>
             <h1 class="mt-6 font-headline text-4xl leading-tight lg:text-6xl">
               Ottawa's <span class="italic text-accent">High-End</span> Audio Store
@@ -204,23 +230,27 @@
               <a class="btn border border-on-primary-container text-on-primary-container hover:bg-on-primary-container/10" href="products.html">Explore Products</a>
             </div>
           </div>
+          <!-- Static-layout hero visual: the scene's first frame as an image.
+               Hidden while the live experience renders behind the page. -->
+          <img class="mt-8 aspect-[4/3] w-full max-w-xl rounded-xl object-cover object-center shadow-[0_4px_20px_rgba(11,28,48,0.1)] xp:hidden" src="experience/dist/assets/poster.jpg" width="918" height="1224" decoding="async" alt="A floorstanding loudspeaker in the pale Distinctive Audio listening gallery">
         </div>
-        <span class="absolute bottom-8 left-1/2 -translate-x-1/2 text-primary" aria-hidden="true">
+        <span class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-primary xp:block" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="animate-bounce"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </div>
     </section>
 
-    <!-- section 02 · frame-index-02 (signature) · 45vh scripted (shortened from
-         the CSV's 145vh so the beat reads without excessive scrolling) -->
-    <!-- -mt-[70vh]: beat sections are transparent, so the structural 100vh
-         between one stage unpinning and the next pinning reads as dead scene.
-         Overlapping the sections closes that hold to ~30vh; the beats' scroll
-         triggers stay sequential (each ends before the next begins). -->
-    <section id="the-distinctive-approach" data-beat="frame-index-02" data-section-ref="index.html section 02" class="relative -mt-[70vh] h-[145vh]">
-      <div class="sticky top-0 h-screen pb-24 pt-36" data-stage-content>
-        <div class="mx-auto w-full max-w-6xl px-5 md:px-8 md:pt-2">
-          <!-- Heading + paragraph pin upper-left while the gold signal path aligns behind. -->
+    <!-- section 02 · frame-index-02 (signature).
+         Static: heading then cards in normal flow.
+         xp: 45vh scripted pin; the -mt overlap closes the structural hold
+         between one stage unpinning and the next pinning (the beats' scroll
+         triggers stay sequential). Cards sit HIGH — anchored just below the
+         heading (items-start, not centred) so they ride above the component
+         trio at the bottom of the frame and can never overlap the heading on
+         short viewports. -->
+    <section id="the-distinctive-approach" data-beat="frame-index-02" data-section-ref="index.html section 02" class="relative xp:-mt-[70vh] xp:h-[145vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:py-0 xp:pb-24 xp:pt-28" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
           <div class="max-w-xl" data-reveal="approach-heading">
             <h2 class="font-headline text-3xl text-on-surface md:text-5xl">
               The <span class="text-accent">Distinctive</span> Approach
@@ -230,10 +260,8 @@
             </p>
           </div>
         </div>
-        <div class="absolute inset-x-0 top-[44%] mx-auto w-full max-w-6xl -translate-y-1/2 px-5 md:px-8">
-          <!-- The three service ideas land centred, slightly above mid-viewport,
-               as the alignment completes. -->
-          <div class="mx-auto grid max-w-4xl grid-cols-1 gap-5 sm:grid-cols-3">
+        <div class="mx-auto mt-10 w-full max-w-6xl px-5 md:px-8 xp:mt-0 xp:flex xp:flex-1 xp:items-start xp:pt-8">
+          <div class="mx-auto grid w-full max-w-4xl grid-cols-1 gap-5 sm:grid-cols-3">
             <div class="card" data-reveal="approach-card">
               <h3 class="font-label text-base font-semibold text-primary">Tailored Synergy</h3>
               <p class="mt-3 text-sm">Matching components that complement each other well is an approach we've refined over the years.</p>
@@ -263,10 +291,11 @@
       </div>
     </section>
 
-    <!-- section 03 · frame-index-03 · 60vh scripted (shortened from the CSV's
-         95vh — the reveals finish early, so the tail was a long empty scroll) -->
-    <section id="featured-categories" data-beat="frame-index-03" data-section-ref="index.html section 03" class="relative -mt-[70vh] h-[160vh]">
-      <div class="sticky top-0 flex h-screen flex-col justify-between pb-16 pt-36" data-stage-content>
+    <!-- section 03 · frame-index-03 · featured categories.
+         Static: heading, category cards, view-all link in flow.
+         xp: 60vh scripted pin; heading top, links along the bottom. -->
+    <section id="featured-categories" data-beat="frame-index-03" data-section-ref="index.html section 03" class="relative xp:-mt-[70vh] xp:h-[160vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:justify-between xp:py-0 xp:pb-16 xp:pt-36" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
           <div class="max-w-2xl" data-reveal="categories-heading">
             <p class="eyebrow text-on-surface/70">CURATED SELECTION</p>
@@ -278,9 +307,8 @@
             </p>
           </div>
         </div>
-        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
-          <!-- Category links occupy the left and lower negative space in sequence. -->
-          <div class="grid max-w-4xl grid-cols-2 gap-4 lg:grid-cols-4">
+        <div class="mx-auto mt-10 w-full max-w-6xl px-5 md:px-8 xp:mt-0">
+          <div class="grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <a class="card group block !p-6" href="turntables.html" data-reveal="category">
               <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Turntables</h3>
               <p class="mt-1 text-sm">Analog sound at its purest — belt-drive decks, tonearms, and phono cartridges.</p>
@@ -306,11 +334,13 @@
       </div>
     </section>
 
-    <!-- section 04 · frame-index-04 · 90vh scripted -->
-    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative -mt-[70vh] h-[190vh]">
-      <div class="sticky top-0 flex h-screen items-start pt-32 md:pt-40" data-stage-content>
+    <!-- section 04 · frame-index-04 · founder.
+         Static: biography in normal flow.
+         xp: 90vh scripted pin; biography floats in the open wall area above
+         the audition table. -->
+    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative xp:-mt-[70vh] xp:h-[190vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-start xp:py-0 xp:pt-32 xp:md:pt-40" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
-          <!-- Biography floats in the open wall area above the audition table. -->
           <div class="max-w-2xl">
             <div data-reveal="founder-heading">
               <p class="eyebrow text-accent">Our Founder</p>
@@ -357,7 +387,7 @@
     </section>
 
     <!-- section 06 · dom-index-06 · Bespoke Services, 0vh scripted (DOM-led cards) -->
-    <section id="bespoke-services" data-dom-beat="dom-index-06" data-section-ref="index.html section 06" class="relative bg-ground/90 py-20 backdrop-blur-sm md:py-24">
+    <section id="bespoke-services" data-dom-beat="dom-index-06" data-section-ref="index.html section 06" class="relative bg-ground/95 py-20 md:py-24">
       <div class="mx-auto max-w-6xl px-5 md:px-8">
         <div class="mb-14 flex flex-col items-center space-y-4 text-center" data-reveal-item>
           <p class="eyebrow text-accent">Our Expertise</p>
@@ -387,17 +417,16 @@
       </div>
     </section>
 
-    <!-- section 07 · frame-index-07 · 90vh scripted -->
-    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative h-[190vh]">
-      <!-- Copy centres in the negative space between the stereo pair (nudged
-           slightly high of true centre so it clears the chair below). -->
-      <div class="sticky top-0 flex h-screen flex-col items-center justify-center pb-24 text-center" data-stage-content>
+    <!-- section 07 · frame-index-07 · closing CTA.
+         Static: centred block in normal flow.
+         xp: 90vh scripted pin; copy centres in the negative space between the
+         stereo pair. -->
+    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative xp:h-[190vh]">
+      <div class="py-20 text-center md:py-28 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:items-center xp:justify-center xp:py-0 xp:pb-24" data-stage-content>
         <div class="mx-auto max-w-3xl px-5 md:px-8">
-          <!-- Closing heading pins above the empty chair zone. -->
           <h2 class="font-headline text-3xl text-on-surface md:text-5xl" data-reveal="closing-heading">
             Hear the difference for yourself
           </h2>
-          <!-- Booking CTA lands in the clear central negative space. -->
           <div class="mt-10" data-reveal="closing-cta">
             <a class="btn-primary shadow-[0_4px_20px_rgba(11,28,48,0.15)]" href="contact.html">Book a Showroom Demo</a>
           </div>
@@ -503,18 +532,27 @@
     </div>
   </footer>
 
-  <!-- Deferred module — boots the experience after parse; never blocks paint. -->
-  <script type="module" src="experience/dist/experience.js"></script>
-
-  <!-- Smart header: hides while scrolling down, slides back on any scroll up. -->
+  <!-- Small page behaviours (no external dependencies):
+       1. Mobile menu toggle (replaces the old CDN custom-elements bundle).
+       2. Smart header: hides while scrolling down, slides back on scroll up. -->
   <script>
     (function () {
+      var toggle = document.querySelector('[data-menu-toggle]')
+      var menu = document.getElementById('mobile-menu')
+      if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+          var open = menu.hidden
+          menu.hidden = !open
+          toggle.setAttribute('aria-expanded', String(open))
+        })
+      }
+
       var header = document.querySelector('[data-site-header]')
       if (!header) return
       var lastY = window.scrollY
       window.addEventListener('scroll', function () {
         var y = window.scrollY
-        var menuOpen = !document.getElementById('mobile-menu')?.hidden
+        var menuOpen = menu && !menu.hidden
         if (y > lastY && y > header.offsetHeight && !menuOpen) {
           header.classList.add('-translate-y-full')
         } else {

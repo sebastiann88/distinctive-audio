@@ -137,7 +137,9 @@ export default defineConfig(({ command }) =>
             // dist/ is SHARED with the Tailwind CLI output (dist/site.css). Never
             // empty it from here or `npm run build` silently deletes the UI layer.
             emptyOutDir: false,
-            sourcemap: true,
+            // No production source maps: they added ~8 MB to every deploy for a
+            // static marketing site. Re-enable locally if you need to profile.
+            sourcemap: false,
             rollupOptions: {
                 // Two independent islands: the immersive homepage experience and
                 // the WebGI product viewer. They share no modules, so each entry

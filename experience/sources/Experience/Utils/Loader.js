@@ -1,9 +1,9 @@
 import EventEmitter from './EventEmitter.js'
 import Experience from '../Experience.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
 
 export default class Resources extends EventEmitter
 {
@@ -25,7 +25,13 @@ export default class Resources extends EventEmitter
     }
 
     /**
-     * Set loaders
+     * Set loaders — only the formats the site actually ships: GLBs compressed
+     * with EITHER Draco (KHR_draco_mesh_compression, decoded by the
+     * self-hosted decoder in public/draco/) or meshopt
+     * (EXT_meshopt_compression, decoded by the small WASM module bundled with
+     * three), EXR environment maps (DWAB-compressed — far smaller than the
+     * old RGBE .hdr), and plain images. The Draco decoder only downloads when
+     * a Draco GLB is actually parsed, so meshopt-only pages never pay for it.
      */
     setLoaders()
     {
@@ -33,7 +39,7 @@ export default class Resources extends EventEmitter
 
         // Images
         this.loaders.push({
-            extensions: ['jpg', 'png'],
+            extensions: ['jpg', 'png', 'webp'],
             action: (_resource) =>
             {
                 const image = new Image()
@@ -52,37 +58,22 @@ export default class Resources extends EventEmitter
             }
         })
 
-        // Draco
-        // SELF-HOSTED decoder (no third-party CDN): public/draco/ holds the
-        // decoder files copied from the installed three release
-        // (node_modules/three/examples/jsm/libs/draco/), so versions can never
-        // drift apart. In dev, Vite serves public/ at the root (/draco/); in the
-        // built bundle the decoder sits beside experience.js (Vite copies
-        // public/ into dist/), so resolve it from the module URL — that works
-        // wherever dist/ is deployed. `type: 'wasm'` (the default) is faster
-        // than Bruno's original 'js'.
+        // GLTF
+        // Draco: SELF-HOSTED decoder (no third-party CDN): public/draco/ holds
+        // the decoder files copied from the installed three release
+        // (node_modules/three/examples/jsm/libs/draco/gltf/), so versions can
+        // never drift apart. In dev, Vite serves public/ at the root
+        // (/draco/); in the built bundle the decoder sits beside
+        // experience.js, so resolve it from the module URL — that works
+        // wherever dist/ is deployed.
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath(
             import.meta.env.DEV ? '/draco/' : new URL('draco/', import.meta.url).href
         )
-        dracoLoader.preload()
 
-        this.loaders.push({
-            extensions: ['drc'],
-            action: (_resource) =>
-            {
-                dracoLoader.load(_resource.source, (_data) =>
-                {
-                    this.fileLoadEnd(_resource, _data)
-
-                    DRACOLoader.releaseDecoderModule()
-                })
-            }
-        })
-
-        // GLTF
         const gltfLoader = new GLTFLoader()
         gltfLoader.setDRACOLoader(dracoLoader)
+        gltfLoader.setMeshoptDecoder(MeshoptDecoder)
 
         this.loaders.push({
             extensions: ['glb', 'gltf'],
@@ -95,28 +86,14 @@ export default class Resources extends EventEmitter
             }
         })
 
-        // FBX
-        const fbxLoader = new FBXLoader()
+        // EXR (environment map)
+        const exrLoader = new EXRLoader()
 
         this.loaders.push({
-            extensions: ['fbx'],
+            extensions: ['exr'],
             action: (_resource) =>
             {
-                fbxLoader.load(_resource.source, (_data) =>
-                {
-                    this.fileLoadEnd(_resource, _data)
-                })
-            }
-        })
-
-        // RGBE | HDR
-        const rgbeLoader = new RGBELoader()
-
-        this.loaders.push({
-            extensions: ['hdr'],
-            action: (_resource) =>
-            {
-                rgbeLoader.load(_resource.source, (_data) =>
+                exrLoader.load(_resource.source, (_data) =>
                 {
                     this.fileLoadEnd(_resource, _data)
                 })

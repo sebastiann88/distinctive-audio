@@ -4,21 +4,26 @@ import Experience from './Experience/Experience.js'
 /**
  * Entry point and manifest bridge.
  *
- * This file does three jobs that keep the experience SEO- and CWV-safe:
+ * This module is only ever loaded by the page's inline capability gate: the
+ * gate adds `.experience-on` to <html> and injects this script ONLY on
+ * viewports ≥1024px with WebGL, no reduced-motion preference, and no obvious
+ * low-end hardware signals. Phones, tablets and older machines never download
+ * the bundle at all — they get the static document with the poster image
+ * (the base layout; see site/index.html).
+ *
+ * What this file still does:
  *
  * 1. READ THE MANIFEST. The page renders semantic HTML, then embeds a JSON
  *    manifest in a <script type="application/json"> tag (static HTML here; a CMS
  *    later emits the identical shape). We parse it and hand the assets +
  *    sceneConfig to the Experience. Same bundle, per-URL scene.
  *
- * 2. DEGRADE GRACEFULLY. The mount ships a CSS-only minimalist loader that
- *    covers it from first paint. If WebGL is unavailable we add .no-webgl and
- *    the loader hides, leaving the mount as a quiet pale background. The
- *    content around the canvas — the part search indexes — is untouched.
+ * 2. DEGRADE GRACEFULLY. If WebGL turns out to be unusable anyway, we drop the
+ *    page back to the static document by removing `.experience-on` — the same
+ *    complete, readable page every non-WebGL visitor gets.
  *
- * 3. DEFER THE MOUNT. We only boot the Experience when the mount scrolls into
- *    view (IntersectionObserver). Heavy WebGL work stays off the critical path,
- *    so Largest Contentful Paint stays fast even on 3D-heavy pages.
+ * 3. DEBUG ON DEMAND. lil-gui + stats are dynamic imports behind the #debug
+ *    hash, so production visitors never download the tooling.
  */
 
 function readManifest(mountEl)
@@ -43,7 +48,7 @@ function supportsWebGL()
     try
     {
         const canvas = document.createElement('canvas')
-        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')))
+        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl2') || canvas.getContext('webgl')))
     }
     catch(error)
     {
@@ -51,14 +56,27 @@ function supportsWebGL()
     }
 }
 
-function boot(mountEl)
+async function boot(mountEl)
 {
     const manifest = readManifest(mountEl)
+
+    // #debug only: pull the debug tooling BEFORE the experience constructs so
+    // the GUI folders exist from the first frame.
+    let debugTools = null
+    if(window.location.hash === '#debug')
+    {
+        const [{ default: GUI }, { default: Stats }] = await Promise.all([
+            import('lil-gui'),
+            import('./Experience/Utils/Stats.js')
+        ])
+        debugTools = { GUI, Stats }
+    }
 
     const experience = new Experience({
         targetElement: mountEl,
         assets: manifest.assets,       // undefined -> Experience falls back to assets.js
-        sceneConfig: manifest.sceneConfig
+        sceneConfig: manifest.sceneConfig,
+        debugTools
     })
 
     // Crossfade the loader only once the scene has actually drawn: resources
@@ -85,7 +103,7 @@ function boot(mountEl)
     })
 
     // Expose for debugging only (#debug hash) — not part of the public seam.
-    if(window.location.hash === '#debug')
+    if(debugTools)
     {
         window.__experience = experience
     }
@@ -97,23 +115,10 @@ document.querySelectorAll('[data-experience]').forEach((mountEl) =>
 {
     if(!supportsWebGL())
     {
-        mountEl.classList.add('no-webgl') // CSS hides the loader; pale field stays
+        // Back to the static document (poster hero, flowing sections).
+        document.documentElement.classList.remove('experience-on')
         return
     }
 
-    // Defer until visible. rootMargin gives us a head start so it's ready by the
-    // time it's actually on screen, without loading everything up front.
-    const observer = new IntersectionObserver((entries, obs) =>
-    {
-        entries.forEach((entry) =>
-        {
-            if(entry.isIntersecting)
-            {
-                obs.disconnect()
-                boot(mountEl)
-            }
-        })
-    }, { rootMargin: '200px' })
-
-    observer.observe(mountEl)
+    boot(mountEl)
 })

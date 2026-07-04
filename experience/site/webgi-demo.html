@@ -3,8 +3,8 @@
   WebGI (Threepipe) product-viewer demo.
 
   Shows the reusable viewer bundle (dist/webgi.js, source: sources/webgi.js) on
-  one of the production GLBs — the same models the immersive homepage uses,
-  exported from the WebGI editor with WEBGI_* extensions this viewer honors.
+  a production GLB as exported from the WebGI editor (assets/models/webgi/ —
+  the untouched original; the homepage's copies are recompressed for weight).
 
   Drop-in usage on any page (or a Craft template — the data attribute is where
   `{{ entry.speaker3d.one().getUrl() }}` goes):
@@ -40,10 +40,14 @@
     </p>
 
     <div id="threepipe-canvas-container" class="mt-10">
+      <!-- The webgi/ copy is the ORIGINAL WebGI-editor export (Draco), kept
+           separate from assets/models/*.glb — those are meshopt-recompressed
+           and simplified for the immersive homepage, and this viewer is
+           proven against the original export. -->
       <canvas
         id="three-canvas"
         class="hidden md:block"
-        data-webgi-model="../dist/assets/models/floorstanding-loudspeaker.glb"
+        data-webgi-model="../dist/assets/models/webgi/floorstanding-loudspeaker.glb"
         data-webgi-background="#F8FBFF"
         style="width: 650px; height: 950px; max-width: 100%;"
       ></canvas>

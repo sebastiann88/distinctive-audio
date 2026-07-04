@@ -311,17 +311,18 @@ export default class World
         const renderer = this.experience.renderer.instance
         const pmrem = new THREE.PMREMGenerator(renderer)
 
-        // Prefer the HDR shipped by the page manifest (name: 'environment') —
-        // real image-based lighting gives the matte-black GLBs believable
-        // specular gradients and lets the brass pick up warm reflections.
-        // Without it, fall back to the neutral procedural RoomEnvironment.
-        // Intensity stays restrained either way so the cool pale skylight mood
-        // governs; override per page via sceneConfig.environmentIntensity.
-        const hdr = this.resources.items['environment']
-        if(hdr)
+        // Prefer the environment map shipped by the page manifest (name:
+        // 'environment' — a DWAB-compressed EXR, ~190 KB) — real image-based
+        // lighting gives the matte-black GLBs believable specular gradients
+        // and lets the brass pick up warm reflections. Without it, fall back
+        // to the neutral procedural RoomEnvironment. Intensity stays
+        // restrained either way so the cool pale skylight mood governs;
+        // override per page via sceneConfig.environmentIntensity.
+        const envTexture = this.resources.items['environment']
+        if(envTexture)
         {
-            this.envMap = pmrem.fromEquirectangular(hdr).texture
-            hdr.dispose()
+            this.envMap = pmrem.fromEquirectangular(envTexture).texture
+            envTexture.dispose()
             this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.45
         }
         else

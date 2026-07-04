@@ -1,9 +1,7 @@
 import * as THREE from 'three'
-import GUI from 'lil-gui'
 
 import Time from './Utils/Time.js'
 import Sizes from './Utils/Sizes.js'
-import Stats from './Utils/Stats.js'
 
 import Resources from './Resources.js'
 import Renderer from './Renderer.js'
@@ -44,6 +42,9 @@ export default class Experience
         this.targetElement = _options.targetElement
         this.assets = _options.assets ?? assets
         this.sceneConfig = _options.sceneConfig ?? {}
+        // Debug tooling (lil-gui + stats) is dynamically imported by index.js
+        // ONLY under the #debug hash, so production visitors never download it.
+        this.debugTools = _options.debugTools ?? null
 
         // Shared, plain state that GSAP writes (in Motion) and World reads (in
         // update()). This is the seam that keeps a SINGLE render loop: GSAP owns
@@ -111,17 +112,17 @@ export default class Experience
 
     setDebug()
     {
-        if(this.config.debug)
+        if(this.config.debug && this.debugTools)
         {
-            this.debug = new GUI()
+            this.debug = new this.debugTools.GUI()
         }
     }
 
     setStats()
     {
-        if(this.config.debug)
+        if(this.config.debug && this.debugTools)
         {
-            this.stats = new Stats(true)
+            this.stats = new this.debugTools.Stats(true)
         }
     }
 
