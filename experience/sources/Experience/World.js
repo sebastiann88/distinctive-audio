@@ -861,9 +861,13 @@ export default class World
 
         // Key light + shadow camera track the gallery position so soft shadows
         // stay crisp near the framed vignette; the wall fill follows along.
-        // The shadow map re-renders only when the key actually moved
-        // (shadowMap.autoUpdate is off — the scene's meshes never move).
-        if(Math.abs(this.camTgt.x - (this.lastShadowX ?? Infinity)) > 0.002)
+        // The shadow map re-renders only when the key has moved MEANINGFULLY
+        // (shadowMap.autoUpdate is off — the scene's meshes never move). The
+        // 0.15-unit threshold is the scroll-smoothness lever: at 0.002 every
+        // scrubbed frame of a room-to-room dolly paid a full-scene shadow
+        // depth pass; at 0.15 the bake lands every ~few frames, and a soft
+        // 9-unit-high spotlight pool lagging ≤0.15 units is invisible.
+        if(Math.abs(this.camTgt.x - (this.lastShadowX ?? Infinity)) > 0.15)
         {
             this.lastShadowX = this.camTgt.x
             this.experience.renderer.instance.shadowMap.needsUpdate = true

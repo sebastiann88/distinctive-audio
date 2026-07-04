@@ -94,8 +94,11 @@ export default class Experience
         // fall back to a static frame, which also protects Core Web Vitals.
         this.config.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-        // Pixel ratio — clamp to 2 so retina phones don't render 3x and tank FPS
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.75)
+        // Pixel ratio — clamped to 1.5 (performance pass): fill rate scales
+        // with the SQUARE of this, so 1.5 renders ~27% fewer pixels than 1.75
+        // per frame. On the pale, soft-shadowed scene with MSAA still on, the
+        // retina difference doesn't read; the scroll smoothness does.
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.5)
 
         // Width and height come from the mount element, NOT the window. The mount
         // may be full-viewport (fixed inset-0) or a box; either way the canvas
@@ -194,7 +197,7 @@ export default class Experience
         this.config.width = boundings.width
         this.config.height = boundings.height
 
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.75)
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.5)
 
         if(this.camera)
             this.camera.resize()

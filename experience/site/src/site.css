@@ -50,6 +50,9 @@
     @apply btn border border-primary text-primary hover:bg-primary/5;
   }
   .card {
-    @apply rounded-xl border border-outline-variant bg-surface/90 p-8 shadow-[0_4px_20px_rgba(11,28,48,0.05)] backdrop-blur-sm;
+    /* No backdrop-blur: cards ride over the fixed WebGL canvas, and a
+       backdrop-filter there re-blurs the canvas region every scrolled frame.
+       Opacity bumped 90→95 so legibility holds without the blur. */
+    @apply rounded-xl border border-outline-variant bg-surface/95 p-8 shadow-[0_4px_20px_rgba(11,28,48,0.05)];
   }
 }
