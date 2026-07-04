@@ -96,6 +96,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -478,7 +486,6 @@
             <img
               src="images/articles/digital-intro.jpg"
               alt="High-End Digital Sources in Ottawa: Buyer's Guide"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -514,7 +521,6 @@
             <img
               src="images/articles/digital-what-counts.jpg"
               alt="What Counts as a Hi-Fi Digital Source?"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -563,7 +569,6 @@
             <img
               src="images/articles/digital-where-to-audition.jpg"
               alt="Where to Audition High-End Digital Sources in Ottawa"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -662,7 +667,6 @@
             <img
               src="images/articles/digital-how-to-choose.jpg"
               alt="How to Choose Between a DAC, Streamer, or All-in-One"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -705,7 +709,6 @@
             <img
               src="images/articles/digital-key-features.jpg"
               alt="Key Features to Compare Before Buying"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -826,7 +829,6 @@
             <img
               src="images/articles/digital-setup-tips.jpg"
               alt="Setup Tips for Ottawa Listeners"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

@@ -107,6 +107,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -431,7 +439,6 @@
             <img
               src="images/articles/racks-intro.jpg"
               alt="Hi-Fi Audio Racks &amp; Accessories Guide: Features and Buying Tips"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -466,7 +473,6 @@
             <img
               src="images/articles/racks-why-dedicated.jpg"
               alt="Why Dedicated Audio Racks Matter for Sound Quality"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -615,7 +621,6 @@
             <img
               src="images/articles/racks-configurations.jpg"
               alt="Rack Configurations for Ottawa Listening Rooms"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -702,7 +707,6 @@
             <img
               src="images/articles/racks-isolation-footers.jpg"
               alt="Isolation Footers and Pucks"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -728,7 +732,6 @@
             <img
               src="images/articles/racks-cable-management.jpg"
               alt="Cable Management and Routing Tools"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -812,7 +815,6 @@
             <img
               src="images/articles/racks-common-mistakes.jpg"
               alt="Common Mistakes Audiophiles Make With Racks and Accessories"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

@@ -133,6 +133,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -494,7 +502,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of a Parasound Halo A 21+ stereo power amplifier, silver faceplate, clean background."
                   src="images/products/parasound-solid-state-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -535,7 +542,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of a Bryston 4B³ Cubed stereo power amplifier, black finish, clean background."
                   src="images/products/micro-mega-solid-state-integrated-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -579,7 +585,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of a ModWright Instruments KWA 150SE stereo power amplifier, clean background."
                   src="images/products/modwright-vacuum-tube-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -619,7 +624,6 @@
             <img
               src="images/articles/power-amp-what-is.jpg"
               alt="Power amplifier connected to a preamplifier in a separates hi-fi system"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -641,7 +645,6 @@
             <img
               src="images/articles/power-amp-monoblock-vs-stereo.jpg"
               alt="A stereo power amplifier beside a pair of monoblock amplifiers"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

@@ -133,6 +133,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -500,7 +508,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A sleek silver solid-state integrated amplifier sitting on a minimalist dark wooden shelf. The lighting is soft and natural, emphasizing the brushed aluminum front panel, precise volume knob, and clean modern aesthetic. The background is a slightly out-of-focus bright interior, conveying a premium lifestyle."
                   src="images/products/audio-lab-integrated-amplifier-mid-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -545,7 +552,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A slim, ultra-modern black integrated amplifier positioned flat on a marble surface. The lighting is moody and dramatic, highlighting the sleek minimalist chassis and subtle LED indicators. The high-contrast setup reflects a sophisticated, cutting-edge audio environment."
                   src="images/products/micro-mega-solid-state-integrated-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -590,7 +596,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A unique audio amplifier featuring a natural bamboo wood casing. Set against an off-white background, the warm tones of the wood contrast with exposed metal components. The lighting is bright and editorial, capturing the artisanal, eco-conscious design language of the equipment."
                   src="images/products/tri-art-integrated-amplifier-medium-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -631,7 +636,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A heavy-duty, premium silver integrated amplifier with gold accent lines around the large central volume dial. Resting on a dark acoustically treated rack, the lighting is focused and warm, emphasizing the robust build quality and luxurious finish typical of high-end separates."
                   src="images/products/parasound-solid-state-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -675,7 +679,6 @@
             <img
               src="images/articles/solid-state-class-topology.jpg"
               alt="Class A, Class AB and Class D solid-state amplifier topologies compared"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -697,7 +700,6 @@
             <img
               src="images/articles/solid-state-what-is.jpg"
               alt="Matching solid-state integrated amplifier power to loudspeaker sensitivity and impedance"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

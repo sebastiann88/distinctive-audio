@@ -64,6 +64,14 @@
   <body
     class="bg-surface text-on-surface font-body-md antialiased selection:bg-secondary-container selection:text-on-background"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -282,7 +290,6 @@
               <img
                 alt="Pro-Ject"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/pro-ject.jpg"
               />
             </a>
@@ -293,7 +300,6 @@
               <img
                 alt="Clearaudio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/clearaudio.jpg"
               />
             </a>
@@ -304,7 +310,6 @@
               <img
                 alt="Oracle Audio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/oracle-audio.jpg"
               />
             </a>
@@ -315,7 +320,6 @@
               <img
                 alt="Gold Note"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/gold-note.jpg"
               />
             </a>
@@ -326,7 +330,6 @@
               <img
                 alt="Rekkord"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/rekkord.jpg"
               />
             </a>
@@ -337,7 +340,6 @@
               <img
                 alt="Ortofon"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/ortofon.jpg"
               />
             </a>
@@ -348,7 +350,6 @@
               <img
                 alt="Benz Micro"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/benz-micro.jpg"
               />
             </a>
@@ -359,7 +360,6 @@
               <img
                 alt="Dynavector"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/dynavector.jpg"
               />
             </a>
@@ -370,7 +370,6 @@
               <img
                 alt="Hana"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/hana.jpg"
               />
             </a>
@@ -381,7 +380,6 @@
               <img
                 alt="Charisma Audio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/charisma-audio.jpg"
               />
             </a>
@@ -392,7 +390,6 @@
               <img
                 alt="Graham"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/graham.jpg"
               />
             </a>
@@ -403,7 +400,6 @@
               <img
                 alt="Reed"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/reed.jpg"
               />
             </a>
@@ -425,7 +421,6 @@
               <img
                 alt="Audiolab"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/audio-lab.jpg"
               />
             </a>
@@ -436,7 +431,6 @@
               <img
                 alt="Unison Research"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/unison-research.jpg"
               />
             </a>
@@ -447,7 +441,6 @@
               <img
                 alt="PrimaLuna"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/prima-luna.jpg"
               />
             </a>
@@ -458,7 +451,6 @@
               <img
                 alt="ModWright"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/modwright.jpg"
               />
             </a>
@@ -469,7 +461,6 @@
               <img
                 alt="Musical Fidelity"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/musical-fidelity.jpg"
               />
             </a>
@@ -480,7 +471,6 @@
               <img
                 alt="Antique Sound Lab"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/antique-sound-lab.jpg"
               />
             </a>
@@ -491,7 +481,6 @@
               <img
                 alt="Audio Space"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/audio-space.jpg"
               />
             </a>
@@ -502,7 +491,6 @@
               <img
                 alt="Zesto Audio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/zesto-audio.jpg"
               />
             </a>
@@ -513,7 +501,6 @@
               <img
                 alt="Tri-Art"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/tri-art.jpg"
               />
             </a>
@@ -535,7 +522,6 @@
               <img
                 alt="MartinLogan"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/martin-logan.jpg"
               />
             </a>
@@ -546,7 +532,6 @@
               <img
                 alt="Unity Audio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/unity-audio.jpg"
               />
             </a>
@@ -568,7 +553,6 @@
               <img
                 alt="Magnetar"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/magnetar.jpg"
               />
             </a>
@@ -579,7 +563,6 @@
               <img
                 alt="Shanling"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/shanling.jpg"
               />
             </a>
@@ -601,7 +584,6 @@
               <img
                 alt="Cardas"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/cardas.jpg"
               />
             </a>
@@ -612,7 +594,6 @@
               <img
                 alt="Transparent"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/transparent.jpg"
               />
             </a>
@@ -623,7 +604,6 @@
               <img
                 alt="WBT"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/wbt.jpg"
               />
             </a>
@@ -645,7 +625,6 @@
               <img
                 alt="PS Audio"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/ps-audio.jpg"
               />
             </a>
@@ -656,7 +635,6 @@
               <img
                 alt="IsoAcoustics"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/iso-acoustics.jpg"
               />
             </a>
@@ -667,7 +645,6 @@
               <img
                 alt="Black Diamond Racing"
                 class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                loading="lazy"
                 src="images/brand-logos/black-diamond-racing.jpg"
               />
             </a>

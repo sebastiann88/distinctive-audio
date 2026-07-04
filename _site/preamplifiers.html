@@ -133,6 +133,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -485,7 +493,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A sleek silver ModWright LS 100 tube preamplifier sitting on a minimalist white surface in bright, clean studio lighting. The brushed aluminum faceplate reflects a premium, light-mode editorial aesthetic with sharp focus on the precision dials."
                   src="images/products/modwright-vacuum-tube-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -532,7 +539,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A black Parasound Halo JC 2 BP solid-state preamplifier with glowing blue indicator lights. It is shot straight-on in a high-key studio environment, emphasizing the sleek, modern lines and robust build quality associated with high-end audio gear."
                   src="images/products/parasound-solid-state-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -575,7 +581,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A top-tier ModWright Ambrose One preamplifier featuring large exposed vacuum tubes and an external power supply. Photographed in an editorial style on a light oak surface with soft, diffused daylight highlighting the premium brushed metal finishes."
                   src="images/products/modwright-vacuum-tube-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -617,7 +622,6 @@
             <img
               src="images/articles/preamp-what-is.jpg"
               alt="Preamplifier acting as the control centre of a separates hi-fi system"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -638,7 +642,6 @@
             <img
               src="images/articles/preamp-tube-vs-solid-state.jpg"
               alt="Tube and solid-state preamplifiers side by side"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

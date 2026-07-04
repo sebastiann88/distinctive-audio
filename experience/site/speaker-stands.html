@@ -163,6 +163,14 @@
   <body
     class="bg-background text-on-surface antialiased font-body-md selection:bg-secondary-container selection:text-on-surface"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -677,7 +685,6 @@
           <img
             src="images/articles/stands-intro.jpg"
             alt="High-end speaker stands supporting bookshelf speakers in an Ottawa room"
-            loading="lazy"
             class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
           />
         </figure>
@@ -694,7 +701,6 @@
           <img
             src="images/articles/stands-height.jpg"
             alt="Measuring tweeter height to ear level on a seated listener"
-            loading="lazy"
             class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
           />
         </figure>
@@ -729,7 +735,6 @@
           <img
             src="images/articles/stands-mass-fill.jpg"
             alt="Hollow-pillar speaker stand being filled with dry sand for mass loading"
-            loading="lazy"
             class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
           />
         </figure>

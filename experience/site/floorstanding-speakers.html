@@ -169,6 +169,14 @@
   <body
     class="bg-surface text-on-surface antialiased font-body-md selection:bg-tertiary-fixed-dim selection:text-on-background"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -686,7 +694,6 @@
             <img
               src="images/articles/floorstanding-intro.jpg"
               alt="High-end floorstanding tower speakers set up in an Ottawa listening room"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -707,7 +714,6 @@
             <img
               src="images/articles/floorstanding-drivers.jpg"
               alt="Driver array and cabinet of a full-range floorstanding loudspeaker"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -742,7 +748,6 @@
             <img
               src="images/articles/floorstanding-room-placement.jpg"
               alt="Floorstanding speakers positioned away from the walls in a treated room"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -770,7 +775,6 @@
             <img
               src="images/articles/floorstanding-amplification.jpg"
               alt="Integrated amplifier driving a pair of floorstanding loudspeakers"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

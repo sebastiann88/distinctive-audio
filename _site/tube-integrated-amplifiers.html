@@ -133,6 +133,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -492,7 +500,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A sleek, modern Unison Research Simply Italy tube integrated amplifier resting on a minimalist wooden surface. The lighting highlights the warm glow of the EL34 tubes and the brushed metal finish. The background is a clean, neutral gray gallery setting."
                   src="images/products/unison-research-vacuum-tube-intergrated-amplifier-medium-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -533,7 +540,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A robust Unison Research S6 tube amplifier showcasing multiple glowing vacuum tubes. The amplifier is positioned on a high-end audio rack in a sophisticated, softly lit room. The dark wood and metal accents of the amp stand out against a muted background."
                   src="images/products/unison-research-vacuum-tube-intergrated-amplifier-medium-end-2.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -574,7 +580,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="A premium high-fidelity tube amplifier with massive transformers and glowing KT88 tubes. It is beautifully lit with natural window light in a luxurious living space, highlighting its brushed aluminum faceplate."
                   src="images/products/modwright-vacuum-tube-pre-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -614,7 +619,6 @@
             <img
               src="images/articles/tube-integrated-what-is.jpg"
               alt="Glowing valves inside a tube integrated amplifier"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -636,7 +640,6 @@
             <img
               src="images/articles/tube-integrated-tube-types.jpg"
               alt="EL34 and KT88 output tubes used in integrated amplifiers"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

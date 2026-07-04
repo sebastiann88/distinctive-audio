@@ -161,6 +161,14 @@
   <body
     class="bg-background text-on-surface font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -665,7 +673,6 @@
                 <img
                   alt="Norstone Esse Hi-Fi Rack"
                   class="object-cover w-full h-full mix-blend-darken transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
                   src="images/products/norstone-audio-rack-high-end.jpg"
                 />
               </div>
@@ -732,7 +739,6 @@
                 <img
                   alt="Tri-Art Audio Bamboo Rack"
                   class="object-cover w-full h-full mix-blend-darken transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
                   src="images/products/tri-art-audio-rack-high-end-3.jpg"
                 />
               </div>
@@ -798,7 +804,6 @@
                 <img
                   alt="Norstone Spider Rack"
                   class="object-cover w-full h-full mix-blend-darken transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
                   src="images/products/norstone-audio-rack-high-end.jpg"
                 />
               </div>

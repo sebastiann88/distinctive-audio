@@ -104,6 +104,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -458,7 +466,6 @@
             <img
               src="images/articles/cables-intro.jpg"
               alt="Ottawa Hi-Fi Cable Buyer's Guide"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -489,7 +496,6 @@
             <img
               src="images/articles/cables-worth-investment.jpg"
               alt="What Makes a Hi-Fi Cable Worth the Investment?"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -543,7 +549,6 @@
             <img
               src="images/articles/cables-where-to-buy.jpg"
               alt="Where to Buy Hi-Fi Cables in Ottawa"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -592,7 +597,6 @@
             <img
               src="images/articles/cables-types.jpg"
               alt="Which Cable Types Match Your System?"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -676,7 +680,6 @@
             <img
               src="images/articles/cables-custom.jpg"
               alt="How Do Custom-Made Cables Improve Your Setup?"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -807,7 +810,6 @@
             <img
               src="images/articles/cables-budget.jpg"
               alt="How to Choose the Right Cable for Your Budget"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -834,7 +836,6 @@
             <img
               src="images/articles/cables-demo.jpg"
               alt="Why Book a Listening Demo Before You Buy"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

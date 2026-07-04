@@ -112,7 +112,16 @@
 </head>
 
 <body>
-  <a class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
+  <!-- Full-page loader: holds the page until every asset has loaded — images,
+       fonts, AND the WebGL scene's models when the experience runs (progress
+       events from sources/index.js; engine: js/script.js; styles: site.css). -->
+  <div class="page-loader" data-page-loader aria-hidden="true">
+    <p class="page-loader__label">Loading&hellip; Please wait</p>
+    <div class="page-loader__progress" data-page-loader-progress></div>
+  </div>
+  <noscript><style>.page-loader { display: none; }</style></noscript>
+
+  <a class="sr-only focus:not-sr-only focus:absolute focus:z-[110] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
 
   <!-- ── the experience: fixed full-viewport canvas + minimalist loader + manifest.
        display:none unless html.experience-on (see sources/style.css). ── -->
@@ -120,9 +129,6 @@
     <!-- Zero-cost vignette: a CSS radial gradient over the canvas replaces the
          old post-processing vignette pass; World eases its opacity per beat. -->
     <div class="experience__vignette" aria-hidden="true"></div>
-    <div class="experience__loader" aria-hidden="true">
-      <span class="experience__loader-line"></span>
-    </div>
     <script type="application/json" data-experience-manifest>
     {
       "assets": [
@@ -531,6 +537,11 @@
       </div>
     </div>
   </footer>
+
+  <!-- Shared site scripts (page loader engine, accordion, nav behaviours).
+       Resolves to the site root's js/ both in dev (vite middleware) and in the
+       assembled _site/. -->
+  <script src="js/script.js"></script>
 
   <!-- Small page behaviours (no external dependencies):
        1. Mobile menu toggle (replaces the old CDN custom-elements bundle).

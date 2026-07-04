@@ -90,6 +90,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -351,7 +359,7 @@
             <article class="flex flex-col group border border-outline-variant rounded bg-surface hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] transition-all duration-300">
               <div class="aspect-square relative overflow-hidden bg-surface-container-low flex items-center justify-center border-b border-outline-variant">
                 
-                <img alt="Ortofon Vasari Red moving magnet phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" src="images/products/project-turntable-medium-end.jpg" />
+                <img alt="Ortofon Vasari Red moving magnet phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="images/products/project-turntable-medium-end.jpg" />
               </div>
               <div class="p-6 flex flex-col flex-grow">
                 <h3 class="font-title-lg text-title-lg text-primary mb-2">Ortofon Vasari Red</h3>
@@ -365,7 +373,7 @@
             <article class="flex flex-col group border border-outline-variant rounded bg-surface hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] transition-all duration-300">
               <div class="aspect-square relative overflow-hidden bg-surface-container-low p-6 flex items-center justify-center border-b border-outline-variant">
                 <div class="absolute top-3 left-3 px-2 py-1 bg-primary-container text-inverse-primary font-label-md text-label-md rounded">Brand New</div>
-                <img alt="Dynavector 20X2 low-output moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" src="images/products/pro-ject-turntable-mid-end-2.jpg" />
+                <img alt="Dynavector 20X2 low-output moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="images/products/pro-ject-turntable-mid-end-2.jpg" />
               </div>
               <div class="p-6 flex flex-col flex-grow">
                 <h3 class="font-title-lg text-title-lg text-primary mb-2">Dynavector 20X2 Low Output</h3>
@@ -379,7 +387,7 @@
             <article class="flex flex-col group border border-outline-variant rounded bg-surface hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] transition-all duration-300">
               <div class="aspect-square relative overflow-hidden bg-surface-container-low flex items-center justify-center border-b border-outline-variant">
                 
-                <img alt="Gold Note Donatello Gold moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" src="images/products/pro-ject-turntable-mid-end-3.jpg" />
+                <img alt="Gold Note Donatello Gold moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="images/products/pro-ject-turntable-mid-end-3.jpg" />
               </div>
               <div class="p-6 flex flex-col flex-grow">
                 <h3 class="font-title-lg text-title-lg text-primary mb-2">Gold Note Donatello Gold</h3>
@@ -393,7 +401,7 @@
             <article class="flex flex-col group border border-outline-variant rounded bg-surface hover:shadow-[0px_4px_20px_rgba(11,28,48,0.05)] transition-all duration-300">
               <div class="aspect-square relative overflow-hidden bg-surface-container-low p-6 flex items-center justify-center border-b border-outline-variant">
                 <div class="absolute top-3 left-3 px-2 py-1 bg-surface-variant text-on-surface font-label-md text-label-md rounded">Display Model</div>
-                <img alt="Dynavector XX2 MKII moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" loading="lazy" src="images/products/pro-ject-turntable-low-end.jpg" />
+                <img alt="Dynavector XX2 MKII moving coil phono cartridge" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" src="images/products/pro-ject-turntable-low-end.jpg" />
               </div>
               <div class="p-6 flex flex-col flex-grow">
                 <h3 class="font-title-lg text-title-lg text-primary mb-2">Dynavector XX2 MKII</h3>
@@ -460,7 +468,6 @@
             <img
               src="images/articles/cartridges-intro.jpg"
               alt="Phono cartridge mounted on a tonearm reading a vinyl record"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -474,7 +481,6 @@
             <img
               src="images/articles/cartridges-mm-vs-mc.jpg"
               alt="Moving magnet and moving coil phono cartridges compared on a turntable"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -506,7 +512,6 @@
             <img
               src="images/articles/cartridges-setup.jpg"
               alt="Inspecting and aligning a phono cartridge stylus"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

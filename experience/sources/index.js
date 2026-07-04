@@ -81,12 +81,23 @@ async function boot(mountEl)
         debugTools
     })
 
-    // Crossfade the loader only once the scene has actually drawn: resources
-    // 'end' fires after every group loads (World builds on the base group), and
-    // two rAFs guarantee at least one update() pass has rendered the built
-    // world. Fading at boot instead shows the clear color while assets load —
-    // the loader vanishes before the experience exists. If loading fails the
-    // listener never fires and the loader keeps sweeping — honest feedback.
+    // Report asset progress to the page loader (js/script.js): the full-page
+    // overlay holds the whole document until the scene is ready, so its bar
+    // should move with the heaviest downloads — the models.
+    experience.resources.on('progress', (group) =>
+    {
+        window.dispatchEvent(new CustomEvent('experience:progress', {
+            detail: { ratio: group.toLoad ? group.loaded / group.toLoad : 1 }
+        }))
+    })
+
+    // Release the page loader only once the scene has actually drawn:
+    // resources 'end' fires after every group loads (World builds on the base
+    // group), and two rAFs guarantee at least one update() pass has rendered
+    // the built world. Signalling at boot instead would reveal the clear color
+    // while assets load — the page appears before the experience exists. If
+    // loading fails the event never fires and the loader stays up until its
+    // safety timeout — honest feedback.
     experience.resources.on('end', () =>
     {
         window.requestAnimationFrame(() =>
@@ -94,15 +105,17 @@ async function boot(mountEl)
             window.requestAnimationFrame(() =>
             {
                 mountEl.classList.add('is-live')
-
-                // Drop the faded loader so it's not a lingering composited
-                // layer over the canvas (transition is 0.8s).
-                const loader = mountEl.querySelector('.experience__loader')
-                if(loader)
-                    window.setTimeout(() => loader.remove(), 1000)
+                window.dispatchEvent(new CustomEvent('experience:ready'))
             })
         })
     })
+
+    // When the loader slides away it removes the scroll lock — the scrollbar
+    // (re)appears and every trigger position shifts, so remeasure.
+    window.addEventListener('page:revealed', () =>
+    {
+        experience.motion?.refresh()
+    }, { once: true })
 
     // Expose for debugging only (#debug hash) — not part of the public seam.
     if(debugTools)
@@ -117,8 +130,11 @@ document.querySelectorAll('[data-experience]').forEach((mountEl) =>
 {
     if(!supportsWebGL())
     {
-        // Back to the static document (poster hero, flowing sections).
+        // Back to the static document (poster hero, flowing sections). Tell
+        // the page loader so it stops waiting for scene assets that will
+        // never load (its experience gate re-checks .experience-on).
         document.documentElement.classList.remove('experience-on')
+        window.dispatchEvent(new CustomEvent('experience:ready'))
         return
     }
 

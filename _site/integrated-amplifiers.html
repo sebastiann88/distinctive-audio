@@ -133,6 +133,14 @@
   <body
     class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen"
   >
+    <!-- Full-page loader: holds the page until every asset has loaded
+         (styles: css/style.css · engine: js/script.js). -->
+    <div class="page-loader" data-page-loader aria-hidden="true">
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+      <div class="page-loader__progress" data-page-loader-progress></div>
+    </div>
+    <noscript><style>.page-loader { display: none; }</style></noscript>
+
     <a
       class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
       href="#main-content"
@@ -499,7 +507,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of an Audiolab 6000A Play integrated amplifier, silver finish, clean background."
                   src="images/products/audio-lab-integrated-amplifier-mid-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -539,7 +546,6 @@
                   alt="Unison Research Simply Italy tube integrated amplifier"
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   src="images/products/unison-research-vacuum-tube-intergrated-amplifier-medium-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -580,7 +586,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of a Micromega M-One integrated amplifier, sleek black design, clean background."
                   src="images/products/micro-mega-solid-state-integrated-amplifier-high-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -621,7 +626,6 @@
                   class="w-full h-full transition-transform duration-500 group-hover:scale-105 object-cover"
                   data-alt="Studio shot of a Tri-Art Audio P-Series integrated amplifier, bamboo enclosure, clean background."
                   src="images/products/tri-art-integrated-amplifier-medium-end.jpg"
-                  loading="lazy"
                 />
               </div>
               <div class="p-4 flex flex-col flex-grow">
@@ -661,7 +665,6 @@
             <img
               src="images/articles/integrated-tube-vs-solid-state.jpg"
               alt="Tube and solid-state integrated amplifiers side by side"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>
@@ -683,7 +686,6 @@
             <img
               src="images/articles/integrated-power-matching.jpg"
               alt="Matching integrated amplifier power to loudspeaker sensitivity"
-              loading="lazy"
               class="w-full rounded-lg border border-outline-variant/20 shadow-sm"
             />
           </figure>

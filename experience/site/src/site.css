@@ -58,3 +58,58 @@
     @apply rounded-xl border border-outline-variant bg-surface/95 p-8 shadow-[0_4px_20px_rgba(11,28,48,0.05)];
   }
 }
+
+/* ------------------------------------------------------------------ *
+ * Page loader (drill-scroll pattern) — full-screen overlay that holds
+ * the page until every asset has loaded, including the WebGL scene's
+ * models on this page (engine: js/script.js at the site root). The
+ * same block lives in src/input.css for the classic pages; keep the
+ * two in sync.
+ * ------------------------------------------------------------------ */
+html.is-loading {
+  overflow: hidden;
+}
+
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0b1c30;
+  color: #f8f9ff;
+  transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.page-loader__label {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.page-loader__progress {
+  position: absolute;
+  top: 52%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #f0aa10;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s ease;
+}
+
+.page-loader--done {
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader,
+  .page-loader__progress {
+    transition: none;
+  }
+}
