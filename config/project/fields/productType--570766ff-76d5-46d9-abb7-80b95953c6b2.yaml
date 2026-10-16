@@ -1,0 +1,22 @@
+columnSuffix: null
+handle: productType
+instructions: null
+name: 'Product Type'
+searchable: false
+settings:
+  allowSelfRelations: false
+  branchLimit: 1
+  defaultPlacement: end
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: null
+  selectionLabel: null
+  showSearchInput: true
+  showSiteMenu: false
+  source: 'group:5f4d9f8d-f760-4ad4-b343-d2ce08d3a3b7' # Product Types
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: list
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Categories

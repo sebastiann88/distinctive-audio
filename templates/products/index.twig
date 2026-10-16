@@ -1,0 +1,181 @@
+{#
+ # products/index.twig — Products catalog (the "productsPage" Single)
+ #
+ # Ported from web/products.html in original order (dark mode cut):
+ #   1. Hero band (navy, the single H1)
+ #   2. Category grid (6 Tier-1 categories, live nested URLs)
+ #   3. New Arrivals (live inventory: isNewArrival → recent fallback)
+ #   4. Full inventory table — the reactive Sprig component (#21/#24)
+ #   5. Final CTA band → /contact
+ #
+ # The catalogue table lives in _components/productsTable.twig (filter/search/sort
+ # via Sprig partial refreshes; trigger on the component root; bookmarkable +
+ # back-button via sprig.pushUrl()). Initial state reads from the query params.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}Shop High-End Audio in Ottawa{% endblock %}
+{% block metaDescription %}Browse Distinctive Audio's current inventory of high-end and pre-owned two-channel audio in Ottawa — amplifiers, loudspeakers, turntables, DACs and more. Contact us to enquire.{% endblock %}
+
+{% block content %}
+  {# slug → nested URL for the six Tier-1 categories (avoids hard-coded flat hrefs). #}
+  {% set catUrl = {} %}
+  {% for c in craft.entries().section('productCategories').level(1).all() %}
+    {% set catUrl = catUrl|merge({ (c.slug): c.url }) %}
+  {% endfor %}
+
+  <!-- Breadcrumb: Home › Products (per original design) -->
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+    <nav aria-label="Breadcrumb" class="flex text-sm text-outline font-label-md">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a class="hover:text-primary-container transition-colors" href="/">Home</a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+            <span aria-current="page" class="text-on-surface">Products</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- 1. Hero -->
+  <section class="bg-primary-container text-on-primary px-margin-mobile md:px-margin-desktop py-16 md:py-24 relative overflow-hidden">
+    <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center relative z-10">
+      <div class="col-span-1 md:col-span-6 space-y-8" data-reveal-group>
+        <div class="flex items-center space-x-4" data-reveal>
+          <span class="font-label-md text-label-md tracking-[0.1em] uppercase text-tertiary-fixed-dim">SHOP</span>
+          <div class="h-px w-12 bg-accent-gold"></div>
+        </div>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight text-surface" data-reveal>
+          High-End <span class="text-accent-gold italic">Audio</span> in Ottawa
+        </h1>
+        <p class="font-body-lg text-body-lg leading-relaxed text-surface-container-high max-w-lg" data-reveal>
+          Everything for a complete high-fidelity system, curated and auditioned.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 pt-4" data-reveal>
+          <a class="inline-flex justify-center items-center bg-accent-gold text-on-secondary-fixed px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-secondary-fixed-dim transition-colors" href="/contact">
+            Book a Listening Demo
+          </a>
+          <a class="inline-flex justify-center items-center border border-on-primary text-on-primary px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-on-primary hover:text-primary transition-colors" href="/lines-we-carry">
+            Lines We Carry
+          </a>
+        </div>
+      </div>
+      <div class="col-span-1 md:col-span-6 mt-12 md:mt-0 relative aspect-[3/2]" data-reveal="fade">
+        {# Above the fold on desktop — the page's LCP candidate. Eager +
+           fetchpriority so it isn't queued behind below-fold category images. #}
+        <img
+          alt="High-end vacuum tube amplifier glowing warmly in a dimly lit, premium listening room."
+          class="w-full h-full object-cover rounded-lg shadow-2xl border border-outline-variant/20"
+          src="/images/products/home-2.jpg"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Category grid -->
+  <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" data-reveal-group>
+      {% set categoryCards = [
+        { slug: 'analogue',          title: 'Analogue',            blurb: 'Turntables, Cartridges, Phono Pre-amplifiers.',                          img: '/images/products/clear-audio-turntable-high-end.jpg',                    alt: 'Close up of a premium turntable stylus reading a vinyl record.' },
+        { slug: 'amplification',     title: 'Amplification',       blurb: 'Integrated Amplifiers, Pre-amplifiers, Power Amplifiers, All-in-One Systems.', img: '/images/products/micro-mega-solid-state-integrated-amplifier-high-end.jpg', alt: 'Brushed metal front panel of a high-end integrated amplifier.' },
+        { slug: 'loudspeakers',      title: 'Loudspeakers',        blurb: 'Floor Standing, Bookshelf, Electrostatic, Subwoofers, Speaker Stands.', img: '/images/products/audio-physics-floor-standing-speakers-high-end.jpg',     alt: 'Tall, elegant floor-standing loudspeaker in a modern living space.' },
+        { slug: 'digital-sources',   title: 'Digital Sources',     blurb: 'Streaming, DACs, CD Players & Transports, Universal Disc Players.',      img: '/images/products/eversolo-streamer-high-end.jpg',                        alt: 'Modern network streamer and DAC with a crisp digital display.' },
+        { slug: 'cables-power',      title: 'Cables & Power',      blurb: 'Interconnects & Speaker Cables, AC Power Cords, Power Line Conditioners.', img: '/images/products/ps-audio-power-line-conditioner-mid-end.jpg',           alt: 'High-end AC power line conditioner for an audio system.' },
+        { slug: 'racks-accessories', title: 'Racks & Accessories', blurb: 'Equipment Racks, Cones & Isolation.',                                    img: '/images/products/norstone-audio-rack-high-end.jpg',                      alt: 'Sturdy wooden audio equipment rack holding several components.' }
+      ] %}
+      {% for card in categoryCards %}
+        <a class="group block" data-reveal href="{{ catUrl[card.slug] ?? '/products' }}">
+          <div class="aspect-square bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden mb-6 relative">
+            <img alt="{{ card.alt }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out" src="{{ card.img }}" loading="lazy" />
+          </div>
+          <h3 class="font-headline-md text-headline-md text-on-surface mb-2">{{ card.title }}</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant">{{ card.blurb }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 3. New Arrivals: ONLY items flagged isNewArrival (available). No filler —
+       the section hides entirely when nothing is flagged. -->
+  {% set newArrivals = craft.entries().section('inventory').availability(['available', ':empty:']).isNewArrival(true).orderBy('dateCreated desc').limit(6).with(['subcategory.parent']).all() %}
+  {% if newArrivals|length %}
+    <section class="bg-surface-container-low py-24 border-y border-outline-variant">
+      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        <div class="flex justify-between items-end mb-12" data-reveal>
+          <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface">New Arrivals</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter" data-reveal-group>
+          {% for item in newArrivals %}
+            {% set sub = item.subcategory.one() %}
+            {% set eyebrow = sub ? (sub.parent ? sub.parent.title : sub.title) : '' %}
+            {% set price = item.msrp %}
+            <div class="bg-surface border border-outline-variant rounded-lg p-6 group flex flex-col" data-reveal>
+              <div class="flex-grow">
+                {% if eyebrow %}<p class="font-label-md text-outline mb-1 uppercase tracking-wider">{{ eyebrow }}</p>{% endif %}
+                <h4 class="font-title-lg text-title-lg text-on-surface mb-2">{{ item.title }}</h4>
+                {% if item.shortDescription %}
+                  <p class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2">{{ item.shortDescription }}</p>
+                {% endif %}
+              </div>
+              <div class="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant border-dashed">
+                <span class="font-title-lg text-on-surface">{{ price ? '$' ~ (price.amount / 100)|number_format(2, '.', ',') }}{{ item.priceUnit == 'Pair' ? ' / pr' }}</span>
+                <a href="/contact" class="font-label-lg text-label-lg uppercase tracking-wide text-primary-container hover:text-accent-gold transition-colors">Enquire</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- 4. Full inventory table (reactive Sprig component) -->
+  <section class="bg-surface-container-low py-24 border-b border-outline-variant">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="mb-12" data-reveal>
+        <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface">Products</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-4 max-w-2xl">
+          Our complete current listing across electronics, analogue, loudspeakers and accessories.
+          All sale prices reflect current pricing — contact us to enquire on any item.
+        </p>
+      </div>
+      {# Trigger lives on the COMPONENT root (which carries hx-get/target/include),
+         not the inner form: change/keyup events bubble up from the controls and
+         fire the partial refresh. Bookmarkable + back-button URLs are handled
+         server-side via sprig.pushUrl() in the component. #}
+      {{ sprig('_components/productsTable', {}, {
+        id: 'products-table',
+        's-trigger': 'change, search, keyup changed delay:300ms',
+      }) }}
+    </div>
+  </section>
+
+  <!-- 5. Final CTA & related links -->
+  <section class="bg-surface py-24 border-b border-outline-variant">
+    <div class="max-w-3xl mx-auto text-center px-margin-mobile" data-reveal>
+      <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-8">Ready to experience the difference?</h2>
+      <a class="inline-flex justify-center items-center bg-accent-gold text-on-surface px-10 py-5 rounded font-label-lg uppercase tracking-wide hover:opacity-90 transition-opacity mb-16 shadow-lg shadow-tertiary-fixed-dim/20" href="/contact">
+        Book a Listening Demo
+      </a>
+      <div class="pt-12 border-t border-outline-variant">
+        <div class="flex flex-wrap justify-center gap-3">
+          {% set pills = [
+            { label: 'Lines We Carry', url: '/lines-we-carry' },
+            { label: 'About', url: '/about' },
+            { label: 'Listening Demos', url: '/contact' },
+            { label: 'Cables & Power', url: catUrl['cables-power'] ?? '/products' },
+            { label: 'Contact', url: '/contact' }
+          ] %}
+          {% for pill in pills %}
+            <a class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background" href="{{ pill.url }}">{{ pill.label }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

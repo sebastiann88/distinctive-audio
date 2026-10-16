@@ -1,0 +1,21 @@
+defaultPlacement: end
+enableVersioning: true
+entryTypes:
+  -
+    uid: 4a5ff973-643d-44ae-bdd5-c62f681af915 # Contact
+handle: contact
+maxAuthors: 1
+minAuthors: 1
+name: Contact
+previewTargets:
+  -
+    label: 'Primary entry page'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  7284f24c-e828-47d7-a342-e9c2ba41a331: # Distinctive Audio
+    enabledByDefault: true
+    hasUrls: true
+    template: contact
+    uriFormat: contact
+type: single

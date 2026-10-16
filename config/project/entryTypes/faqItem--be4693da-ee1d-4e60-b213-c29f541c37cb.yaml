@@ -1,0 +1,58 @@
+allowLineBreaksInTitles: false
+color: null
+description: null
+fieldLayouts:
+  2b6343c7-7517-4ddb-8aa8-8572be6ddeb1:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: dbeb3316-302b-46f8-9678-0112f794ef48 # Question
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 89415568-1e17-45b6-9a94-45633d1a9541
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 357ffe78-a09d-4e36-9c30-d38d45f0a176 # Answer
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 6882284a-6822-4a88-89bf-6f1a1b0f45fd
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 586dfc60-2dc1-4b0e-9cb1-88d9497229a9
+        userCondition: null
+    thumbFieldKey: null
+handle: faqItem
+hasTitleField: false
+icon: null
+name: 'FAQ Item'
+showSlugField: true
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
+uiLabelFormat: '{title}'

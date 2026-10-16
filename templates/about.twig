@@ -1,0 +1,168 @@
+{#
+ # about.twig — About (the "about" Single)
+ # Ported from web/about.html. Editorial copy will move to fields in #19;
+ # static for now. Dark mode cut; links → Craft routes; assets root-relative.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}About Us — Ottawa High-End Audio Since 1986{% endblock %}
+{% block metaDescription %}Established 1986, Distinctive Audio is a locally owned Ottawa high-end audio store. Meet founder Rhéal Nadeau and our environment-first approach to system design.{% endblock %}
+
+{% block content %}
+  <!-- HERO -->
+  <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-16 md:py-24 text-center md:text-left">
+    <div class="max-w-3xl" data-reveal-group>
+      <div class="flex items-center justify-center md:justify-start gap-4 mb-8" data-reveal>
+        <span class="w-12 h-0.5 bg-secondary-container"></span>
+        <span class="font-label-lg text-label-lg text-on-surface-variant tracking-widest uppercase">ESTABLISHED 1986</span>
+      </div>
+      <h1 class="font-display-lg text-display-lg md:text-[80px] md:leading-[88px] text-on-surface mb-8" data-reveal>
+        Refining the Art of <span class="text-accent-gold italic">Listening</span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant md:text-xl max-w-2xl leading-relaxed" data-reveal>
+        We do more than sell equipment — we help you build a closer connection to the music you love through expert system design and acoustical precision.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOUNDER BIO -->
+  <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-16 md:py-24 border-t border-outline-variant/30">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+      <div class="md:col-span-5 md:col-start-1 order-1 md:order-1 mb-12 md:mb-0" data-reveal="fade">
+        <div class="aspect-[4/5] relative overflow-hidden rounded border border-outline-variant p-2 bg-surface-bright shadow-sm">
+          <img alt="Founder Rhéal Nadeau" class="w-full h-full object-cover rounded-sm hover:grayscale-0 transition-all duration-700" src="/images/rheal-nadeau.jpg" />
+        </div>
+      </div>
+      <div class="md:col-span-6 md:col-start-7 order-2 md:order-2 pl-0 md:pl-12" data-reveal>
+        <div class="inline-block bg-[#003B6FF2] text-[#8EC9FB] px-3 py-1 rounded-sm font-label-md text-label-md uppercase tracking-wider mb-6">
+          FOUNDER &amp; PRESIDENT
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Rhéal Nadeau</h2>
+        <p class="font-label-lg text-label-lg text-on-surface-variant mb-8 italic">DEC in analytical chemistry, BSc, MSc</p>
+        <div class="space-y-6 font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          <p>Raised on a family dairy farm, Rhéal pursued a rigorous academic path culminating in three chemistry degrees. He spent 14 years working as a chemist and lab supervisor, developing a meticulous attention to detail and analytical rigour.</p>
+          <p>An avid audiophile since his college days, his passion for high-fidelity sound reproduction naturally evolved into a business. He founded Distinctive Audio part-time in February 1986, transitioning to full-time dedication by January 1988, and incorporated the business in Ontario in December 1999.</p>
+          <p>For nearly four decades, Rhéal has served the Ottawa–Gatineau community from the exact same location, applying his scientific background to the art of acoustic synergy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE DISTINCTIVE APPROACH -->
+  <section class="bg-surface-container-low py-20 md:py-32">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <h2 class="font-headline-lg text-headline-lg text-center md:text-left text-on-surface mb-16" data-reveal>The Distinctive Approach</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter" data-reveal-group>
+        {% set approach = [
+          { icon: 'tune', title: 'Tailored Synergy', points: ['Component matching', 'Tonal balance', 'Power requirements'] },
+          { icon: 'home', title: 'Environment First', points: ['Room acoustics analysis', 'Precision speaker placement', 'In-home consultation'] },
+          { icon: 'handyman', title: 'Long-Term Support', points: ['Expert setup & calibration', 'Fair trade-in program', 'Certified expert repairs'] },
+        ] %}
+        {% for card in approach %}
+          <div class="bg-surface-bright border border-outline-variant rounded p-8 hover:shadow-sm transition-shadow duration-300" data-reveal>
+            <div class="w-12 h-12 bg-primary-container rounded flex items-center justify-center mb-6">
+              <span class="material-symbols-outlined text-secondary-container">{{ card.icon }}</span>
+            </div>
+            <h3 class="font-title-lg text-title-lg text-on-surface mb-4">{{ card.title }}</h3>
+            <ul class="space-y-3 font-body-md text-body-md text-on-surface-variant">
+              {% for point in card.points %}
+                <li class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-secondary-container text-[20px] mt-0.5">stop_circle</span>
+                  {{ point }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT THE STORE -->
+  <section class="bg-surface py-20 md:py-32 overflow-hidden">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+        <div class="md:col-span-5 md:order-1 order-2" data-reveal="fade">
+          <div class="overflow-hidden rounded border border-outline-variant bg-surface-bright shadow-sm">
+            <img alt="Cardas and Oracle turntable setup" class="w-full rounded-sm object-cover h-auto" src="/images/products/lines-we-carry.jpg" />
+          </div>
+        </div>
+        <div class="md:col-span-7 md:pl-12 mb-12 md:mb-0 z-10 md:order-2 order-1" data-reveal>
+          <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">About the Store</h2>
+          <p class="font-body-lg text-body-lg text-on-surface-variant">
+            Established in 1986, Distinctive Audio has been providing expert service to our customers for nearly 40 years. We are a locally owned and operated business serving the Ottawa–Gatineau region. Shopping at Distinctive Audio is a boutique-like experience where you will receive personalized service. Every customer's needs are unique and addressed by offering specialized advice on our products. Through our expert advice we guide our customers through the process of selecting from our diverse inventory. Through this we help you build a truly satisfying high-end audio system. As a client of Distinctive Audio, you will experience high-fidelity sound that connects you to the music you love. You will feel a greater emotional connection to your music.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEARLY 40 YEARS OF EXPERTISE -->
+  <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-20 md:py-32">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-16">
+      <div class="md:col-span-5 flex flex-col justify-center" data-reveal>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Nearly 40 Years of Expertise</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mb-8 border-l-2 border-secondary-container pl-6">
+          Locally owned and operated, offering a boutique experience with personalized advice. We guide you to a system that fits your room, taste and budget.
+        </p>
+        <a class="inline-flex items-center gap-2 font-label-lg text-label-lg text-primary-container hover:text-secondary-container transition-colors group" href="/contact">
+          Visit our showroom
+          <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </a>
+      </div>
+      <div class="md:col-span-7 mt-12 md:mt-0" data-reveal="fade">
+        <div class="aspect-[16/9] overflow-hidden rounded border border-outline-variant bg-surface-bright shadow-sm">
+          <img alt="Distinctive Audio Showroom setup with high-end equipment" class="w-full h-full object-cover rounded-sm" src="/images/products/home-2.jpg" />
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter" data-reveal-group>
+      <div class="aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-surface-bright" data-reveal="fade">
+        <img alt="Close up of premium floor standing speakers" class="w-full h-full object-cover" src="/images/products/audio-physics-floor-standing-speakers-high-end-3.jpg" />
+      </div>
+      <div class="aspect-[4/3] overflow-hidden rounded border border-outline-variant bg-surface-bright" data-reveal="fade">
+        <img alt="Detailed view of high-fidelity audio components" class="w-full h-full object-cover" src="/images/products/contact-4.jpg" />
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE BAND -->
+  <section class="bg-primary-container py-24 px-margin-mobile text-center">
+    <div class="max-w-4xl mx-auto" data-reveal>
+      <span class="material-symbols-outlined text-secondary-container text-opacity-50 text-[64px] mb-6">format_quote</span>
+      {# font-light dropped: the self-hosted Newsreader subset carries 400 only,
+         so 300 would render synthesized — declare the weight that actually paints. #}
+      <blockquote class="font-headline-lg text-headline-lg text-on-primary md:text-[56px] md:leading-[64px] italic">
+        "Our job isn't just to sell components — it's to help you connect more deeply with the music you love."
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="bg-[#f0aa10] py-20 px-margin-mobile text-center">
+    <div class="max-w-container-max mx-auto" data-reveal>
+      <h2 class="font-headline-lg text-headline-lg text-[#0b1c30] mb-8">Experience the difference.</h2>
+      <a class="inline-block bg-[#003d5e] text-white px-8 py-4 rounded-sm font-label-lg text-label-lg tracking-wider hover:bg-[#00263d] transition-colors shadow-sm" href="/contact">
+        Book a Showroom Demo
+      </a>
+    </div>
+  </section>
+
+  <!-- RELATED PILLS -->
+  <section class="py-12 border-t border-outline-variant/30 px-margin-mobile md:px-margin-desktop">
+    <div class="max-w-container-max mx-auto flex flex-wrap gap-3 justify-center">
+      {% set pills = [
+        { label: 'About', url: '/about' },
+        { label: 'Products', url: '/products' },
+        { label: 'Lines We Carry', url: '/lines-we-carry' },
+        { label: 'Listening Demos', url: '/contact' },
+        { label: 'Custom Cables', url: catUrl['cables-power'] },
+        { label: 'Contact', url: '/contact' },
+        { label: 'Home', url: '/' },
+      ] %}
+      {% for pill in pills %}
+        <a class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors bg-surface-bright" href="{{ pill.url }}">{{ pill.label }}</a>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

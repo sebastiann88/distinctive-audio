@@ -1,8 +1,40 @@
-# Dependencies
-node_modules/
+# ---------------------------------------------------------------------------
+# Distinctive Audio — Craft CMS 5 .gitignore (project root)
+#
+# Note: Craft ships its own nested .gitignore files that keep directory
+# structure while ignoring volatile contents:
+#   - storage/.gitignore            (backups, logs, runtime, *-backups)
+#   - storage/config-deltas/.gitignore
+#   - web/cpresources/.gitignore
+# Those are committed and handle storage/ + cpresources. Rules below cover
+# the remaining root-level concerns only.
+# ---------------------------------------------------------------------------
+
+# Environment & secrets (never commit; .env.example.* ARE committed)
+/.env
+/.env.*.local
+
+# Craft license key (per-install, not version-controlled) — incl. .key.N backups
+/config/license.key*
+
+# Composer dependencies
+/vendor
+
+# Node / build tooling
+node_modules
+/web/dist
+
+# Control-panel resources (belt-and-suspenders; also handled by nested ignore)
+/web/cpresources
+
+# Craft-generated image transforms (regenerated on demand; originals ARE committed)
+/web/images/**/_*/
+
+# DDEV local environment (per-machine; DDEV regenerates it on `ddev start`).
+# DDEV ships its own .ddev/.gitignore, but we ignore the whole dir at the root
+# so no machine-specific container config leaks into the repo.
+/.ddev
 
 # OS / editor cruft
 .DS_Store
-
-# Editor local history
-.history/
+.history

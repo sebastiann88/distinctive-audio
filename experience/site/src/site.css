@@ -22,8 +22,28 @@
   .experience-on [data-stage-content] {
     will-change: transform, opacity;
   }
+  /* The frame-beat sections overlap via negative margins in the choreographed
+     layout, and a later section's (transparent) box paints above the previous
+     one — hit-testing would swallow clicks meant for the still-pinned stage
+     beneath it (hero CTAs, category cards). Make beat sections hit-transparent
+     and restore hit-testing on the reveal units: GSAP's autoAlpha hides exactly
+     those (visibility:hidden receives no events), so clickability always
+     tracks what is actually visible. */
+  .experience-on [data-beat] {
+    pointer-events: none;
+  }
+  .experience-on [data-beat] [data-reveal] {
+    pointer-events: auto;
+  }
   ::selection {
     @apply bg-secondary-container text-on-surface;
+  }
+  /* The document opts into smooth anchor scrolling (html.scroll-smooth), but
+     for reduced-motion visitors anchor jumps should be instant. */
+  @media (prefers-reduced-motion: reduce) {
+    html.scroll-smooth {
+      scroll-behavior: auto;
+    }
   }
   :focus-visible {
     outline: 2px solid theme('colors.accent.DEFAULT');
@@ -82,7 +102,73 @@ html.is-loading {
   transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+.page-loader__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Analogue VU meter: track + gold end-zone arcs, tick scale, sprung needle.
+   The needle is drawn vertical and rotated from its hub by script.js
+   (−52° at 0% → +52° at 100%). */
+.page-loader__dial {
+  width: 232px;
+  height: auto;
+}
+.page-loader__track {
+  stroke: rgba(248, 249, 255, 0.16);
+  stroke-width: 2;
+}
+.page-loader__zone {
+  stroke: #f0aa10;
+  stroke-width: 2;
+  opacity: 0.9;
+}
+.page-loader__ticks-minor line {
+  stroke: rgba(248, 249, 255, 0.28);
+  stroke-width: 1;
+}
+.page-loader__ticks-major line {
+  stroke: rgba(248, 249, 255, 0.55);
+  stroke-width: 1.5;
+}
+.page-loader__needle {
+  transform-box: view-box;
+  transform-origin: 110px 112px;
+  transform: rotate(-52deg);
+  will-change: transform;
+}
+.page-loader__needle line {
+  stroke: #f0aa10;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.page-loader__needle-tail {
+  stroke: rgba(248, 249, 255, 0.5);
+  stroke-width: 3.5;
+}
+.page-loader__hub {
+  fill: #0b1c30;
+  stroke: #f0aa10;
+  stroke-width: 1.5;
+}
+
+.page-loader__readout {
+  margin-top: -4px;
+  font-family: "Inter", sans-serif;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.page-loader__unit {
+  font-size: 16px;
+  opacity: 0.55;
+  margin-left: 2px;
+}
+
 .page-loader__label {
+  margin-top: 14px;
   font-family: "Inter", sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -92,7 +178,7 @@ html.is-loading {
 
 .page-loader__progress {
   position: absolute;
-  top: 52%;
+  bottom: 16%;
   left: 0;
   width: 100%;
   height: 2px;

@@ -1,0 +1,74 @@
+allowLineBreaksInTitles: false
+color: null
+description: null
+fieldLayouts:
+  d9327e8a-084f-48fc-9b51-4dd759a3a29e:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: fbc4553b-418b-4c00-afb8-174ae56d2e5e # Heading
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 19ade107-96e2-42ed-9f63-d560ac392ed5
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 680d70fd-979a-453e-8169-7f07250b77a7 # Spec Table
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 0d97c973-6475-4aad-a95b-e940a2f56ded
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 82d3e198-5edf-4274-8b53-40d4976f454a # Footnote
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 7ac44ac4-60cb-428d-97a7-8bb1392d4165
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 8de12916-b0df-4b4b-b6b9-4ea9d1898b5a
+        userCondition: null
+    thumbFieldKey: null
+handle: specComparison
+hasTitleField: false
+icon: null
+name: 'Spec Comparison'
+showSlugField: true
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
+uiLabelFormat: '{title}'

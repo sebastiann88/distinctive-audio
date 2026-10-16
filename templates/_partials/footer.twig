@@ -1,0 +1,113 @@
+{#
+ # footer.twig — site footer
+ #
+ # Ported from the static web/*.html <footer>. Three link groups are looped:
+ #   • Navigation  — reuses `primaryNav` (set in base.twig)
+ #   • Products    — the six Tier-1 product categories
+ #   • New Arrivals — latest inventory items
+ #
+ # productNav / newArrivals are static placeholders for the build-out PoC.
+ # Once the content model (task #7) and inventory import (task #9) land, replace
+ # the two `set` blocks below with the live entry queries shown in the comments —
+ # the loop bodies already read `.title` / `.url`, which work for entries too.
+ #}
+{# Products column: the six Tier-1 categories, live (nested URLs via entry.url).
+   Ordered to match the Products page category grid (products/index.twig) exactly. #}
+{% set catBySlug = {} %}
+{% for c in craft.entries().section('productCategories').level(1).all() %}
+  {% set catBySlug = catBySlug|merge({ (c.slug): c }) %}
+{% endfor %}
+{% set productNav = [] %}
+{% for slug in ['analogue', 'amplification', 'loudspeakers', 'digital-sources', 'cables-power', 'racks-accessories'] %}
+  {% if catBySlug[slug] is defined %}
+    {% set productNav = productNav|merge([catBySlug[slug]]) %}
+  {% endif %}
+{% endfor %}
+
+{# New Arrivals: ONLY items flagged isNewArrival (available). No filler — the
+   column hides entirely when nothing is flagged. Inventory has no detail pages
+   (null URI), so each links to the catalogue. #}
+{% set newArrivals = craft.entries().section('inventory').availability(['available', ':empty:']).isNewArrival(true).orderBy('dateCreated desc').limit(5).with(['subcategory']).all() %}
+
+<footer class="bg-[#003B6FF2]">
+  <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
+    <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+      <div class="space-y-8">
+        <a href="/">
+          <img
+            src="/images/distinctive-audio-logo.webp"
+            width="742"
+            height="168"
+            alt="Distinctive Audio"
+            class="h-14 w-auto"
+          />
+        </a>
+        <p class="text-balance text-sm/6 text-gray-300">
+          Established in 1986, Distinctive Audio has been providing expert
+          service to our customers for nearly 40 years. We are a locally
+          owned and operated business serving the Ottawa–Gatineau region.
+        </p>
+        {# Social icons removed 2026-07 (brand-QA pass): no real accounts exist yet,
+           and dead href="#" links hurt UX/SEO. Restore the anchor list from git
+           history when actual profile URLs land. #}
+      </div>
+      <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+        <div class="md:grid md:grid-cols-2 md:gap-8">
+          <div>
+            <h3 class="text-sm/6 font-semibold text-white">Navigation</h3>
+            <ul role="list" class="mt-6 space-y-4">
+              {% for item in primaryNav %}
+                <li>
+                  <a
+                    href="{{ item.url }}"
+                    class="text-sm/6 text-gray-300 hover:text-white"
+                    >{{ item.label }}</a
+                  >
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="mt-10 md:mt-0">
+            <h3 class="text-sm/6 font-semibold text-white">Products</h3>
+            <ul role="list" class="mt-6 space-y-4">
+              {% for item in productNav %}
+                <li>
+                  <a
+                    href="{{ item.url }}"
+                    class="text-sm/6 text-gray-300 hover:text-white"
+                    >{{ item.title }}</a
+                  >
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% if newArrivals|length %}
+          <div class="md:grid md:grid-cols-1 md:gap-8">
+            <div>
+              <h3 class="text-sm/6 font-semibold text-white">New Arrivals</h3>
+              <ul role="list" class="mt-6 space-y-4">
+                {% for item in newArrivals %}
+                  {# Link to the item's Tier-2 category page (inventory has no detail page); else the catalogue. #}
+                  {% set sc = item.subcategory.one() %}
+                  <li>
+                    <a
+                      href="{{ sc ? sc.url : '/products' }}"
+                      class="text-sm/6 text-gray-300 hover:text-white"
+                      >{{ item.title }}</a
+                    >
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
+      <p class="text-sm/6 text-gray-300">
+        &copy; {{ now|date('Y') }} Distinctive Audio Inc. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

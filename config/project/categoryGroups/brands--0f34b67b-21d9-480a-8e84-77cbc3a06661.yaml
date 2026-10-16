@@ -1,0 +1,66 @@
+defaultPlacement: end
+fieldLayouts:
+  a115eb5d-472a-480f-9da3-3bb1b020b83b:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            dateAdded: null
+            disabled: false
+            elementCondition: null
+            id: null
+            inputType: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\TitleField
+            uid: c69317d9-368e-400f-8041-ad80eaead098
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: d1ad97a4-a7dc-4c5e-a8e8-780a691845f8 # Website
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 14e26351-efd9-4222-a5c5-ead63472cfbd
+            userCondition: null
+            warning: null
+            width: 100
+        name: Brand
+        uid: e55da581-c8d9-4ae2-8c0a-3f6ba58a84c0
+        userCondition: null
+    thumbFieldKey: null
+handle: brands
+name: Brands
+siteSettings:
+  7284f24c-e828-47d7-a342-e9c2ba41a331: # Distinctive Audio
+    hasUrls: false
+    template: null
+    uriFormat: null
+structure:
+  maxLevels: 1
+  uid: 413276e9-2ae9-458a-b3bf-80cb3c183f39

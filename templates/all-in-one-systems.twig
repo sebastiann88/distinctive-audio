@@ -1,0 +1,158 @@
+{#
+ # all-in-one-systems.twig — All-in-One Systems (the "allInOneSystems" Single)
+ # Ported from web/all-in-one-systems.html (Tier-2-shaped editorial page).
+ # Dark mode cut; links → Craft routes; assets root-relative.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}All-in-One Music Systems in Ottawa{% endblock %}
+{% block metaDescription %}All-in-one music systems in Ottawa — streaming, DAC, amplification (and sometimes CD) in one elegant box. Just add speakers. Eversolo, Audiolab Omnia, Tangent and more.{% endblock %}
+
+{% block content %}
+  <!-- Breadcrumb -->
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+    <nav aria-label="Breadcrumb" class="flex text-sm text-outline font-label-md">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center"><a class="hover:text-primary-container transition-colors" href="/">Home</a></li>
+        <li><div class="flex items-center"><span class="material-symbols-outlined text-sm mx-1">chevron_right</span><a class="hover:text-primary-container transition-colors" href="{{ catUrl['amplification'] }}">Amplification</a></div></li>
+        <li><div class="flex items-center"><span class="material-symbols-outlined text-sm mx-1">chevron_right</span><span aria-current="page" class="text-on-surface">All-in-One Systems</span></div></li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="bg-primary-container text-on-primary px-margin-mobile md:px-margin-desktop py-16 md:py-24">
+    <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-6" data-reveal-group>
+        <div class="space-y-2" data-reveal>
+          <div class="w-12 h-0.5 bg-accent-gold"></div>
+          <p class="font-label-md text-label-md tracking-[0.1em] text-accent-gold uppercase">Amplification</p>
+        </div>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight text-on-primary" data-reveal>
+          <span class="text-accent-gold italic">All-in-One</span> Systems in Ottawa
+        </h1>
+        <p class="font-body-lg text-body-lg leading-relaxed text-on-primary-container max-w-lg" data-reveal>
+          Streaming, CD and amplification in a single elegant box — just add speakers.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 pt-4" data-reveal>
+          <a href="/contact" class="inline-flex items-center justify-center bg-accent-gold text-on-secondary-fixed px-8 py-3 rounded-[2px] font-label-lg text-label-lg hover:bg-secondary-fixed-dim transition-colors">Book a Listening Demo</a>
+          <a href="#products" class="inline-flex items-center justify-center border border-on-primary text-on-primary bg-transparent px-8 py-3 rounded-[2px] font-label-lg text-label-lg hover:bg-on-primary hover:text-primary transition-colors">Our Selection</a>
+        </div>
+      </div>
+      <div class="relative aspect-video md:aspect-[16/9] rounded-xl overflow-hidden shadow-sm" data-reveal="fade">
+        <img alt="Eversolo DMP-A6 all-in-one streamer and amplifier in a modern living room" class="object-cover w-full h-full" src="/images/products/ever-solo-streamer-integrated-amplifier-cd-player-low-end.jpg" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Lead + Quick-Spec Comparison -->
+  <section id="products" class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
+    <div class="max-w-3xl" data-reveal>
+      <p class="font-label-md text-label-md uppercase tracking-widest text-outline mb-4">Buying Guide</p>
+      <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-6">What Is an All-in-One Music System?</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-6">
+        An all-in-one system combines amplification, a DAC, and network streaming — and sometimes a CD player — in a single chassis. It is the simplest route to a complete, high-quality system: just add speakers. For Ottawa listeners who want genuine hi-fi sound without a rack of separates, an all-in-one delivers streaming, digital, and physical media from one elegant box, with far less cabling and clutter.
+      </p>
+    </div>
+    <div class="mt-10 overflow-x-auto" data-reveal>
+      <table class="w-full text-left border border-outline-variant">
+        <caption class="sr-only">All-in-one systems available at Distinctive Audio in Ottawa, with key features, rated power, and price.</caption>
+        <thead class="bg-surface-container">
+          <tr>
+            {% for h in ['Model', 'Key Features', 'Power', 'Price (CAD)'] %}
+              <th class="px-4 py-3 font-label-lg text-label-lg uppercase tracking-wide text-on-surface border-b border-outline-variant">{{ h }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody class="font-body-md text-body-md text-on-surface-variant">
+          {% set models = [
+            { model: 'Eversolo DMP-A6', features: 'Streaming, Class D, MQA', power: '—', price: '$1,150.00 CAD' },
+            { model: 'Tangent Ampster BT II', features: 'Bluetooth 5.0, Optical In', power: '50 W', price: '$299.00 CAD' },
+            { model: 'Audiolab Omnia', features: 'CD Drive, Streaming (DTS Play-Fi)', power: '50 W', price: '$1,999.00 CAD' },
+          ] %}
+          {% for m in models %}
+            <tr class="border-b border-outline-variant last:border-b-0">
+              <td class="px-4 py-3 font-semibold text-on-surface">{{ m.model }}</td>
+              <td class="px-4 py-3">{{ m.features }}</td>
+              <td class="px-4 py-3">{{ m.power }}</td>
+              <td class="px-4 py-3">{{ m.price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="font-label-md text-label-md text-outline mt-3">Prices and availability shown are subject to change — contact us to confirm current stock.</p>
+    </div>
+  </section>
+
+  <!-- Buying Guidance -->
+  <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 border-t border-outline-variant">
+    <div class="max-w-3xl" data-reveal>
+      <h2 class="font-headline-md text-headline-md text-on-surface mb-6">What Should an All-in-One Include?</h2>
+      <figure class="my-8">
+        <img src="/images/articles/all-in-one-what-is.jpg" alt="An all-in-one music system combining amplification, streaming, and a CD drive in one chassis" loading="lazy" class="w-full rounded-lg border border-outline-variant/20 shadow-sm" />
+      </figure>
+      <p class="font-body-lg text-body-lg text-on-surface-variant mb-6">
+        A capable all-in-one should bring together amplification, a DAC, and network streaming — and, on some models, a CD player. The Eversolo DMP-A6 pairs Class D amplification with Wi-Fi streaming and MQA support, the Audiolab Omnia adds a built-in CD drive and DTS Play-Fi streaming alongside its 50-watt amplifier, and the compact Tangent Ampster BT II covers the essentials with Bluetooth 5.0 and an optical input. The right mix depends on which sources matter most to you.
+      </p>
+      <h2 class="font-headline-md text-headline-md text-on-surface mt-12 mb-6">Who Are All-in-One Systems For?</h2>
+      <figure class="my-8">
+        <img src="/images/articles/all-in-one-who-for.jpg" alt="A compact all-in-one system on a shelf in a small Ottawa listening room" loading="lazy" class="w-full rounded-lg border border-outline-variant/20 shadow-sm" />
+      </figure>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        All-in-one systems are ideal for space-conscious listeners, first-time hi-fi buyers, and second rooms. If you want serious sound without a rack of separates, a single chassis keeps clutter and cabling to a minimum while still driving a proper pair of speakers. They make an easy first system, a tidy bedroom or office setup, or a second-room companion to a larger main rig — just add the loudspeakers that suit your space.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 md:py-24 bg-surface-container-low">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="lg:col-span-1" data-reveal>
+          <h2 class="font-headline-md text-headline-lg text-on-surface mb-4">Frequently Asked Questions</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant">Expert guidance on choosing the right all-in-one system for your space.</p>
+        </div>
+        <div class="lg:col-span-2" data-reveal-group>
+          {% set faqs = [
+            { q: 'What is an all-in-one music system?', a: 'An all-in-one music system combines multiple hi-fi separates into a single chassis — typically a preamplifier, a power amplifier, and source components such as a network streamer, a DAC (Digital-to-Analogue Converter), and sometimes a CD player. You simply connect a pair of speakers to have a complete audio setup.' },
+            { q: 'Do I still need separate speakers?', a: 'Yes. An all-in-one system provides the amplification, but you still need a pair of passive speakers to complete the system. We recommend matching the amplifier\'s power output with the speakers\' sensitivity and impedance, and our team can help you find the right pairing during a listening demo.' },
+            { q: 'Does an all-in-one system include streaming and a DAC?', a: 'Most modern all-in-one systems feature network streaming over Wi-Fi or Ethernet to access services like Tidal, Qobuz, and Spotify, along with a built-in DAC. Some models, such as the Audiolab Omnia, also integrate a dedicated CD transport, so you can enjoy both digital files and physical media from the same device.' },
+            { q: 'How is an all-in-one system different from separates?', a: 'Separates split amplification and source components into individual boxes, while an all-in-one system brings them together in one chassis. The all-in-one approach means less cabling, a smaller footprint, and a simpler setup, which makes it a practical route to a complete, high-quality system — just add speakers. Separates let you upgrade each stage independently, but they take more space and more cables.' },
+            { q: 'Can I add a turntable to an all-in-one system?', a: 'Yes, many all-in-one systems include standard analog RCA inputs, and some feature a built-in MM (Moving Magnet) phono stage specifically for turntables. If the system lacks a phono stage, you can add an external phono preamplifier between the turntable and the all-in-one system.' },
+            { q: 'Can I audition all-in-one systems in Ottawa before buying?', a: 'Yes. Distinctive Audio offers in-store listening demos in Ottawa so you can hear an all-in-one system with your choice of speakers before you commit. Book a listening demo and we will set up a comparison matched to how you actually listen.' },
+          ] %}
+          {% for item in faqs %}
+            <details class="group border-b border-outline-variant [&_summary::-webkit-details-marker]:hidden" data-reveal>
+              <summary class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors">
+                <span>{{ item.q }}</span>
+                <span class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180" data-icon="expand_more">expand_more</span>
+              </summary>
+              <div class="pb-6 pr-12"><p class="font-body-lg text-body-lg text-on-surface-variant">{{ item.a }}</p></div>
+            </details>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA & Related Links -->
+  <section class="bg-surface py-24 border-y border-outline-variant">
+    <div class="max-w-3xl mx-auto text-center px-margin-mobile" data-reveal>
+      <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-8">Ready to hear the difference?</h2>
+      <a class="inline-flex justify-center items-center bg-accent-gold text-on-surface px-10 py-5 rounded font-label-lg uppercase tracking-wide hover:opacity-90 transition-opacity mb-16 shadow-lg shadow-tertiary-fixed-dim/20" href="/contact">Book a Listening Demo</a>
+      <div class="pt-12 border-t border-outline-variant">
+        <div class="flex flex-wrap justify-center gap-3">
+          {% set pills = [
+            { label: 'All Amplification', url: catUrl['amplification'] },
+            { label: 'Integrated Amplifiers', url: catUrl['integrated-amplifiers'] },
+            { label: 'Music Streamers', url: catUrl['music-streamers'] },
+            { label: 'Loudspeakers', url: catUrl['loudspeakers'] },
+          ] %}
+          {% for pill in pills %}
+            <a class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background" href="{{ pill.url }}">{{ pill.label }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

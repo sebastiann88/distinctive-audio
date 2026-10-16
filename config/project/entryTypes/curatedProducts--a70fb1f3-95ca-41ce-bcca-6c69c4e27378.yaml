@@ -1,0 +1,58 @@
+allowLineBreaksInTitles: false
+color: null
+description: null
+fieldLayouts:
+  779fdbe5-97a3-4425-97b4-608623bfc8e2:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: fbc4553b-418b-4c00-afb8-174ae56d2e5e # Heading
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 1a3ac9c1-fcd9-4a38-ac2d-6a1a6b1ba30b
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: a2a7c462-bdba-4089-8d14-aa7d8974bf36 # Products
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: c2fed2f1-a8f6-4a4a-9750-b9a2414dd108
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: ecb7654b-0a6a-4113-bd87-fa473e43a704
+        userCondition: null
+    thumbFieldKey: null
+handle: curatedProducts
+hasTitleField: false
+icon: null
+name: 'Curated Products'
+showSlugField: true
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
+uiLabelFormat: '{title}'

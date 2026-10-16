@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 
 export default class Resources extends EventEmitter
 {
@@ -29,9 +30,9 @@ export default class Resources extends EventEmitter
      * with EITHER Draco (KHR_draco_mesh_compression, decoded by the
      * self-hosted decoder in public/draco/) or meshopt
      * (EXT_meshopt_compression, decoded by the small WASM module bundled with
-     * three), EXR environment maps (DWAB-compressed — far smaller than the
-     * old RGBE .hdr), and plain images. The Draco decoder only downloads when
-     * a Draco GLB is actually parsed, so meshopt-only pages never pay for it.
+     * three), EXR and RGBE (.hdr) environment maps, and plain images. The
+     * Draco decoder only downloads when a Draco GLB is actually parsed, so
+     * meshopt-only pages never pay for it.
      */
     setLoaders()
     {
@@ -79,10 +80,18 @@ export default class Resources extends EventEmitter
             extensions: ['glb', 'gltf'],
             action: (_resource) =>
             {
-                gltfLoader.load(_resource.source, (_data) =>
-                {
-                    this.fileLoadEnd(_resource, _data)
-                })
+                gltfLoader.load(
+                    _resource.source,
+                    (_data) => { this.fileLoadEnd(_resource, _data) },
+                    // Byte-level progress: the hero GLB dominates the page
+                    // loader's wait, so the meter needle should sweep through
+                    // its download, not jump when it completes.
+                    (_event) =>
+                    {
+                        if(_event.total)
+                            this.trigger('fileProgress', [_resource, _event.loaded / _event.total])
+                    }
+                )
             }
         })
 
@@ -93,7 +102,26 @@ export default class Resources extends EventEmitter
             extensions: ['exr'],
             action: (_resource) =>
             {
-                exrLoader.load(_resource.source, (_data) =>
+                exrLoader.load(
+                    _resource.source,
+                    (_data) => { this.fileLoadEnd(_resource, _data) },
+                    (_event) =>
+                    {
+                        if(_event.total)
+                            this.trigger('fileProgress', [_resource, _event.loaded / _event.total])
+                    }
+                )
+            }
+        })
+
+        // RGBE .hdr (environment map)
+        const rgbeLoader = new RGBELoader()
+
+        this.loaders.push({
+            extensions: ['hdr'],
+            action: (_resource) =>
+            {
+                rgbeLoader.load(_resource.source, (_data) =>
                 {
                     this.fileLoadEnd(_resource, _data)
                 })

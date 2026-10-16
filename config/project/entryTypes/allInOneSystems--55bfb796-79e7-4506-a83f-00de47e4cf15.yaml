@@ -1,0 +1,54 @@
+allowLineBreaksInTitles: false
+color: null
+description: null
+fieldLayouts:
+  e5b4a090-2095-4e2f-8590-e32af2372486:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            dateAdded: null
+            disabled: false
+            elementCondition: null
+            id: null
+            inputType: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            required: true
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 42dad55e-eec7-4317-a42a-9ccb721d8435
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 3b619b0b-c292-4b62-b99a-05c3846d6e47
+        userCondition: null
+    thumbFieldKey: null
+handle: allInOneSystems
+hasTitleField: true
+icon: null
+name: 'All-in-One Systems'
+showSlugField: true
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
+uiLabelFormat: '{title}'

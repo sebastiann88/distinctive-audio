@@ -18,9 +18,9 @@ import Experience from './Experience.js'
  * Art direction (style-ref TAKE list + register):
  *  - cool pale ground (#f4f7fb family), soft skylight pools, no hard shadows
  *  - matte-black objects defined by silhouette, brass micro-details only
- *  - gold (#f0aa10) is a scarce scripted event: the signal-path line resolving
- *    on the floor in beat 02, the floor catch at the listening spot in beat 07
- *    — edge catches elsewhere, never ambient, never a wash.
+ *  - gold (#f0aa10) is reserved for brass micro-details on the objects —
+ *    never ambient, never a wash, and no scripted floor accents (the beat 02
+ *    axis line and beat 07 circle both read as unexplained yellow marks).
  */
 
 const VIGNETTE_X = [0, 16, 32, 48, 64]
@@ -68,27 +68,55 @@ export default class World
             { a: { pos: [14.3, 1.10, 7.0], tgt: [15.4, 0.78, 0] },  s: { pos: [16.0, 1.00, 5.6], tgt: [16.0, 0.62, 0] },   settle: 0.55, depart: 0.88 },
             // 03: three plinths — target recentred on the tighter diagonal.
             { a: { pos: [29.2, 1.35, 8.6], tgt: [31.6, 0.75, -0.3] }, s: { pos: [30.4, 1.25, 7.6], tgt: [31.9, 0.70, -0.4] }, settle: 0.30, depart: 0.82 },
-            { a: { pos: [48.0, 1.05, 7.8], tgt: [48.0, 0.90, 0] },  s: { pos: [48.0, 1.05, 7.5], tgt: [48.0, 0.88, 0] },   settle: 0.25, depart: 0.84 },
+            // 04: depart 1.0 — the camera holds settled through the whole pin
+            // (copy fade included); the departure dolly begins exactly as the
+            // section unpins and rides the address band's 100vh rise, so the
+            // canvas sliver above the band keeps moving the entire way.
+            { a: { pos: [48.0, 1.05, 7.8], tgt: [48.0, 0.90, 0] },  s: { pos: [48.0, 1.05, 7.5], tgt: [48.0, 0.88, 0] },   settle: 0.25, depart: 1.0 },
             // 07: the ARRIVAL waits well left of the listening room (empty
             // gallery in frame — the speakers must NOT loom in the canvas
             // slivers behind the address/services bands, even on wide
             // viewports where the horizontal FOV grows), then a long lateral
             // dolly brings the stereo pair gliding in from the right, settling
-            // tight on it. The chair reads small at the bottom.
-            { a: { pos: [55.0, 1.15, 7.8], tgt: [55.8, 0.95, -0.4] }, s: { pos: [64.0, 1.08, 6.2], tgt: [64.0, 0.85, -0.5] }, settle: 0.22, depart: 1.01 }
+            // tight on it. The chair reads small at the bottom. settle 0.35
+            // (pin-relative) compensates for the shortened section + uncapped
+            // scrub extension, keeping the lateral glide at its authored pace
+            // instead of whipping in.
+            { a: { pos: [55.0, 1.15, 7.8], tgt: [55.8, 0.95, -0.4] }, s: { pos: [64.0, 1.08, 6.2], tgt: [64.0, 0.85, -0.5] }, settle: 0.35, depart: 1.01 }
         ]
 
         this.disposables = { geometries: [], materials: [], textures: [] }
         this.trackedModels = new Set()
+        // SSR bookkeeping: the mirrored-clone fallback reflections (hidden
+        // while the renderer's SSR pass is active) and the transparent
+        // floor-plane overlays that must join the SSR selection (see
+        // setReflections).
+        this.mirrorClones = []
+        this.floorOverlays = []
         this.camPos = new THREE.Vector3()
         this.camTgt = new THREE.Vector3()
         this.tmp = new THREE.Vector3()
+
+        // Two-stage load (perf pass): the 'base' group carries ONLY what the
+        // opening frame needs (hero floorstander + environment) so the page
+        // can reveal on ~900 KB instead of the full catalogue; the 'extras'
+        // group streams the remaining rooms' models in behind the reveal.
+        // Manifests without an 'extras' group build everything at once.
+        this.hasExtras = (this.experience.assets ?? []).some((g) => g.name === 'extras')
 
         this.resources.on('groupEnd', (_group) =>
         {
             if(_group.name === 'base')
             {
                 this.build()
+            }
+            else if(_group.name === 'environment')
+            {
+                this.swapEnvironment()
+            }
+            else if(_group.name === 'extras' && this.built)
+            {
+                this.buildLaterVignettes()
             }
         })
     }
@@ -138,6 +166,40 @@ export default class World
         }
     }
 
+    /** Primitive gallery chair, shared by beats 04 and 07: graphite shell
+     *  (chairShell) with fabric pads on seat and back, a slightly reclined
+     *  backrest, and brass foot caps — the same micro-detail language as the
+     *  components' feet. Proportions come in per beat. */
+    primitiveChair(x, z, rotY, { seatW, seatD, seatH, backH, legT })
+    {
+        const chair = new THREE.Group()
+        chair.position.set(x, 0, z)
+        chair.rotation.y = rotY
+        this.scene.add(chair)
+
+        // Seat shell + fabric pad.
+        this.box(seatW, 0.045, seatD, this.chairShell, 0, seatH, 0, chair)
+        this.box(seatW - 0.05, 0.035, seatD - 0.05, this.chairPad, 0, seatH + 0.04, 0, chair)
+
+        // Backrest reclined a few degrees, fabric pad on its seat-facing side.
+        const backY = seatH + backH / 2 + 0.03
+        const backZ = -seatD / 2 + 0.025
+        const back = this.box(seatW, backH, 0.045, this.chairShell, 0, backY, backZ, chair)
+        back.rotation.x = -0.09
+        const pad = this.box(seatW - 0.06, backH - 0.08, 0.02, this.chairPad, 0, backY, backZ + 0.033, chair)
+        pad.rotation.x = -0.09
+
+        // Legs + brass foot caps.
+        const dx = seatW / 2 - legT / 2 - 0.015
+        const dz = seatD / 2 - legT / 2 - 0.015
+        for(const [ox, oz] of [[-dx, -dz], [dx, -dz], [-dx, dz], [dx, dz]])
+        {
+            this.box(legT, seatH - 0.03, legT, this.chairShell, ox, (seatH - 0.03) / 2 + 0.03, oz, chair)
+            this.cylinder(legT * 0.44, legT * 0.55, 0.03, this.brass, ox, 0.015, oz, chair)
+        }
+        return chair
+    }
+
     /** Blurred, quiet floor reflection: a mirrored clone, ~6% strength. */
     reflect(mesh)
     {
@@ -148,6 +210,7 @@ export default class World
         clone.castShadow = false
         clone.receiveShadow = false
         this.scene.add(clone)
+        this.mirrorClones.push(clone)
         return clone
     }
 
@@ -163,8 +226,17 @@ export default class World
      * (the floorstander appears in four beats). Clones share geometry,
      * material, and texture, so those are registered for disposal exactly
      * once per model name.
+     *
+     * `rig` (ported from the WebGI product viewer): the exports carry an
+     * authored studio light rig (KHR_lights_punctual — key/rim spots aimed at
+     * the product plus two fills), which the webgi.js island honors and which
+     * is what makes the models pop there. Pass an array of light-node names
+     * (e.g. ['Key_Light', 'Rim_Light']) to KEEP those lights on this
+     * placement — shadowless, distance-capped, scaled by `rigIntensity` — so
+     * the model gets its authored specular/rim definition without the full
+     * rig-per-clone explosion that got them stripped in the first place.
      */
-    placeModel(name, { axis, size, x, y = 0, z, rotY = 0 })
+    placeModel(name, { axis, size, x, y = 0, z, rotY = 0, rig = null, rigIntensity = 1 })
     {
         const source = this.resources.items[name]?.scene
         if(!source)
@@ -186,9 +258,47 @@ export default class World
                     }
                 }
             })
+
+            if(name === 'floorstanding-loudspeaker')
+                this.brightenFloorstander(source)
+
+            if(name === 'integrated-amplifier')
+                this.repairAmplifier(source)
         }
 
         const model = source.clone()
+
+        // Strip any lights the export shipped (KHR_lights_punctual): the
+        // speaker and turntable GLBs each embed a 4-light studio rig, and
+        // cloned placements multiplied those into dozens of live punctual
+        // lights — in a forward renderer every one adds per-fragment cost to
+        // EVERY material in the frame. The gallery has its own light rig.
+        // Exception: lights this placement asked to keep via `rig`.
+        const strays = []
+        model.traverse((child) => { if(child.isLight) strays.push(child) })
+        for(const light of strays)
+        {
+            if(rig?.includes(light.name))
+            {
+                light.castShadow = false
+                light.intensity *= rigIntensity
+                // Physical decay-2 falloff never reaches zero — cap the range
+                // so a kept rig light can't spill into the next room over.
+                light.distance = 8
+                // Object3D.clone() breaks a SpotLight's aim: the clone gets a
+                // fresh unparented `target` (matrixWorld = identity), so the
+                // spot silently re-aims at the world origin. Re-do what
+                // GLTFLoader did on load — target as a child at local -z —
+                // and the authored aim survives the placement transform.
+                if(light.isSpotLight)
+                {
+                    light.target.position.set(0, 0, -1)
+                    light.add(light.target)
+                }
+                continue
+            }
+            light.removeFromParent()
+        }
 
         const box = new THREE.Box3().setFromObject(model)
         const dims = box.getSize(new THREE.Vector3())
@@ -210,11 +320,84 @@ export default class World
         return model
     }
 
+    /** One-time exposure lift for the floorstander GLB — shared by every
+     *  clone (the beat-01 hero and the beat-07 pair), so it runs once when
+     *  the model is first tracked. NOT a re-skin: the export's own palette
+     *  (charcoal panel, black frame, orange cabinet) stays exactly as
+     *  authored — owner call. The model just catches more light: a stronger
+     *  environment response, and a faint SELF-COLOURED emissive lift (each
+     *  material brightens in its own hue, so the charcoal stays charcoal
+     *  instead of washing to grey and the orange keeps its saturation) that
+     *  keeps the shadowed faces readable in beat 07's dimmed grade. */
+    brightenFloorstander(source)
+    {
+        source.traverse((child) =>
+        {
+            if(!child.isMesh)
+                return
+            for(const m of Array.isArray(child.material) ? child.material : [child.material])
+            {
+                m.envMapIntensity = 3.4
+
+                // Emissive in the material's own hue, NORMALISED to a fixed
+                // peak before the intensity scale — a raw color.clone() on the
+                // near-black charcoal multiplies to nothing, so dark materials
+                // (the ones that need the lift) would get none.
+                const lift = m.color.clone()
+                const peak = Math.max(lift.r, lift.g, lift.b, 0.001)
+                lift.multiplyScalar(Math.min(0.55 / peak, 12))
+                m.emissive = lift
+                m.emissiveIntensity = 0.22
+            }
+        })
+    }
+
+    /** One-time repair for the integrated-amplifier GLB — shared by every
+     *  clone (beats 02 and 03), so it runs once when the model is first
+     *  tracked. The export's vertex normals are broken on the flat chassis
+     *  panels (the lid is triangulated as a corner fan and shipped smoothed
+     *  normals), and its chassis material omits metallicFactor — glTF's
+     *  default is FULLY metallic — so every normal error becomes a dark
+     *  specular streak raking across the top plate. Recompute the normals
+     *  (hard edges survive: the export already splits vertices along them)
+     *  and drop the chassis normal map, which was baked against the broken
+     *  normals (the wood side caps keep theirs — the grain is real detail). */
+    repairAmplifier(source)
+    {
+        source.traverse((child) =>
+        {
+            if(!child.isMesh)
+                return
+            child.geometry.computeVertexNormals()
+            for(const m of Array.isArray(child.material) ? child.material : [child.material])
+            {
+                if(m.name === 'Front Panel' && m.normalMap)
+                {
+                    m.normalMap = null
+                    m.needsUpdate = true
+                }
+            }
+        })
+    }
+
+    /** Register a soft elliptical contact shadow in the floor shader under an
+     *  object: world x/z centre, radius, strength (0..1). Analytic AO, not a
+     *  shadow-map term — it stays perfectly soft and stable at any distance
+     *  and costs one smoothstep per floor fragment. */
+    contactShadow(x, z, radius, strength)
+    {
+        const slots = this.contactShadowUniform.value
+        if(this.contactShadowCount >= slots.length)
+            return
+        slots[this.contactShadowCount++].set(x, z, radius, strength)
+    }
+
     /** reflect(), for a placed model group: mirrored clone in the shared
      *  reflection material. */
     reflectModel(model)
     {
         const clone = model.clone()
+        const strays = []
         clone.traverse((child) =>
         {
             if(child.isMesh)
@@ -223,11 +406,36 @@ export default class World
                 child.castShadow = false
                 child.receiveShadow = false
             }
+            // Any rig light the placement kept must not double up in its
+            // mirrored clone.
+            if(child.isLight)
+                strays.push(child)
         })
+        for(const light of strays)
+            light.removeFromParent()
         clone.scale.y *= -1
         clone.position.y *= -1
         this.scene.add(clone)
+        this.mirrorClones.push(clone)
         return clone
+    }
+
+    /** Punch a hole in the SSR floor reflection under one object: a
+     *  floor-level plane kept OUT of the SSR selection. Invisible in the
+     *  beauty pass (no color/depth writes), but the metalness mask renders
+     *  every non-selected mesh opaque black, so the SSR pass skips exactly
+     *  these floor pixels. Sits above the skylight-pool overlays (y 0.006,
+     *  which ARE selected) so it wins the mask where they overlap. */
+    maskReflection(x, z, w, d)
+    {
+        const mask = new THREE.Mesh(
+            this.geo(new THREE.PlaneGeometry(w, d)),
+            this.mat(new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false }))
+        )
+        mask.rotation.x = -Math.PI / 2
+        mask.position.set(x, 0.009, z)
+        this.scene.add(mask)
+        return mask
     }
 
     /** Radial white glow texture (bright core, feathered to transparent) —
@@ -269,6 +477,7 @@ export default class World
         mesh.rotation.x = -Math.PI / 2
         mesh.position.set(x, 0.006, 0.4)
         this.scene.add(mesh)
+        this.floorOverlays.push(mesh)
     }
 
     // ── build ────────────────────────────────────────────────────────────
@@ -280,23 +489,16 @@ export default class World
         this.setGallery()
         this.setLights()
         this.setVignette01()
-        this.setVignette02()
-        this.setVignette03()
-        this.setVignette04()
-        this.setVignette07()
 
-        // Freeze static transforms: every mesh in the gallery is stationary
-        // (only the camera rig and the key/fill lights move), so skip the
-        // per-frame local-matrix recomposition for the whole mesh population.
-        // Materials still animate (gold opacities) — that doesn't touch matrices.
-        this.scene.traverse((child) =>
-        {
-            if(child.isMesh)
-            {
-                child.updateMatrix()
-                child.matrixAutoUpdate = false
-            }
-        })
+        // With an 'extras' group in flight, rooms 02–07 arrive right behind
+        // the reveal (buildLaterVignettes); the gallery, pools and washes
+        // already exist, so a racing scroller sees an empty room for a
+        // moment, never a broken one.
+        if(!this.hasExtras)
+            this.buildLaterVignettes()
+
+        this.freezeMatrices()
+        this.setReflections()
 
         this.built = true
         // First frame of the built scene must render even if the user has not
@@ -306,39 +508,142 @@ export default class World
         this.experience.renderer.instance.shadowMap.needsUpdate = true
     }
 
+    /** Rooms 02–07, deferred behind the reveal when the manifest ships an
+     *  'extras' group. Re-freezes and re-syncs the reflections because the
+     *  new meshes (and their mirror clones) arrive after build(). */
+    buildLaterVignettes()
+    {
+        this.setVignette02()
+        this.setVignette03()
+        this.setVignette04()
+        this.setVignette07()
+
+        if(this.built)
+        {
+            this.freezeMatrices()
+            this.setReflections()
+            this.experience.needsRender = true
+            this.experience.renderer.instance.shadowMap.needsUpdate = true
+        }
+    }
+
+    /** Freeze static transforms: every mesh in the gallery is stationary
+     *  (only the camera rig and the key/fill lights move), so skip the
+     *  per-frame local-matrix recomposition for the whole mesh population.
+     *  Matrices are all that's skipped — material animation is unaffected.
+     *  Safe to run repeatedly (deferred vignettes re-freeze). */
+    freezeMatrices()
+    {
+        this.scene.traverse((child) =>
+        {
+            if(child.isMesh)
+            {
+                child.updateMatrix()
+                child.matrixAutoUpdate = false
+            }
+        })
+    }
+
+    /** Hand the reflective surfaces to the renderer's SSR pass. The floor is
+     *  the reflector; the transparent floor-plane overlays (skylight pools)
+     *  join the selection because SSRPass's metalness mask renders every
+     *  non-selected mesh as opaque black — left out, they would punch holes
+     *  in the reflection exactly under each vignette. Their depth and
+     *  normals match the floor, so the reflection continues under them. */
+    setReflections()
+    {
+        const renderer = this.experience.renderer
+
+        // Only the #debug build has an SSR pass to feed; in production it does
+        // not exist. Either way the mirror-clone fallback must be synced so the
+        // floor reflection is visible (it is the only reflector when SSR is off,
+        // which is the default).
+        if(renderer.ssrPass)
+            renderer.setSSRSelects([this.floor, ...this.floorOverlays])
+
+        this.syncMirrorReflections()
+    }
+
+    /** The mirrored-clone fallback reflections track the SSR state: hidden
+     *  while the SSR pass is doing the reflecting, restored when it is
+     *  toggled off (Firefox probe, adaptive quality, debug GUI). */
+    syncMirrorReflections()
+    {
+        const renderer = this.experience.renderer
+        const ssrActive = !!(renderer.ssrPass && renderer.useSSR)
+        for(const clone of this.mirrorClones)
+            clone.visible = !ssrActive
+        this.experience.needsRender = true
+    }
+
     setEnvironment()
     {
-        const renderer = this.experience.renderer.instance
-        const pmrem = new THREE.PMREMGenerator(renderer)
-
-        // Prefer the environment map shipped by the page manifest (name:
-        // 'environment' — a DWAB-compressed EXR, ~190 KB) — real image-based
-        // lighting gives the matte-black GLBs believable specular gradients
-        // and lets the brass pick up warm reflections. Without it, fall back
-        // to the neutral procedural RoomEnvironment. Intensity stays
-        // restrained either way so the cool pale skylight mood governs;
-        // override per page via sceneConfig.environmentIntensity.
+        // The environment map ships in its own fast-follow group (name:
+        // 'environment' — assets/exr/atmosphere.exr, DWAB; the loader handles
+        // EXR and RGBE .hdr alike), loaded right behind the reveal-gating
+        // base group. Build starts on the neutral procedural RoomEnvironment
+        // so the opening frame never waits for the file; swapEnvironment()
+        // upgrades to the real image-based lighting when it lands — the
+        // matte-black GLBs' specular gradients and the brass's warm
+        // reflections. If the manifest shipped it inside 'base' instead
+        // (older pages), it is applied here directly.
         const envTexture = this.resources.items['environment']
         if(envTexture)
         {
-            this.envMap = pmrem.fromEquirectangular(envTexture).texture
-            envTexture.dispose()
-            this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.45
+            this.applyEnvironment(envTexture, this.sceneConfig.environmentIntensity ?? 0.45)
         }
         else
         {
+            const pmrem = new THREE.PMREMGenerator(this.experience.renderer.instance)
             this.envMap = pmrem.fromScene(new RoomEnvironment(), 0.04).texture
+            pmrem.dispose()
+            this.disposables.textures.push(this.envMap)
+            this.scene.environment = this.envMap
             this.scene.environmentIntensity = this.sceneConfig.environmentIntensity ?? 0.25
+            this.envBase = this.scene.environmentIntensity
         }
-        pmrem.dispose()
-        this.envBase = this.scene.environmentIntensity
-
-        this.disposables.textures.push(this.envMap)
-        this.scene.environment = this.envMap
 
         // Fog pulled in so floor and wall converge to the same tone where they
         // meet (~12+ units out) — part of erasing the hard horizon line.
+        // Its pale colour is UNLIT — at beat 07's camera distance the back wall
+        // is majority fog, which is why the light-rig trims alone can't darken
+        // that frame. The per-beat `fog` trim grades this colour (updateLightTrims).
         this.scene.fog = new THREE.Fog(this.colors.ground, 11, 30)
+        this.fogBase = new THREE.Color(this.colors.ground)
+        this.fogTarget = new THREE.Color()
+    }
+
+    /** PMREM a loaded equirect texture into scene.environment. */
+    applyEnvironment(envTexture, intensity)
+    {
+        const pmrem = new THREE.PMREMGenerator(this.experience.renderer.instance)
+        this.envMap = pmrem.fromEquirectangular(envTexture).texture
+        pmrem.dispose()
+        envTexture.dispose()
+
+        this.disposables.textures.push(this.envMap)
+        this.scene.environment = this.envMap
+        this.scene.environmentIntensity = intensity
+        this.envBase = intensity
+    }
+
+    /** The fast-follow environment landed (typically well inside the intro
+     *  ramp). Swap the procedural placeholder for the real map with the
+     *  intensity pulled LOW — updateLightTrims' per-frame easing then lifts
+     *  it to target over ~1 s, so the richer lighting breathes in instead
+     *  of popping. */
+    swapEnvironment()
+    {
+        const envTexture = this.resources.items['environment']
+        if(!envTexture || !this.built)
+            return
+
+        const placeholder = this.envMap
+        this.applyEnvironment(envTexture, this.sceneConfig.environmentIntensity ?? 0.45)
+        this.scene.environmentIntensity = 0.12
+        placeholder?.dispose()
+
+        this.experience.needsRender = true
     }
 
     setMaterials()
@@ -377,6 +682,21 @@ export default class World
         this.glove = this.mat(new THREE.MeshStandardMaterial({
             color: '#f5f2ea', roughness: 0.95, metalness: 0
         }))
+        // Chair frame: lifted warm graphite, a deliberate step up from the
+        // matte-black electronics — the chair is furniture, not gear, and at
+        // #17191d it read as a flat black cutout (no face-to-face shading).
+        // Clearcoat gives it the plinths' skylight response, so seat, back,
+        // and legs each catch the oculus differently and the form reads.
+        this.chairShell = this.mat(new THREE.MeshPhysicalMaterial({
+            color: '#4d545f', roughness: 0.38, metalness: 0.05,
+            clearcoat: 0.55, clearcoatRoughness: 0.28
+        }))
+        // Woven seat/back pads: lighter and fully matte, with sheen so the
+        // light catch reads as fabric rather than plastic.
+        this.chairPad = this.mat(new THREE.MeshPhysicalMaterial({
+            color: '#6b7280', roughness: 0.9, metalness: 0,
+            sheen: 0.5, sheenColor: new THREE.Color('#aeb6c2'), sheenRoughness: 0.6
+        }))
         // Shared reflection material (mirrored clones). DoubleSide because the
         // y-flip reverses triangle winding, which would cull front-side faces.
         // Opacity raised with the glossier floor — the reference's polished
@@ -389,21 +709,66 @@ export default class World
 
     setGallery()
     {
-        // POLISHED pale concrete floor — low roughness so it picks up a real
-        // environment sheen (the reference's glossy museum floor); envMap
-        // intensity restrained so the pale ground doesn't blow out. The
-        // mirrored reflection clones read against this sheen.
+        // POLISHED concrete floor, a clear step DARKER than the wall so the
+        // ground plane reads as its own material and the pale wall lifts off
+        // it (the old floor sat too close to the wall tone and the hero frame
+        // read flat). Two more grades happen in the SHADER (injections below):
+        //  1. Skylight pool grade — per 16-unit room the floor brightens
+        //     toward the oculus centre and falls away toward the corners,
+        //     mirroring the wall's oculus falloff so floor and wall shade as
+        //     one lighting scheme (floor one step down).
+        //  2. Soft contact shadows — analytic elliptical AO blobs under each
+        //     vignette's objects (registered via contactShadow()), softer and
+        //     more stable than the shadow map alone; they ground the hero
+        //     speaker, whose floor reflection is deliberately removed.
+        const floorMat = this.mat(new THREE.MeshStandardMaterial({
+            color: '#d7dfeb', roughness: 0.56, metalness: 0,
+            envMapIntensity: 0.22
+        }))
+
+        // Fixed-size uniform block; the vignette builders fill it via
+        // contactShadow() (build order: setGallery runs first). Unused slots
+        // keep radius 0 and are skipped in the shader.
+        this.contactShadowUniform = { value: Array.from({ length: 16 }, () => new THREE.Vector4()) }
+        this.contactShadowCount = 0
+
+        floorMat.onBeforeCompile = (shader) =>
+        {
+            shader.uniforms.uContactShadows = this.contactShadowUniform
+            shader.vertexShader = shader.vertexShader
+                .replace('#include <common>', '#include <common>\nvarying vec2 vFloorXZ;')
+                .replace('#include <begin_vertex>', '#include <begin_vertex>\nvFloorXZ = (modelMatrix * vec4(transformed, 1.0)).xz;')
+            shader.fragmentShader = shader.fragmentShader
+                .replace('#include <common>', '#include <common>\nvarying vec2 vFloorXZ;\nuniform vec4 uContactShadows[16];')
+                .replace('#include <color_fragment>', `#include <color_fragment>
+{
+	// Skylight pool grade — same room math as the wall's oculus falloff.
+	float roomDx = abs(mod(vFloorXZ.x + 8.0, 16.0) - 8.0);
+	float poolR = length(vec2(roomDx, (vFloorXZ.y - 0.4) * 0.9));
+	diffuseColor.rgb *= mix(1.05, 0.84, smoothstep(2.4, 9.5, poolR));
+
+	// Soft contact shadows: xy = world xz, z = radius, w = strength.
+	float shade = 1.0;
+	for(int i = 0; i < 16; i++)
+	{
+		vec4 s = uContactShadows[i];
+		if(s.z <= 0.0) continue;
+		float d = length(vFloorXZ - s.xy) / s.z;
+		shade *= 1.0 - s.w * (1.0 - smoothstep(0.25, 1.0, d));
+	}
+	diffuseColor.rgb *= shade;
+}`)
+        }
+
         const floor = new THREE.Mesh(
             this.geo(new THREE.PlaneGeometry(120, 32)),
-            this.mat(new THREE.MeshStandardMaterial({
-                color: '#e2e8f1', roughness: 0.56, metalness: 0,
-                envMapIntensity: 0.22
-            }))
+            floorMat
         )
         floor.rotation.x = -Math.PI / 2
         floor.position.set(32, 0, 2)
         floor.receiveShadow = true
         this.scene.add(floor)
+        this.floor = floor
 
         // Back wall, shaped in the SHADER (two injections):
         //  1. Cove blend — the base fades into the floor color over ~2 units,
@@ -416,7 +781,10 @@ export default class World
         const wallMat = this.mat(new THREE.MeshStandardMaterial({
             color: '#f4f7fb', roughness: 1
         }))
-        const floorTone = new THREE.Color('#e6ebf3')
+        // Matches the DARKER floor at the wall line (base #d7dfeb, shaded
+        // below 1.0 that far from the pool centre) so the cove stays a soft
+        // blend, not a visible tone step.
+        const floorTone = new THREE.Color('#d3dbe8')
         wallMat.onBeforeCompile = (shader) =>
         {
             shader.uniforms.uCoveColor = { value: floorTone }
@@ -451,7 +819,11 @@ export default class World
                 this.mat(new THREE.MeshBasicMaterial({
                     map: this.radialGlowTexture(),
                     transparent: true,
-                    opacity: x === VIGNETTE_X[4] ? 0.4 : 0.28,
+                    // Final room eased 0.4 → 0.3: still the strongest wash in
+                    // the gallery, just no longer fighting beat 07's dimmed
+                    // grade (the closing frame's brightness is governed by the
+                    // fog/clear-colour grade — see updateLightTrims).
+                    opacity: x === VIGNETTE_X[4] ? 0.3 : 0.28,
                     depthWrite: false
                 }))
             )
@@ -525,12 +897,36 @@ export default class World
         // stays at full strength while the ambient terms (fill hits the wall
         // head-on there, env, hemi) drop and the vignette deepens, so the
         // stereo pair sits in a bright pool with cool falling-away corners.
+        // Beat 07 is `late`: its grade does NOT lead the depart dolly (the
+        // canvas slivers behind the address/services bands stay at the bright
+        // gallery grade) — instead it eases in with the arrival travel,
+        // landing as the stereo pair settles into frame (see updateLightTrims).
+        // Beat 03 takes a mild trim of the same shape: its pale plinths plus
+        // the head-on fill pushed the whole room toward clipping, so the
+        // ambient terms step back while the key pool keeps the plinth tops lit.
+        // `fog` grades the (unlit) fog colour — the term that actually darkens
+        // the far wall, which sits mostly inside the fog at these camera
+        // distances and shrugs off the light trims alone.
         this.lightTrims = [
-            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
-            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
-            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
-            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 },
-            { key: 0.9, fill: 0.22, env: 0.3, hemi: 0.55, vig: 2.6 }
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1, fog: 1 },
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1, fog: 1 },
+            { key: 0.95, fill: 0.72, env: 0.78, hemi: 0.82, vig: 1.2, fog: 1 },
+            { key: 1, fill: 1, env: 1, hemi: 1, vig: 1, fog: 1 },
+            // (Grade eased up one step — owner call: the closing room ran too
+            // dark; this keeps the dimmed-atmosphere shape, just lifted.)
+            { key: 1, fill: 0.62, env: 0.68, hemi: 0.8, vig: 1.4, fog: 0.99, late: true }
+        ]
+
+        // Per-beat key-light offset: beat 01's key hangs slanted from upper
+        // right — the hero speaker's PCF shadow elongates left toward the
+        // open floor and the speaker models with a bright +x edge. Other
+        // beats keep the straight-overhead oculus. Eased in updateCamera.
+        this.keyOffsets = [
+            { x: 2.6, z: 1.2 },
+            { x: 0, z: 0 },
+            { x: 0, z: 0 },
+            { x: 0, z: 0 },
+            { x: 0, z: 0 }
         ]
 
         // One dominant overhead OCULUS: a wide, fully-feathered spotlight
@@ -548,7 +944,10 @@ export default class World
         // was indistinguishable); normalBias (over a large depth bias) avoids
         // acne without detaching small parts' shadows from their objects.
         this.key.shadow.mapSize.set(1024, 1024)
-        this.key.shadow.radius = 8
+        // radius 5: soft skylight shadows that still READ — at 8 the cast
+        // shadows blurred to nothing and objects floated on their analytic
+        // contact blobs alone.
+        this.key.shadow.radius = 5
         this.key.shadow.bias = -0.0002
         this.key.shadow.normalBias = 0.03
         this.key.shadow.camera.near = 0.5
@@ -558,28 +957,49 @@ export default class World
     }
 
     /** beat 01 — single floorstander, large and impressive in the RIGHT of
-     *  frame (the hero copy holds the left half), angled slightly to camera. */
+     *  frame (the hero copy holds the left half), angled slightly to camera.
+     *  This speaker carries NO floor reflection (owner call): the SSR patch
+     *  where its mirror image would land is masked out, and no mirrored
+     *  fallback clone is made. The beat-07 pair keeps its reflections. */
     setVignette01()
     {
         const x = VIGNETTE_X[0] + 1.6
 
-        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.9, x, z: 0.4, rotY: -0.42 })
+        // Mask sized to the reflection footprint: from the speaker base out
+        // toward the beat-01 camera (z ≈ 5.8–7.4, eye ≈ 1.1) — a 1.9-tall
+        // object's mirror image reaches ~4.5 units in front of its base.
+        this.maskReflection(x - 0.1, 2.6, 3.0, 5.2)
+
+        // The hero's grounding: with its reflection removed, the soft contact
+        // shadow is what seats the speaker on the floor. Strongest of the set.
+        this.contactShadow(x, 0.4, 0.95, 0.6)
+
+        // God-ray cast shadow: the beat-01 key hangs toward +x/+z (see
+        // keyOffsets), so the speaker's shade trails away left and slightly
+        // toward the wall. Two fading blobs extend the real PCF shadow into
+        // a readable directional cast on the open floor.
+        this.contactShadow(x - 0.85, 0.15, 0.8, 0.32)
+        this.contactShadow(x - 1.55, -0.15, 0.65, 0.2)
+
+        // The hero keeps its authored WebGI key + rim spots (the webgi-viewer
+        // look): the key rakes a specular streak down the cabinet's camera
+        // side, the rim separates the dark back edge from the wall. Intensity
+        // trimmed hard — the authored 30 cd studio values are scaled for a
+        // black void, not the pale gallery.
+        const speaker = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.9, x, z: 0.4, rotY: -0.42, rig: ['Key_Light', 'Rim_Light'], rigIntensity: 0.25 })
         if(speaker)
         {
-            this.reflectModel(speaker)
             return
         }
 
         // Primitive fallback (manifest shipped no model).
-        const column = this.box(0.5, 1.7, 0.6, this.matteBlack, x, 0.9, 0)
+        this.box(0.5, 1.7, 0.6, this.matteBlack, x, 0.9, 0)
         this.brassFeet(x, 0, 0.5, 0.6)
 
         // Drivers on the front face.
         this.cylinder(0.12, 0.12, 0.028, this.blackDetail, x, 1.42, 0.31).rotation.x = Math.PI / 2
         this.cylinder(0.16, 0.16, 0.028, this.blackDetail, x, 0.92, 0.31).rotation.x = Math.PI / 2
         this.cylinder(0.16, 0.16, 0.028, this.blackDetail, x, 0.5, 0.31).rotation.x = Math.PI / 2
-
-        this.reflect(column)
     }
 
     /** beat 02 (signature) — turntable, amplifier, CD player becoming one
@@ -588,6 +1008,9 @@ export default class World
     setVignette02()
     {
         const cx = VIGNETTE_X[1]
+
+        for(const ox of [-1.05, 0, 1.05])
+            this.contactShadow(cx + ox, 0, 0.7, 0.22)
 
         // Turntable, integrated amplifier, CD player — three separated forms
         // standing directly in the gallery, at matching real-world component
@@ -636,17 +1059,8 @@ export default class World
             this.reflect(cd)
         }
 
-        // The scripted gold event — THIS BEAT ONLY. A thin gold line resolves
-        // on the floor beneath the three components as the system aligns (the
-        // signal path made literal; the old travelling dot read as an
-        // unexplained yellow ball and is gone).
-        this.goldAxisMat = this.mat(new THREE.MeshBasicMaterial({
-            color: this.colors.accent, transparent: true, opacity: 0
-        }))
-        this.goldAxis = new THREE.Mesh(this.geo(new THREE.PlaneGeometry(3.1, 0.022)), this.goldAxisMat)
-        this.goldAxis.rotation.x = -Math.PI / 2
-        this.goldAxis.position.set(cx, 0.012, 0.5)
-        this.scene.add(this.goldAxis)
+        // (No gold axis line here anymore — like beat 07's gold circle, it
+        // read as an unexplained yellow stripe on the floor and is gone.)
     }
 
     /** beat 03 — three plinths receding diagonally, one component each:
@@ -661,7 +1075,12 @@ export default class World
 
         for(const [x, z] of spots)
         {
-            this.box(0.9, 0.5, 0.9, this.plinth, x, 0.25, z)
+            // The plinths stand directly on the gallery floor, so they earn a
+            // floor reflection like the beat-02 components — the components on
+            // top do not (they sit on the plinths, not the floor).
+            const plinth = this.box(0.9, 0.5, 0.9, this.plinth, x, 0.25, z)
+            this.reflect(plinth)
+            this.contactShadow(x, z, 0.85, 0.24)
         }
 
         // One component per plinth top (y = 0.5), each independently a GLB or
@@ -698,11 +1117,15 @@ export default class World
     {
         const cx = VIGNETTE_X[3]
 
-        // Table: top slab + four legs.
+        this.contactShadow(cx, 0, 1.5, 0.2)
+        this.contactShadow(cx + 1.35, 1.0, 0.62, 0.3)
+
+        // Table: top slab + four legs — legs in the chair's graphite (both are
+        // furniture; pure matte black beside the lifted chair read mismatched).
         this.box(2.2, 0.06, 0.9, this.plinth, cx, 0.72, 0)
         for(const [ox, oz] of [[-1.0, -0.38], [1.0, -0.38], [-1.0, 0.38], [1.0, 0.38]])
         {
-            this.box(0.06, 0.72, 0.06, this.matteBlack, cx + ox, 0.36, oz)
+            this.box(0.06, 0.72, 0.06, this.chairShell, cx + ox, 0.36, oz)
         }
 
         // Turntable mid-audition, seated on the table top (y = 0.75). Sized to
@@ -725,16 +1148,9 @@ export default class World
 
         // Chair just pulled back from listening position — beside the table so
         // the audition tabletop stays the subject.
-        const chair = new THREE.Group()
-        chair.position.set(cx + 1.35, 0, 1.0)
-        chair.rotation.y = -0.5
-        this.scene.add(chair)
-        this.box(0.46, 0.05, 0.44, this.matteBlack, 0, 0.45, 0, chair)
-        this.box(0.46, 0.5, 0.05, this.matteBlack, 0, 0.72, -0.2, chair)
-        for(const [ox, oz] of [[-0.19, -0.18], [0.19, -0.18], [-0.19, 0.18], [0.19, 0.18]])
-        {
-            this.box(0.04, 0.45, 0.04, this.matteBlack, ox, 0.22, oz, chair)
-        }
+        this.primitiveChair(cx + 1.35, 1.0, -0.5, {
+            seatW: 0.46, seatD: 0.44, seatH: 0.45, backH: 0.5, legT: 0.04
+        })
     }
 
     /** beat 07 — the listening position: a realistic near-field stereo pair,
@@ -743,13 +1159,20 @@ export default class World
     {
         const cx = VIGNETTE_X[4]
 
+        for(const ox of [-1.3, 1.3])
+            this.contactShadow(cx + ox, -0.6, 0.9, 0.3)
+        this.contactShadow(cx, 2.1, 0.6, 0.26)
+
         // The stereo pair carries the frame: closer together (a real ~2.5 m
         // triangle), larger, toed in toward the listening spot. Each
         // placeModel() call clones the one loaded GLB.
         for(const ox of [-1.3, 1.3])
         {
             const toeIn = ox < 0 ? 0.3 : -0.3
-            const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.55, x: cx + ox, z: -0.6, rotY: toeIn })
+            // The pair keeps only the authored rim spot (the key would fight
+            // beat 07's dimmed grade): enough to lift the cabinets' back
+            // edges off the darkened wall so they read as forms, not cutouts.
+            const speakerModel = this.placeModel('floorstanding-loudspeaker', { axis: 'y', size: 1.55, x: cx + ox, z: -0.6, rotY: toeIn, rig: ['Rim_Light'], rigIntensity: 0.15 })
             if(speakerModel)
             {
                 this.reflectModel(speakerModel)
@@ -788,16 +1211,9 @@ export default class World
         }
         else
         {
-            const chair = new THREE.Group()
-            chair.position.set(cx, 0, 2.1)
-            chair.rotation.y = Math.PI
-            this.scene.add(chair)
-            this.box(0.44, 0.05, 0.42, this.matteBlack, 0, 0.3, 0, chair)
-            this.box(0.44, 0.3, 0.05, this.matteBlack, 0, 0.47, -0.19, chair)
-            for(const [ox, oz] of [[-0.18, -0.17], [0.18, -0.17], [-0.18, 0.17], [0.18, 0.17]])
-            {
-                this.box(0.035, 0.3, 0.035, this.matteBlack, ox, 0.15, oz, chair)
-            }
+            this.primitiveChair(cx, 2.1, Math.PI, {
+                seatW: 0.44, seatD: 0.42, seatH: 0.3, backH: 0.32, legT: 0.035
+            })
         }
 
         // (No gold floor catch and no wall niche panels here anymore — the
@@ -836,6 +1252,12 @@ export default class World
         const scale = this.experience.sceneState.beatScales?.[i] || 1
         const tPin = t / scale
 
+        // How far the depart dolly has traveled toward the next room (0 while
+        // approaching/settled) — updateLightTrims blends the two rooms' light
+        // grades with it, so a trimmed room never shows the previous room's
+        // lighting during the arrival.
+        let departK = 0
+
         const a = cam.a, s = cam.s
         if(tPin <= cam.settle)
         {
@@ -852,6 +1274,7 @@ export default class World
         {
             const next = this.beatCams[i + 1]
             const k = this.ramp(t, cam.depart * scale, 1)
+            departK = k
             this.camPos.set(...s.pos).lerp(this.tmp.set(...next.a.pos), k)
             this.camTgt.set(...s.tgt).lerp(this.tmp.set(...next.a.tgt), k)
         }
@@ -868,46 +1291,95 @@ export default class World
         // scrubbed frame of a room-to-room dolly paid a full-scene shadow
         // depth pass; at 0.15 the bake lands every ~few frames, and a soft
         // 9-unit-high spotlight pool lagging ≤0.15 units is invisible.
-        if(Math.abs(this.camTgt.x - (this.lastShadowX ?? Infinity)) > 0.15)
+        // Beat 01's slanted key (the god-ray direction) eases in and out here;
+        // the eased offset joins the rebake check so the shadow tracks the
+        // light through the transition, and keeps frames coming while easing.
+        const keyOff = this.keyOffsets[i] ?? { x: 0, z: 0 }
+        this.keyOffCur ??= { x: keyOff.x, z: keyOff.z }
+        this.keyOffCur.x += (keyOff.x - this.keyOffCur.x) * 0.08
+        this.keyOffCur.z += (keyOff.z - this.keyOffCur.z) * 0.08
+        if(Math.abs(keyOff.x - this.keyOffCur.x) > 0.01 || Math.abs(keyOff.z - this.keyOffCur.z) > 0.01)
+            this.experience.needsRender = true
+        const keyX = this.camTgt.x + this.keyOffCur.x
+
+        if(Math.abs(keyX - (this.lastShadowX ?? Infinity)) > 0.15)
         {
-            this.lastShadowX = this.camTgt.x
+            this.lastShadowX = keyX
             this.experience.renderer.instance.shadowMap.needsUpdate = true
         }
-        this.key.position.set(this.camTgt.x, 9, 2.5)
+        this.key.position.set(keyX, 9, 2.5 + this.keyOffCur.z)
         this.key.target.position.set(this.camTgt.x, 0, 0)
         this.fill.position.set(this.camTgt.x, 4, 12)
         this.fill.target.position.set(this.camTgt.x, 2, -4.5)
 
-        // localT stays PIN-relative (clamped) so the gold accents and light
-        // trims keep their authored timing against the pinned copy.
-        return { beatIndex: i, localT: Math.min(tPin, 1) }
-    }
-
-    updateGoldAccents(beatIndex, t)
-    {
-        // Beat 02: the gold axis line resolves on the floor once the camera
-        // has mostly settled, then fades as the beat departs (transition_out).
-        this.goldAxisMat.opacity = (beatIndex === 1)
-            ? this.ramp(t, 0.4, 0.62) * (1 - this.ramp(t, 0.82, 0.96)) * 0.85
-            : 0
+        // localT stays PIN-relative (clamped) so the light trims keep their
+        // authored timing against the pinned copy.
+        return { beatIndex: i, localT: Math.min(tPin, 1), departK }
     }
 
     /** Ease the light rig toward the active beat's exposure trim. Exponential
      *  smoothing avoids a pop at beat boundaries; the needsRender flag keeps
      *  frames coming until the ease lands (render-on-demand would otherwise
-     *  freeze a half-trimmed frame when scrolling stops mid-transition). */
-    updateLightTrims(beatIndex)
+     *  freeze a half-trimmed frame when scrolling stops mid-transition).
+     *
+     *  During the room-to-room dolly the target blends toward the NEXT beat's
+     *  trim, and the lighting LEADS the camera (the blend completes by 60% of
+     *  the travel): the beat index flips only at the scroll boundary, so
+     *  without this a trimmed room (beat 03) spends the whole arrival
+     *  under the previous room's untrimmed rig — plinths washed to white —
+     *  and only grades down after the visitor has already settled.
+     *
+     *  `late` trims (beat 07) invert that: leading the dolly left the long
+     *  canvas band behind the services section sitting in the dimmed grade.
+     *  A late room stays at the neutral bright grade through the travel, then
+     *  dims in with the arrival (scrub-linked, completing at the camera
+     *  settle) — the light falls exactly as the stereo pair takes the frame. */
+    updateLightTrims(beatIndex, departK = 0, localT = 0)
     {
-        const trim = this.lightTrims[beatIndex] ?? { key: 1, fill: 1, env: 1, hemi: 1, vig: 1 }
-        const keyTarget = this.keyBase * trim.key
-        const fillTarget = this.fillBase * trim.fill
-        const envTarget = this.envBase * trim.env
-        const hemiTarget = this.hemiBase * trim.hemi
+        const fallback = { key: 1, fill: 1, env: 1, hemi: 1, vig: 1, fog: 1 }
+        let cur = this.lightTrims[beatIndex] ?? fallback
+        let next = this.lightTrims[beatIndex + 1] ?? cur
+
+        if(next.late)
+            next = fallback
+
+        if(cur.late)
+        {
+            const arriveK = this.ramp(localT, 0.06, this.beatCams[beatIndex]?.settle ?? 0.35)
+            cur = {
+                key: 1 + (cur.key - 1) * arriveK,
+                fill: 1 + (cur.fill - 1) * arriveK,
+                env: 1 + (cur.env - 1) * arriveK,
+                hemi: 1 + (cur.hemi - 1) * arriveK,
+                vig: 1 + (cur.vig - 1) * arriveK,
+                fog: 1 + ((cur.fog ?? 1) - 1) * arriveK
+            }
+        }
+
+        const k = this.ramp(departK, 0, 0.6)
+        const mix = (a, b) => a + (b - a) * k
+
+        const keyTarget = this.keyBase * mix(cur.key, next.key)
+        const fillTarget = this.fillBase * mix(cur.fill, next.fill)
+        const envTarget = this.envBase * mix(cur.env, next.env)
+        const hemiTarget = this.hemiBase * mix(cur.hemi, next.hemi)
 
         this.key.intensity += (keyTarget - this.key.intensity) * 0.08
         this.fill.intensity += (fillTarget - this.fill.intensity) * 0.08
         this.hemi.intensity += (hemiTarget - this.hemi.intensity) * 0.08
         this.scene.environmentIntensity += (envTarget - this.scene.environmentIntensity) * 0.08
+
+        // Fog colour grade — scale the base colour and ease toward it in-place.
+        // The renderer CLEAR COLOUR tracks the fog exactly: at beat 07's camera
+        // distance most of the frame is fog-saturated wall plus geometry-free
+        // backdrop, so the pale clear colour is what actually reads as "the
+        // room's light level" — grade the fog alone and the horizon splits.
+        if(this.scene.fog)
+        {
+            this.fogTarget.copy(this.fogBase).multiplyScalar(mix(cur.fog ?? 1, next.fog ?? 1))
+            this.scene.fog.color.lerp(this.fogTarget, 0.08)
+            this.experience.renderer.instance.setClearColor(this.scene.fog.color, 1)
+        }
 
         // The CSS vignette overlay grades with the beat too (deepest in beat
         // 07). It's DOM opacity — compositor-only, no WebGL render needed, and
@@ -916,7 +1388,7 @@ export default class World
         if(this.vignetteEl)
         {
             this.vigCurrent ??= 0.45
-            const vigTarget = Math.min(1, 0.45 * trim.vig)
+            const vigTarget = Math.min(1, 0.45 * mix(cur.vig, next.vig))
             if(Math.abs(vigTarget - this.vigCurrent) > 0.002)
             {
                 this.vigCurrent += (vigTarget - this.vigCurrent) * 0.08
@@ -927,7 +1399,8 @@ export default class World
         if(Math.abs(keyTarget - this.key.intensity) > 0.005
             || Math.abs(fillTarget - this.fill.intensity) > 0.005
             || Math.abs(hemiTarget - this.hemi.intensity) > 0.005
-            || Math.abs(envTarget - this.scene.environmentIntensity) > 0.002)
+            || Math.abs(envTarget - this.scene.environmentIntensity) > 0.002
+            || (this.scene.fog && Math.abs(this.fogTarget.r - this.scene.fog.color.r) > 0.002))
         {
             this.experience.needsRender = true
         }
@@ -943,9 +1416,8 @@ export default class World
             return
 
         const progress = this.experience.sceneState.scrollProgress
-        const { beatIndex, localT } = this.updateCamera(progress)
-        this.updateGoldAccents(beatIndex, localT)
-        this.updateLightTrims(beatIndex)
+        const { beatIndex, localT, departK } = this.updateCamera(progress)
+        this.updateLightTrims(beatIndex, departK, localT)
     }
 
     destroy()

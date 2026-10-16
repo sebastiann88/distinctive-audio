@@ -1,0 +1,158 @@
+fieldLayouts:
+  c4ac138d-8dca-4aa4-994a-8031ea972241:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 394d0871-b5d8-48f0-b107-4031c552a735 # Business Name
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: db321e10-28cc-4d55-81dc-62ef4add9ab6
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 665e387a-d1f5-4350-845b-d9be13dd0388 # Street Address
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 8dc70eea-fd93-4e15-9a57-854bddd1ada8
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 075de05c-f942-48a0-88f6-3cc4e565dba3 # City
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 0b5b0af5-848a-49dd-8edf-a03431df5a90
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: cbb32ddf-3151-4511-8e29-e6350fb9079c # Province
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 26343a67-98c0-4cb3-9de0-05134206d8fa
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: a9625847-33db-4f32-8df8-10c3d007da10 # Postal Code
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 3329a146-6dfd-44c2-b083-1d4eb07c85bb
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 2709fb8b-745a-4275-840a-134f0c69d6cc # Phone
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: b98aacc9-4ca4-4f1e-b848-81492a4b6d9d
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 4bd5b79c-26d0-4891-9c95-02b666aae9f7 # Email
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 80e6efb9-9505-443c-b4c2-ea5a892542cb
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: f7445992-b89d-4c78-8815-54ffcfc8b2f7 # Opening Hours
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: fd5d85a2-1447-441f-938d-a1dee4ebeba2
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: ca6f4ca5-ba7b-409a-86dd-e93bb0245121 # Established Year
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 25831ed3-e8ab-49eb-9bc8-700adc6db439
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 45d91fe5-38d1-4a17-a407-f36e93a5dcba
+        userCondition: null
+    thumbFieldKey: null
+handle: contactInfo
+name: 'Contact Info'
+sortOrder: 1

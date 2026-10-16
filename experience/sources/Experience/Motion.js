@@ -80,11 +80,13 @@ export default class Motion
      * stage inside; 'top top' → 'bottom bottom' is the pinned range.
      *
      * The scrub END, however, extends past the pin to wherever the NEXT
-     * section begins (capped at +50vh): the beat sections overlap with
-     * negative margins, and without the extension the entire 16-unit
-     * room-to-room camera dolly crammed into the last few vh of the pin and
-     * then FROZE through the structural gap — transitions read as a lurch
-     * then a dead hold. With it, the dolly rides the whole gap.
+     * section begins: the beat sections overlap with negative margins, and
+     * without the extension the entire 16-unit room-to-room camera dolly
+     * crammed into the last few vh of the pin and then FROZE through the
+     * structural gap — transitions read as a lurch then a dead hold. With it,
+     * the dolly rides the whole gap. No cap: the old +50vh cap re-froze the
+     * scene for the back half of any full-viewport gap (worst after the
+     * founder beat — 50vh of dead scroll while the address band rose).
      *
      * World needs to know how much each span was stretched so settle/hold
      * timings stay anchored to the PIN (text is read against a still camera,
@@ -105,8 +107,7 @@ export default class Motion
             {
                 const pinEnd = section.offsetTop + section.offsetHeight - window.innerHeight
                 const nextTop = section.nextElementSibling?.offsetTop ?? pinEnd
-                const cap = pinEnd + window.innerHeight * 0.5
-                return Math.round(Math.min(Math.max(nextTop, pinEnd), cap))
+                return Math.round(Math.max(nextTop, pinEnd))
             }
 
             // The LAST beat's scrub starts 30vh BEFORE its pin: the sections
@@ -195,15 +196,27 @@ export default class Motion
         gsap.from('[data-reveal="hero-copy"]', {
             autoAlpha: 0, x: -24, duration: 0.9, ease: 'power2.out', delay: 0.15
         })
-        // Depart fade only (no scrubbed entrances): the card and the scroll
-        // arrow leave at 0.5 — before the camera starts its (now longer,
-        // gentler) dolly toward room 2 at 0.62 — so the speaker gets the whole
-        // second half of the beat to transition out on its own.
+        // Scroll hint: fixed to the viewport and visible from first paint; it
+        // fades out over the first eighth-screen of scroll — once the
+        // visitor moves, the hint has done its job.
+        gsap.to('[data-scroll-hint]', {
+            autoAlpha: 0,
+            ease: 'none',
+            scrollTrigger: {
+                start: 0,
+                end: () => window.innerHeight * 0.125,
+                scrub: true
+            }
+        })
+        // Depart fade only (no scrubbed entrances): the card leaves at 0.5 —
+        // before the camera starts its (now longer, gentler) dolly toward
+        // room 2 at 0.62 — so the speaker gets the whole second half of the
+        // beat to transition out on its own.
         reveal('frame-index-01', [], 0.5)
 
         // frame-index-02 (signature): heading + paragraph pin upper-left; the
         // three service ideas stagger into the viewport centre as the camera
-        // settles (0.55) and the gold axis line resolves beneath the trio.
+        // settles (0.55).
         // Earlier positions than the CSV because the section's scroll span was
         // shortened — the full set must be readable well before the depart fade.
         reveal('frame-index-02', [
@@ -226,12 +239,14 @@ export default class Motion
             { sel: '[data-reveal="founder-cta"]', at: 0.6, duration: 0.08 }
         ])
 
-        // frame-index-07: the speakers glide in and settle first (camera
-        // settle at 0.22); ONLY THEN does the closing heading drop down from
-        // above (negative y), the booking CTA following the same way.
+        // frame-index-07: the speakers glide in and settle first (they arrive
+        // during the early-start approach, before the pin); ONLY THEN does the
+        // closing heading drop down from above (negative y), the booking CTA
+        // following the same way. Positions sit early in the (shortened, 60vh)
+        // pin so the payoff lands promptly instead of after a quiet hold.
         reveal('frame-index-07', [
-            { sel: '[data-reveal="closing-heading"]', at: 0.3, y: -36, duration: 0.12 },
-            { sel: '[data-reveal="closing-cta"]', at: 0.5, y: -24, duration: 0.1 }
+            { sel: '[data-reveal="closing-heading"]', at: 0.2, y: -36, duration: 0.12 },
+            { sel: '[data-reveal="closing-cta"]', at: 0.38, y: -24, duration: 0.1 }
         ])
     }
 

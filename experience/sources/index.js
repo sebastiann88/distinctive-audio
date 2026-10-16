@@ -83,23 +83,31 @@ async function boot(mountEl)
 
     // Report asset progress to the page loader (js/script.js): the full-page
     // overlay holds the whole document until the scene is ready, so its bar
-    // should move with the heaviest downloads — the models.
+    // should move with the heaviest downloads — the models. Only the BASE
+    // group gates the reveal, so only it drives the bar (the extras group
+    // streams in behind the revealed page and must not move a dead bar).
     experience.resources.on('progress', (group) =>
     {
+        if(group.name !== 'base')
+            return
         window.dispatchEvent(new CustomEvent('experience:progress', {
-            detail: { ratio: group.toLoad ? group.loaded / group.toLoad : 1 }
+            // ratio includes mid-file byte progress (Resources.fileProgress),
+            // so the loader's meter sweeps through the hero model's download.
+            detail: { ratio: group.ratio ?? (group.toLoad ? group.loaded / group.toLoad : 1) }
         }))
     })
 
-    // Release the page loader only once the scene has actually drawn:
-    // resources 'end' fires after every group loads (World builds on the base
-    // group), and two rAFs guarantee at least one update() pass has rendered
-    // the built world. Signalling at boot instead would reveal the clear color
-    // while assets load — the page appears before the experience exists. If
-    // loading fails the event never fires and the loader stays up until its
-    // safety timeout — honest feedback.
-    experience.resources.on('end', () =>
+    // Release the page loader once the OPENING FRAME has actually drawn: the
+    // 'base' group is exactly what beat 01 needs (hero model + environment;
+    // World builds on it), and two rAFs guarantee at least one update() pass
+    // has rendered the built world. The remaining rooms' models (the
+    // 'extras' group) keep streaming behind the revealed page — see
+    // World.buildLaterVignettes. If loading fails the event never fires and
+    // the loader stays up until its safety timeout — honest feedback.
+    experience.resources.on('groupEnd', (group) =>
     {
+        if(group.name !== 'base')
+            return
         window.requestAnimationFrame(() =>
         {
             window.requestAnimationFrame(() =>

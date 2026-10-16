@@ -1,0 +1,576 @@
+{#
+ # index.twig — Home (routes from the "Home" Single's __home__ URI)
+ #
+ # THE IMMERSIVE HOMEPAGE. Craft-rendered port of the static immersive build
+ # (experience/site/index.html — kept as the island's dev harness). This page
+ # deliberately does NOT extend _layouts/base.twig: it ships its own head and
+ # chrome because it runs on the experience's own Tailwind build
+ # (/experience/dist/site.css, spec brand tokens + the `xp:` variant), not the
+ # sitewide /css/style.css. Content edits here require rebuilding that CSS:
+ #   cd experience && npm run build:css
+ #
+ # TWO LAYOUTS, ONE DOCUMENT:
+ #
+ # · The BASE layout (no class on <html>) is a static, normally-flowing page:
+ #   auto-height sections, no pinning, no overlaps, poster image in the hero.
+ #   This is what phones, tablets, low-end hardware, reduced-motion visitors,
+ #   and no-JS/no-WebGL visitors get — and none of them download the WebGL
+ #   bundle or the 3D assets at all.
+ #
+ # · The CHOREOGRAPHED layout applies only under html.experience-on (the `xp:`
+ #   Tailwind variant), added by the inline capability gate in <head> on
+ #   desktop viewports (≥1024px) with WebGL2 and no low-end signals. It pins
+ #   each beat section as a full-viewport stage over the fixed Three.js canvas,
+ #   choreographed by GSAP (experience/sources/Experience/Motion.js).
+ #
+ # The two contracts shared with the JS bundle (kept byte-stable so
+ # /experience/dist/experience.js stays copyable and unchanged):
+ #   1. the JSON manifest shape in <script data-experience-manifest>
+ #   2. the [data-experience] mount + poster <img> convention
+ #
+ # Frame-beat sections are (scroll_span_vh + 100)vh tall with a sticky
+ # full-viewport stage inside: the +100vh is the viewport itself, so the pinned
+ # portion equals the choreography's span exactly.
+ #}
+<!DOCTYPE html>
+<html lang="en-CA" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {# SEOmatic owns <title> + description + OpenGraph/Twitter + canonical +
+     JSON-LD (same wiring as _layouts/base.twig; Craft injects the rendered
+     tags at the end of <head>). #}
+  {% do seomatic.meta.seoTitle("Ottawa's High-End Audio Store") %}
+  {% do seomatic.meta.seoDescription("Helping the Ottawa–Gatineau region listen better since 1986. High-end audio — turntables, amplifiers, loudspeakers — matched to your room and music.") %}
+  {% do seomatic.tag.get('twitter:creator').include(false) %}
+
+  <meta name="theme-color" content="#00263d">
+
+  {# Self-hosted fonts (perf pass): shared partial — same files, preloads and
+     @font-face set as _layouts/base.twig, so every page hits one cached set. #}
+  {% include '_partials/fonts.twig' %}
+
+  <link rel="stylesheet" href="/experience/dist/site.css">        {# Tailwind v3 (the UI) #}
+  <link rel="stylesheet" href="/experience/dist/experience.css">  {# scoped island CSS (the mount) #}
+
+  {# Capability gate: the WebGL experience is DESKTOP-ONLY and opts out for
+     constrained hardware. Everyone else keeps the static base layout and
+     never downloads the bundle or the 3D assets. Runs synchronously in
+     <head> so the choreographed layout applies before first paint. #}
+  <script>
+    (function () {
+      try {
+        if (!matchMedia('(min-width: 1024px)').matches) return
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        if (navigator.deviceMemory && navigator.deviceMemory <= 2) return
+        if (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2) return
+        var canvas = document.createElement('canvas')
+        if (!canvas.getContext('webgl2')) return
+        document.documentElement.classList.add('experience-on')
+        var script = document.createElement('script')
+        script.type = 'module'
+        script.src = '/experience/dist/experience.js'
+        document.head.appendChild(script)
+        // Preload ONLY the reveal-gating assets (the manifest's `base`
+        // group: hero model + environment) IN PARALLEL with the bundle
+        // download — without this they queue behind bundle fetch + parse +
+        // boot. The extras group deliberately stays OFF this list so it
+        // never competes with the opening frame for bandwidth; it streams
+        // behind the revealed page. Keep in sync with the manifest below.
+        // crossorigin is REQUIRED on as="fetch" preloads: without it the
+        // preload's credentials mode doesn't match the loaders' fetch() and
+        // the browser downloads every file TWICE (verified in devtools).
+        ;[
+          '/experience/dist/assets/models/floorstanding-loudspeaker.glb',
+          '/experience/dist/assets/exr/atmosphere.exr'
+        ].forEach(function (href) {
+          var link = document.createElement('link')
+          link.rel = 'preload'
+          link.as = 'fetch'
+          link.crossOrigin = 'anonymous'
+          link.href = href
+          document.head.appendChild(link)
+        })
+      } catch (error) { /* stay on the static layout */ }
+    })()
+  </script>
+</head>
+
+<body>
+  {#
+   # Site navigation (footer.twig reads primaryNav) and the category slug→URL
+   # map, mirroring _layouts/base.twig so hardcoded category links below always
+   # resolve to the live (nested) URL shape.
+   #}
+  {% set primaryNav = [
+    { label: 'Home',           url: '/',               segment: null },
+    { label: 'About',          url: '/about',          segment: 'about' },
+    { label: 'Lines We Carry', url: '/lines-we-carry', segment: 'lines-we-carry' },
+    { label: 'Products',       url: '/products',       segment: 'products' },
+    { label: 'Contact',        url: '/contact',        segment: 'contact' },
+  ] %}
+  {% set catUrl = {} %}
+  {% for c in craft.entries.section('productCategories').all() %}
+    {% set catUrl = catUrl|merge({ (c.slug): c.url }) %}
+  {% endfor %}
+
+  {# Full-page loader: holds the page until every asset has loaded — images,
+     fonts, AND the WebGL scene's models when the experience runs (progress
+     events from experience/sources/index.js; engine: /js/script.js; styles:
+     site.css). #}
+  {# Analogue VU-meter loader: the needle sweeps the dial with real byte
+     progress from the hero model download (spring physics in script.js —
+     a touch of underdamped wobble, like a real meter movement), the readout
+     counts the percentage in tabular figures. Pure inline SVG: zero assets. #}
+  <div class="page-loader" data-page-loader aria-hidden="true">
+    <div class="page-loader__stack">
+      <svg class="page-loader__dial" viewBox="0 0 220 130" fill="none" aria-hidden="true">
+        <path class="page-loader__track" d="M 40.66 57.82 A 88 88 0 0 1 179.34 57.82"/>
+        <path class="page-loader__zone" d="M 155.59 36.73 A 88 88 0 0 1 179.34 57.82"/>
+        <g class="page-loader__ticks-minor">
+          <line x1="50.95" y1="56.55" x2="47.31" y2="53.13"/>
+          <line x1="56.22" y1="51.43" x2="52.9" y2="47.69"/>
+          <line x1="61.93" y1="46.8" x2="58.97" y2="42.78"/>
+          <line x1="74.49" y1="39.2" x2="72.3" y2="34.7"/>
+          <line x1="81.24" y1="36.28" x2="79.46" y2="31.6"/>
+          <line x1="88.22" y1="33.98" x2="86.87" y2="29.17"/>
+          <line x1="102.66" y1="31.33" x2="102.21" y2="26.35"/>
+          <line x1="110" y1="31" x2="110" y2="26"/>
+          <line x1="117.34" y1="31.33" x2="117.79" y2="26.35"/>
+          <line x1="131.78" y1="33.98" x2="133.13" y2="29.17"/>
+          <line x1="138.76" y1="36.28" x2="140.54" y2="31.6"/>
+          <line x1="145.51" y1="39.2" x2="147.7" y2="34.7"/>
+          <line x1="158.07" y1="46.8" x2="161.03" y2="42.78"/>
+          <line x1="163.78" y1="51.43" x2="167.1" y2="47.69"/>
+          <line x1="169.05" y1="56.55" x2="172.69" y2="53.13"/>
+        </g>
+        <g class="page-loader__ticks-major">
+          <line x1="50.11" y1="65.21" x2="42.23" y2="59.05"/>
+          <line x1="70.63" y1="46.99" x2="65.45" y2="38.44"/>
+          <line x1="96.28" y1="37.25" x2="94.48" y2="27.41"/>
+          <line x1="123.72" y1="37.25" x2="125.52" y2="27.41"/>
+          <line x1="149.37" y1="46.99" x2="154.55" y2="38.44"/>
+          <line x1="169.89" y1="65.21" x2="177.77" y2="59.05"/>
+        </g>
+        <g class="page-loader__needle" data-page-loader-needle>
+          <line x1="110" y1="112" x2="110" y2="28"/>
+          <line class="page-loader__needle-tail" x1="110" y1="112" x2="110" y2="122"/>
+        </g>
+        <circle class="page-loader__hub" cx="110" cy="112" r="4.5"/>
+      </svg>
+      <p class="page-loader__readout">
+        <span data-page-loader-percent>0</span><span class="page-loader__unit">%</span>
+      </p>
+      <p class="page-loader__label">Loading&hellip; Please wait</p>
+    </div>
+    <div class="page-loader__progress" data-page-loader-progress></div>
+  </div>
+  <noscript><style>.page-loader { display: none; }</style></noscript>
+
+  <a class="sr-only focus:not-sr-only focus:absolute focus:z-[110] focus:top-2 focus:left-2 focus:bg-primary focus:text-surface focus:px-4 focus:py-2 focus:rounded" href="#main-content">Skip to main content</a>
+
+  {# ── the experience: fixed full-viewport canvas + minimalist loader + manifest.
+     display:none unless html.experience-on (see experience/sources/style.css).
+     The manifest shape matches the bundle's assets.js exactly — do not reshape. ── #}
+  <div class="experience fixed inset-0 z-0" data-experience>
+    {# Zero-cost vignette: a CSS radial gradient over the canvas replaces the
+       old post-processing vignette pass; World eases its opacity per beat. #}
+    <div class="experience__vignette" aria-hidden="true"></div>
+    <script type="application/json" data-experience-manifest>
+    {
+      "assets": [
+        { "name": "base", "data": {}, "items": [
+          { "name": "floorstanding-loudspeaker", "source": "/experience/dist/assets/models/floorstanding-loudspeaker.glb" }
+        ] },
+        { "name": "environment", "data": {}, "items": [
+          { "name": "environment", "source": "/experience/dist/assets/exr/atmosphere.exr" }
+        ] },
+        { "name": "extras", "data": {}, "items": [
+          { "name": "cd-player", "source": "/experience/dist/assets/models/cd-player.glb" },
+          { "name": "integrated-amplifier", "source": "/experience/dist/assets/models/integrated-amplifier.glb" },
+          { "name": "turntable", "source": "/experience/dist/assets/models/turntable.glb" },
+          { "name": "low-listening-chair", "source": "/experience/dist/assets/models/low-listening-chair.glb" }
+        ] }
+      ],
+      "sceneConfig": {
+        "clearColor": "#f4f7fb",
+        "colors": {
+          "ground": "#f4f7fb",
+          "surface": "#f8f9ff",
+          "teal": "#003d5e",
+          "tealDeep": "#005581",
+          "ink": "#0b1c30",
+          "accent": "#f0aa10"
+        },
+        "scrollEnd": "bottom top",
+        "beats": [
+          { "id": "frame-index-01", "from": 0,     "to": 0.184 },
+          { "id": "frame-index-02", "from": 0.184, "to": 0.466 },
+          { "id": "frame-index-03", "from": 0.466, "to": 0.650 },
+          { "id": "frame-index-04", "from": 0.650, "to": 0.825 },
+          { "id": "frame-index-07", "from": 0.825, "to": 1.0 }
+        ]
+      }
+    }
+    </script>
+  </div>
+
+  {# ── site header. This page carries its own header markup (styled by the
+     experience's Tailwind build, no CDN dependency): sticks, hides while
+     scrolling down, and slides back on any scroll up (script at the end of
+     <body>). ── #}
+  <header class="sticky top-0 z-40 transition-transform duration-300" data-site-header>
+    <nav class="relative bg-primary-container shadow">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex flex-1">
+            <div class="flex shrink-0 items-center">
+              <a href="/">
+                <img src="/images/distinctive-audio-logo.webp" width="742" height="168" alt="Distinctive Audio" class="h-14 w-auto" />
+              </a>
+            </div>
+            <div class="hidden sm:ml-auto sm:flex sm:space-x-8">
+              <a href="/" class="inline-flex items-center border-b-2 border-accent-gold px-1 pt-1 text-sm font-medium text-accent-gold">Home</a>
+              <a href="/about" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80">About</a>
+              <a href="/lines-we-carry" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80">Lines We Carry</a>
+              <a href="/products" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80">Products</a>
+              <a href="/contact" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-white hover:border-white/40 hover:text-white/80">Contact</a>
+            </div>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            {# Mobile menu button (plain JS toggle at the end of <body> — no
+               CDN dependency). #}
+            <button type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" class="relative inline-flex items-center justify-center rounded-md p-2 text-white/80 hover:bg-white/10 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-gold">
+              <span class="absolute -inset-0.5"></span>
+              <span class="sr-only">Open main menu</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 [[aria-expanded='true']_&]:hidden">
+                <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 [&:not([aria-expanded='true']_*)]:hidden">
+                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="mobile-menu" hidden class="sm:hidden">
+        <div class="space-y-1 pb-3 pt-2">
+          <a href="/" class="block border-l-4 border-accent-gold bg-accent-gold/10 py-2 pl-3 pr-4 text-base font-medium text-accent-gold">Home</a>
+          <a href="/about" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">About</a>
+          <a href="/lines-we-carry" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">Lines We Carry</a>
+          <a href="/products" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">Products</a>
+          <a href="/contact" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="relative z-10">
+
+    {# section 01 · frame-index-01 · hero.
+       Static: copy card + poster image in normal flow.
+       xp: 12vh scripted pin (trimmed from 18 — the copy card fades half-way
+       through the pin, so the tail span was empty hold); copy pins over
+       the left half, the speaker holds the right of the WebGL frame. #}
+    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative xp:h-[112vh]">
+      {# Static-layout backdrop: the scene's environment EXR, tone-mapped to a
+         JPG (browsers can't decode EXR), fills the hero so the top of the page
+         isn't a flat ground tone; a bottom gradient melts it into bg-ground.
+         Hidden while the live experience renders behind the page — a section
+         background would cover the fixed WebGL canvas. #}
+      <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden xp:hidden" aria-hidden="true">
+        <img class="h-full w-full object-cover object-center" src="/experience/dist/assets/exr/environment-backdrop.jpg" width="1536" height="864" decoding="async" alt="">
+        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ground"></div>
+      </div>
+      <div class="xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-center" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 pb-14 pt-10 md:px-8 xp:py-0">
+          <div class="max-w-xl rounded-xl bg-[#003B6FF2] p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] lg:p-14 xp:short:p-10" data-reveal="hero-copy">
+            <p class="eyebrow text-secondary-container">ESTABLISHED 1986</p>
+            <h1 class="mt-6 text-balance font-headline text-4xl leading-tight lg:text-6xl xp:short:text-5xl">
+              Ottawa's <span class="whitespace-nowrap italic text-accent">High-End</span> Audio Store
+            </h1>
+            <p class="mt-6 max-w-md text-lg text-on-primary-container">
+              Helping the Ottawa–Gatineau region listen better for nearly 40 years.
+            </p>
+            <div class="mt-10 flex flex-col gap-4 sm:flex-row" data-reveal="hero-ctas">
+              <a class="btn-primary" href="/contact">Book a Showroom Demo</a>
+              <a class="btn border border-on-primary-container text-on-primary-container hover:bg-on-primary-container/10" href="/products">Explore Products</a>
+            </div>
+          </div>
+          {# Static-layout hero visual: the scene's first frame as an image.
+             Hidden while the live experience renders behind the page. #}
+          {# loading="lazy": under xp the poster is display:none, so lazy stops
+             desktop-experience visitors downloading its 136 KB at all; on the
+             static layout it sits at the viewport edge and fetches immediately. #}
+          <img class="mt-8 aspect-[4/3] w-full max-w-xl rounded-xl object-cover object-center shadow-[0_4px_20px_rgba(11,28,48,0.1)] xp:hidden" src="/experience/dist/assets/poster.jpg" width="918" height="1224" decoding="async" loading="lazy" alt="A floorstanding loudspeaker in the pale Distinctive Audio listening gallery">
+        </div>
+      </div>
+      {# Scroll hint: fixed to the viewport — outside [data-stage-content] so
+         it neither rides the pinned stage nor joins the hero card's depart
+         fade. Visible from first paint; Motion.js fades it out over the
+         first quarter-screen of scroll. #}
+      <span class="pointer-events-none fixed bottom-8 left-1/2 z-20 hidden -translate-x-1/2 text-primary xp:block" data-scroll-hint aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="animate-bounce"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </section>
+
+    {# section 02 · frame-index-02 (signature).
+       Static: heading then cards in normal flow.
+       xp: 20vh scripted pin; the -mt overlap closes the structural hold
+       between one stage unpinning and the next pinning (the beats' scroll
+       triggers stay sequential). Cards sit HIGH — anchored just below the
+       heading (items-start, not centred) so they ride above the component
+       trio at the bottom of the frame and can never overlap the heading on
+       short viewports. #}
+    <section id="the-distinctive-approach" data-beat="frame-index-02" data-section-ref="index.html section 02" class="relative xp:-mt-[70vh] xp:h-[120vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:py-0 xp:pb-24 xp:pt-28" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <div class="max-w-xl" data-reveal="approach-heading">
+            <h2 class="font-headline text-3xl text-on-surface md:text-5xl">
+              The <span class="text-accent">Distinctive</span> Approach
+            </h2>
+            <p class="mt-4 max-w-prose text-lg">
+              We don't just sell boxes; we design experiences. Our philosophy is rooted in finding the right synergy for your unique listening environment.
+            </p>
+          </div>
+        </div>
+        <div class="mx-auto mt-10 w-full max-w-6xl px-5 md:px-8 xp:mt-0 xp:flex xp:flex-1 xp:items-start xp:pt-8">
+          <div class="mx-auto grid w-full max-w-4xl grid-cols-1 gap-5 sm:grid-cols-3">
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Tailored Synergy</h3>
+              <p class="mt-3 text-sm">Matching components that complement each other well is an approach we've refined over the years.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Component matching</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>System architecture</li>
+              </ul>
+            </div>
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Environment First</h3>
+              <p class="mt-3 text-sm">Your room is a critical component. We design systems that perform well in your specific space.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Acoustic assessment</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Placement strategy</li>
+              </ul>
+            </div>
+            <div class="card" data-reveal="approach-card">
+              <h3 class="font-label text-base font-semibold text-primary">Long-Term Support</h3>
+              <p class="mt-3 text-sm">Our relationship begins, not ends, with your purchase. We are committed to your ongoing musical enjoyment.</p>
+              <ul class="mt-4 space-y-1 text-sm text-on-surface">
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Professional setup</li>
+                <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>Expert advice</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {# section 03 · frame-index-03 · featured categories.
+       Static: heading, category cards, view-all link in flow.
+       xp: 28vh scripted pin; heading top, links along the bottom. #}
+    <section id="featured-categories" data-beat="frame-index-03" data-section-ref="index.html section 03" class="relative xp:-mt-[70vh] xp:h-[128vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:justify-between xp:py-0 xp:pb-16 xp:pt-36" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <div class="max-w-2xl" data-reveal="categories-heading">
+            <p class="eyebrow text-on-surface/70">CURATED SELECTION</p>
+            <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl">
+              Featured <span class="text-accent">Categories</span>
+            </h2>
+            <p class="mt-5 max-w-prose text-base text-body-text md:text-lg">
+              Explore our curated selection of high-end audio equipment in Ottawa — premium turntables, integrated amplifiers, high-fidelity speakers, music streamers, and DACs from the world's most respected hi-fi brands, each one auditioned in our Carling Avenue showroom.
+            </p>
+          </div>
+        </div>
+        <div class="mx-auto mt-10 w-full max-w-6xl px-5 md:px-8 xp:mt-0">
+          <div class="grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <a class="card group block !p-6" href="{{ catUrl['turntables'] }}" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Turntables</h3>
+              <p class="mt-1 text-sm">Analogue sound at its purest — belt-drive decks, tonearms, and phono cartridges.</p>
+            </a>
+            <a class="card group block !p-6" href="{{ catUrl['amplification'] }}" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Integrated Amplifiers</h3>
+              <p class="mt-1 text-sm">Solid state &amp; vacuum tube designs that pair effortless power with finesse.</p>
+            </a>
+            <a class="card group block !p-6" href="{{ catUrl['loudspeakers'] }}" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Speakers</h3>
+              <p class="mt-1 text-sm">The voice of the system — floorstanding, bookshelf, and electrostatic.</p>
+            </a>
+            <a class="card group block !p-6" href="{{ catUrl['digital-sources'] }}" data-reveal="category">
+              <h3 class="font-label text-base font-semibold text-primary transition-colors group-hover:text-accent">Streaming &amp; DACs</h3>
+              <p class="mt-1 text-sm">Digital precision — music streamers, DACs, and CD transports.</p>
+            </a>
+          </div>
+          <a class="mt-8 inline-flex items-center gap-1 font-label text-sm font-semibold text-primary-container transition-colors hover:text-accent" href="/products" data-reveal="categories-cta">
+            View all products
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {# section 04 · frame-index-04 · founder.
+       Static: biography in normal flow.
+       xp: 24vh scripted pin (trimmed from 38 — the biography was fully read
+       well before the pin released, leaving a long dead tail); biography
+       floats in the open wall area above the audition table. #}
+    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative xp:-mt-[70vh] xp:h-[124vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-start xp:py-0 xp:pt-36" data-stage-content>
+        <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
+          <div class="max-w-2xl">
+            <div data-reveal="founder-heading">
+              <p class="eyebrow text-accent">Our Founder</p>
+              <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl xp:short:text-4xl">
+                Meet <span class="text-accent">Rhéal</span> Nadeau
+              </h2>
+            </div>
+            <p class="mt-6 max-w-prose text-lg xp:short:mt-4 xp:short:text-base" data-reveal="founder-copy">
+              Owner and president since 1988, Rhéal Nadeau has curated a wide-ranging collection of high-fidelity audio equipment at our Ottawa location — a destination for audiophiles seeking precision and soul.
+            </p>
+            <p class="mt-4 max-w-prose text-lg xp:short:text-base" data-reveal="founder-copy">
+              Every system is auditioned by Rhéal himself.
+            </p>
+            <a class="mt-8 inline-flex items-center gap-2 border-b border-primary-container pb-1 font-label text-sm font-semibold text-primary-container transition-colors hover:border-on-surface hover:text-on-surface xp:short:mt-5" href="/about" data-reveal="founder-cta">
+              Read our story
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {# section 05 · dom-index-05 · address band, 0vh scripted (colour band; no parallax) #}
+    <section id="proof-band" data-dom-beat="dom-index-05" data-section-ref="index.html section 05" class="relative bg-primary-container py-14 text-surface">
+      <div class="mx-auto max-w-6xl px-5 md:px-8">
+        <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
+          <div class="space-y-10 border-l border-accent pl-6">
+            <div data-reveal-item>
+              <span class="block font-headline text-5xl leading-none text-accent md:text-6xl">Est. 1986</span>
+              <span class="mt-3 block font-label text-sm font-semibold uppercase tracking-[0.2em] text-surface/80">Foundation</span>
+            </div>
+            <div data-reveal-item>
+              <span class="block font-headline text-5xl leading-none text-accent md:text-6xl">Nearly 40 Years</span>
+              <span class="mt-3 block font-label text-sm font-semibold uppercase tracking-[0.2em] text-surface/80">Experience in Hi-Fi &amp; Two-Channel Audio</span>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <p class="font-headline text-2xl text-surface md:text-3xl" data-reveal-item>
+              Visit us at 903 Carling Avenue, Ottawa
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {# section 06 · dom-index-06 · Bespoke Services, 0vh scripted (DOM-led cards) #}
+    <section id="bespoke-services" data-dom-beat="dom-index-06" data-section-ref="index.html section 06" class="relative bg-ground/95 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-5 md:px-8">
+        <div class="mb-14 flex flex-col items-center space-y-4 text-center" data-reveal-item>
+          <p class="eyebrow text-accent">Our Expertise</p>
+          <h2 class="font-headline text-3xl text-on-surface md:text-5xl">
+            Bespoke <span class="text-accent">Services</span>
+          </h2>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {# Two equal card CTAs, deliberately no single primary. #}
+          <a class="card group block" href="/contact" data-reveal-item>
+            <h3 class="font-label text-lg font-semibold text-on-surface">Listening Demos</h3>
+            <p class="mt-3 text-base">In-store auditions are available; however, a better listening experience can be had by booking a demo.</p>
+            <span class="mt-5 inline-flex items-center gap-1 font-label text-xs font-semibold uppercase tracking-wider text-primary-container transition-colors group-hover:text-accent">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+          <a class="card group block" href="{{ catUrl['cables-power'] }}" data-reveal-item>
+            <h3 class="font-label text-lg font-semibold text-on-surface">Custom Cables</h3>
+            <p class="mt-3 text-base">Custom cables of a specific length and termination can be ordered from our suppliers for specific needs.</p>
+            <span class="mt-5 inline-flex items-center gap-1 font-label text-xs font-semibold uppercase tracking-wider text-primary-container transition-colors group-hover:text-accent">
+              Learn more
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {# section 07 · frame-index-07 · closing CTA.
+       Static: centred block in normal flow.
+       xp: 20vh scripted pin (trimmed from 38 — one heading + one button
+       doesn't earn a longer hold); copy centres in the negative space between
+       the stereo pair. #}
+    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative xp:h-[120vh]">
+      <div class="py-20 text-center md:py-28 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:items-center xp:justify-center xp:py-0 xp:pb-24" data-stage-content>
+        <div class="mx-auto max-w-3xl px-5 md:px-8">
+          <h2 class="font-headline text-3xl text-on-surface md:text-5xl" data-reveal="closing-heading">
+            Hear the difference for yourself
+          </h2>
+          <div class="mt-10" data-reveal="closing-cta">
+            <a class="btn-primary shadow-[0_4px_20px_rgba(11,28,48,0.15)]" href="/contact">Book a Showroom Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {# section 08 · dom-index-08 · quick-links, 0vh scripted (scene has ended) #}
+    <section id="related-links" data-dom-beat="dom-index-08" data-section-ref="index.html section 08" class="relative bg-surface py-14">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-6 px-5 md:px-8">
+        <span class="font-label text-xs font-semibold uppercase tracking-[0.2em] text-on-surface/70" data-reveal-item>Related:</span>
+        <div class="flex flex-wrap justify-center gap-3" data-reveal-item>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="/about">About</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="/products">Products</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="/lines-we-carry">Lines We Carry</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="/contact">Listening Demos</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="{{ catUrl['cables-power'] }}">Custom Cables</a>
+          <a class="rounded-full border border-outline-variant bg-surface px-4 py-2 font-label text-xs font-medium text-on-surface/70 transition-colors hover:border-primary-container hover:text-primary-container" href="/contact">Contact</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {# Shared site footer (live queries: Tier-1 categories + New Arrivals).
+     Its classes are scanned into the experience Tailwind build — see
+     experience/tailwind.config.cjs content globs. Cached: Craft tracks the
+     element queries inside and busts the cache automatically when entries
+     are saved (no-op while devMode is on). #}
+  <div class="relative z-10">
+    {% cache %}
+      {% include '_partials/footer.twig' %}
+    {% endcache %}
+  </div>
+
+  {# Shared site scripts (page loader engine, accordion, nav behaviours). #}
+  <script src="/js/script.js?v=2"></script>
+
+  {# Small page behaviours (no external dependencies):
+     1. Mobile menu toggle (this page doesn't load the CDN custom-elements bundle).
+     2. Smart header: hides while scrolling down, slides back on scroll up. #}
+  <script>
+    (function () {
+      var toggle = document.querySelector('[data-menu-toggle]')
+      var menu = document.getElementById('mobile-menu')
+      if (toggle && menu) {
+        toggle.addEventListener('click', function () {
+          var open = menu.hidden
+          menu.hidden = !open
+          toggle.setAttribute('aria-expanded', String(open))
+        })
+      }
+
+      var header = document.querySelector('[data-site-header]')
+      if (!header) return
+      var lastY = window.scrollY
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY
+        var menuOpen = menu && !menu.hidden
+        if (y > lastY && y > header.offsetHeight && !menuOpen) {
+          header.classList.add('-translate-y-full')
+        } else {
+          header.classList.remove('-translate-y-full')
+        }
+        lastY = Math.max(0, y)
+      }, { passive: true })
+    })()
+  </script>
+</body>
+</html>

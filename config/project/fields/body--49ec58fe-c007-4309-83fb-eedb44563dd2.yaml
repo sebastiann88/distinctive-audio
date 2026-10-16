@@ -1,0 +1,46 @@
+columnSuffix: null
+handle: body
+instructions: null
+name: Body
+searchable: false
+settings:
+  createButtonLabel: null
+  defaultIndexViewMode: cards
+  enableVersioning: false
+  entryTypes:
+    -
+      __assoc__:
+        -
+          - uid
+          - 4b02a171-bec4-4840-a94d-e7644c3a9845 # Lead Intro
+    -
+      __assoc__:
+        -
+          - uid
+          - 79e46ee1-f8cf-4a38-b8e8-53ffa0d969f8 # Spec Comparison
+    -
+      __assoc__:
+        -
+          - uid
+          - a70fb1f3-95ca-41ce-bcca-6c69c4e27378 # Curated Products
+    -
+      __assoc__:
+        -
+          - uid
+          - b8fdf6f7-ac41-4076-839e-4409d792ae99 # Rich Text
+    -
+      __assoc__:
+        -
+          - uid
+          - be4693da-ee1d-4e60-b213-c29f541c37cb # FAQ Item
+  includeTableView: false
+  maxEntries: null
+  minEntries: null
+  pageSize: null
+  propagationKeyFormat: null
+  propagationMethod: all
+  showCardsInGrid: false
+  viewMode: cards
+translationKeyFormat: null
+translationMethod: site
+type: craft\fields\Matrix

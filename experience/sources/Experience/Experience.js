@@ -57,6 +57,19 @@ export default class Experience
         this.needsRender = true
         this.lastRenderedProgress = -1
 
+        // ADAPTIVE QUALITY: once the page reveals, render flat-out for ~2 s
+        // and read the real frame times. Struggling machines shed the light
+        // SSR pass first (falling back to the mirror-clone reflections), and
+        // only then pixel ratio — one calibration pass, one-way steps. See
+        // runAdaptiveQuality().
+        this.qualityPhase = 'waiting'
+        this.qualitySamples = []
+        this.lastQualityTime = 0
+        const beginCalibration = () => { this.qualityPhase = 'warmup' }
+        window.addEventListener('page:revealed', beginCalibration, { once: true })
+        // Fallback (dev harness without the page loader).
+        window.setTimeout(beginCalibration, 8000)
+
         if(!this.targetElement)
         {
             console.warn('Missing \'targetElement\' property')
@@ -93,11 +106,14 @@ export default class Experience
         // fall back to a static frame, which also protects Core Web Vitals.
         this.config.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-        // Pixel ratio — clamped to 1.5 (performance pass): fill rate scales
-        // with the SQUARE of this, so 1.5 renders ~27% fewer pixels than 1.75
-        // per frame. On the pale, soft-shadowed scene with MSAA still on, the
-        // retina difference doesn't read; the scroll smoothness does.
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.5)
+        // Pixel ratio — clamped to 1.35 (ruthless perf pass, down from 1.5):
+        // fill rate scales with the SQUARE of this, so 1.35 renders ~19%
+        // fewer pixels than 1.5 per frame. On the pale, soft-shadowed scene
+        // with native MSAA the retina difference doesn't read; the scroll
+        // smoothness does. All text is DOM, so type stays razor sharp.
+        // pixelRatioCap can be lowered once by adaptive quality (see update).
+        this.pixelRatioCap ??= 1.35
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), this.pixelRatioCap)
 
         // Width and height come from the mount element, NOT the window. The mount
         // may be full-viewport (fixed inset-0) or a box; either way the canvas
@@ -156,10 +172,76 @@ export default class Experience
         this.motion = new Motion()
     }
 
+    /** One calibration pass, one-way degradation. Runs inside the rAF loop:
+     *  30 warmup frames (JIT/GC settle), 90 sampled frames, all forced to
+     *  render so the deltas measure the REAL full-pipeline cost. Hidden tabs
+     *  pause sampling (rAF throttling would read as a slow GPU). */
+    runAdaptiveQuality()
+    {
+        if(this.qualityPhase === 'waiting' || this.qualityPhase === 'done')
+            return
+        if(!this.world?.built || document.hidden)
+            return
+
+        this.needsRender = true
+
+        const now = performance.now()
+        const delta = now - this.lastQualityTime
+        this.lastQualityTime = now
+        if(delta > 250)
+            return // first frame, tab switch or long stall — not a GPU signal
+
+        if(this.qualityPhase === 'warmup')
+        {
+            if(this.qualitySamples.push(delta) >= 30)
+            {
+                this.qualityPhase = 'sampling'
+                this.qualitySamples = []
+            }
+            return
+        }
+
+        this.qualitySamples.push(delta)
+        if(this.qualitySamples.length < 90)
+            return
+
+        this.qualityPhase = 'done'
+        this.qualitySamples.sort((a, b) => a - b)
+        const median = this.qualitySamples[45]
+        this.qualitySamples = []
+
+        if(median <= 20)
+            return // holds ~50+ fps with the current pipeline
+
+        // If SSR is somehow active (debug toggle left on), shed it first: it
+        // re-renders the scene for its beauty + normal + metalness prepasses
+        // and ray-marches every reflective pixel, so it dominates the optional
+        // per-frame cost. The mirror-clone fallback reflections come back, so
+        // the floor stays alive. SSR is off by default, so this normally no-ops
+        // and we fall straight through to fill rate.
+        if(this.renderer.useSSR && this.renderer.ssrPass)
+        {
+            this.renderer.setSSREnabled(false)
+            this.world?.syncMirrorReflections?.()
+            console.info(`[experience] adaptive quality: SSR off (median frame ${median.toFixed(1)}ms)`)
+
+            if(median <= 30)
+                return // dropping SSR alone buys the headroom back
+        }
+
+        // Still struggling (or SSR was never the cost): shed fill rate.
+        // Severe cases go straight to 1x.
+        this.pixelRatioCap = median > 40 ? 1 : 1.15
+        this.resize()
+        console.info(`[experience] adaptive quality: pixel ratio capped at ${this.pixelRatioCap}`)
+    }
+
     update()
     {
         if(this.stats)
             this.stats.update()
+
+        this.runAdaptiveQuality()
 
         // World first: it positions the camera rig from scrollProgress. Camera
         // then copies the rig into the render camera the SAME frame — with
@@ -196,7 +278,7 @@ export default class Experience
         this.config.width = boundings.width
         this.config.height = boundings.height
 
-        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), 1.5)
+        this.config.pixelRatio = Math.min(Math.max(window.devicePixelRatio, 1), this.pixelRatioCap ?? 1.35)
 
         if(this.camera)
             this.camera.resize()

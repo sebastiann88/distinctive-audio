@@ -1,0 +1,57 @@
+{#
+ # 404.twig — Not Found (Craft renders this automatically for 404s)
+ #
+ # On-brand dead-end: navy band, gold accent, clear routes back to the pages
+ # that matter (catalogue / contact). Also the landing spot for any legacy
+ # `.html` URL whose slug no longer matches an entry (_redirects/legacy.twig
+ # falls back to /slug), so it should sell the next step, not apologise twice.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}Page Not Found{% endblock %}
+{% block metaDescription %}That page doesn't exist. Browse Distinctive Audio's current high-end audio inventory or contact our Ottawa showroom.{% endblock %}
+
+{% block content %}
+  <section class="bg-primary-container text-on-primary px-margin-mobile md:px-margin-desktop py-24 md:py-32">
+    <div class="max-w-container-max mx-auto">
+      <div class="max-w-2xl space-y-8">
+        <div class="flex items-center space-x-4">
+          <span class="font-label-md text-label-md tracking-[0.1em] uppercase text-tertiary-fixed-dim">404 — NOT FOUND</span>
+          <div class="h-px w-12 bg-accent-gold"></div>
+        </div>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight text-surface">
+          This page seems to be <span class="text-accent-gold italic">out of print</span>
+        </h1>
+        <p class="font-body-lg text-body-lg leading-relaxed text-surface-container-high max-w-lg">
+          The page you're looking for doesn't exist — it may have moved when we
+          reorganized the site. The music, however, is right where you left it.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+          <a class="inline-flex justify-center items-center bg-accent-gold text-on-secondary-fixed px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-secondary-fixed-dim transition-colors" href="/products">
+            Browse Products
+          </a>
+          <a class="inline-flex justify-center items-center border border-on-primary text-on-primary px-8 py-4 rounded font-label-lg uppercase tracking-wide hover:bg-on-primary hover:text-primary transition-colors" href="/contact">
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface py-16 border-b border-outline-variant">
+    <div class="max-w-3xl mx-auto text-center px-margin-mobile">
+      <p class="font-label-md text-label-md uppercase tracking-[0.2em] text-on-surface/70 mb-6">Looking for something specific?</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        {% for pill in [
+          { label: 'Home', url: '/' },
+          { label: 'About', url: '/about' },
+          { label: 'Lines We Carry', url: '/lines-we-carry' },
+          { label: 'Products', url: '/products' },
+          { label: 'Contact', url: '/contact' },
+        ] %}
+          <a class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background" href="{{ pill.url }}">{{ pill.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

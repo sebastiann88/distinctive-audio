@@ -1,0 +1,8 @@
+baseUrl: $PRIMARY_SITE_URL
+handle: default
+hasUrls: true
+language: en
+name: 'Distinctive Audio'
+primary: true
+siteGroup: 572f53cf-1bb0-42b7-81c0-9a69f1aec984 # Distinctive Audio
+sortOrder: 1

@@ -1,0 +1,44 @@
+columnSuffix: null
+handle: availability
+instructions: null
+name: Availability
+searchable: false
+settings:
+  customOptions: false
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Available
+        -
+          - value
+          - available
+        -
+          - default
+          - true
+    -
+      __assoc__:
+        -
+          - label
+          - Reserved
+        -
+          - value
+          - reserved
+        -
+          - default
+          - false
+    -
+      __assoc__:
+        -
+          - label
+          - Sold
+        -
+          - value
+          - sold
+        -
+          - default
+          - false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

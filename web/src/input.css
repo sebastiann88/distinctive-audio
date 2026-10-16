@@ -1,0 +1,754 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ *
+ * Distinctive Audio — custom styles
+ * Source of truth for hand-written CSS. Compiled (with Tailwind) into
+ * css/style.css via `npm run build`. Edit here, never the output file.
+ * ------------------------------------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid #f0aa10;
+  outline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f8f9ff;
+  color: #0b1c30;
+}
+
+/* Material Symbols icon font */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+.material-symbols-outlined.fill,
+.material-symbols-outlined[data-weight="fill"],
+.font-variation-fill {
+  font-variation-settings: "FILL" 1;
+}
+
+/* Shadows */
+.shadow-ambient {
+  box-shadow: 0px 4px 20px rgba(11, 28, 48, 0.05);
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 24px -4px rgba(0, 61, 94, 0.06);
+}
+
+.ambient-shadow {
+  box-shadow: 0 16px 24px rgba(0, 61, 94, 0.04);
+}
+
+.ambient-shadow:hover {
+  box-shadow: 0 16px 32px -4px rgba(0, 61, 94, 0.06);
+}
+
+.ambient-shadow-hover:hover {
+  box-shadow: 0 20px 32px rgba(0, 61, 94, 0.08);
+}
+
+.hover-shadow-ambient:hover {
+  box-shadow:
+    0 24px 32px -4px rgba(0, 61, 94, 0.06),
+    0 12px 16px -4px rgba(0, 61, 94, 0.03);
+}
+
+/* Leader lists (spec rows with dotted leaders) */
+.custom-leader-list {
+  position: relative;
+}
+
+.custom-leader-list li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.custom-leader-list li::before {
+  content: "";
+  flex-grow: 1;
+  border-bottom: 1px dotted #c1c7ce;
+  margin: 0 0.5rem;
+  order: 2;
+}
+
+.custom-leader-list .label {
+  order: 1;
+}
+
+.custom-leader-list .value {
+  order: 3;
+  font-weight: 600;
+}
+
+.leader-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.leader-list li {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.leader-list li::before {
+  content: "";
+  flex-grow: 1;
+  border-bottom: 1px dotted #c1c7ce;
+  margin: 0 0.5rem;
+  order: 1;
+}
+
+.leader-list .label {
+  order: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1c30;
+}
+
+.leader-list .value {
+  order: 2;
+  font-family: "Manrope", sans-serif;
+  font-size: 16px;
+  color: #41474e;
+}
+
+.leader-list-item {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+}
+
+.leader-list-item::after {
+  content: "";
+  flex-grow: 1;
+  margin: 0 8px;
+  border-bottom: 1px dotted #c1c7ce;
+  position: relative;
+  top: -4px;
+}
+
+.leader-list-label {
+  white-space: nowrap;
+}
+
+.leader-list-dots {
+  flex-grow: 1;
+  border-bottom: 1px dotted theme("colors.outline-variant");
+  margin: 0 8px;
+  opacity: 0.5;
+}
+
+.leader-list-value {
+  white-space: nowrap;
+}
+
+.leader-dots {
+  background-image: radial-gradient(circle, #c1c7d0 1px, transparent 1.5px);
+  background-position: bottom;
+  background-size: 8px 4px;
+  background-repeat: repeat-x;
+}
+
+.leader-line,
+.spec-leader {
+  border-bottom: 1px dotted #72787e;
+  flex-grow: 1;
+  margin: 0 8px;
+  position: relative;
+  top: -6px;
+}
+
+/* Accent helpers */
+.text-accent-gold {
+  color: #f0aa10;
+}
+
+.bg-accent-gold {
+  background-color: #f0aa10;
+}
+
+.border-accent-gold {
+  border-color: #f0aa10;
+}
+
+.hover\:bg-gold-dark:hover {
+  background-color: #d6980e;
+}
+
+.gold-rule {
+  height: 2px;
+  background-color: #fec96f;
+  width: 40px;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #fec96f;
+  color: #00263d;
+  border-radius: 0.125rem;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #f1be65;
+}
+
+.btn-secondary {
+  border: 1px solid #003d5e;
+  color: #003d5e;
+  border-radius: 0.125rem;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #eff4ff;
+}
+
+.btn-secondary-inverse {
+  background-color: transparent;
+  color: #f0aa10;
+  border: 1px solid #f0aa10;
+  border-radius: 2px;
+  padding: 12px 24px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary-inverse:hover {
+  background-color: rgba(240, 170, 16, 0.05);
+}
+
+/* Unified status-badge system (canonical — see docs/design/badges.md).
+   Fixed CSS classes because the variant is chosen from DB values at render time;
+   Tailwind's purge would strip dynamic utility strings. Two axes:
+   condition (3 tonal tiers, always shown) + availability (Reserved/Sold only). */
+.status-pill {
+  display: inline-block;
+  padding: 0.3125rem 0.6875rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Condition tiers */
+.status-pill--new      { background: #e9f6ee; color: #2f7d4f; border-color: #b9e0c7; }
+.status-pill--demo     { background: #ffdeaa; color: #5f4100; border-color: #f1be65; }
+.status-pill--preowned { background: #e6eeff; color: #41474e; border-color: #c1c7ce; }
+
+/* Availability (actionable) */
+.status-pill--reserved { background: #fec96f; color: #775300; border-color: #f1be65; }
+.status-pill--sold     { background: #213146; color: #ebf1ff; border-color: #213146; }
+
+/* Sold treatments — product card + inventory row */
+.product-card--sold .product-card__img   { filter: grayscale(1); opacity: 0.75; }
+.product-card--sold .product-card__price { text-decoration: line-through; color: #72787e; }
+tr.is-sold th[scope="row"],
+tr.is-sold td { color: #72787e; }
+tr.is-sold td:nth-child(5) { text-decoration: line-through; }
+
+/* Products filter bar + inventory table wrap (ported from the legacy page). */
+/* Row 1: the primary search, full width above the refining controls. */
+.da-filter-search {
+  margin-bottom: 1rem;
+}
+/* The primary search is a TEXT input (NOT a select): no chevron, a left search
+   icon, full width on its own row above the refining dropdowns. */
+.da-filter-search-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  font-family: Manrope, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgb(11 28 48);
+  background-color: #ffffff;
+  border: 1px solid rgb(193 199 206);
+  border-radius: 0.5rem;
+  padding: 0.7rem 0.875rem 0.7rem 2.5rem;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2372787e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.875rem center;
+  background-size: 1.05rem;
+  cursor: text;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.da-filter-search-input::placeholder { color: rgb(114 120 126); }
+.da-filter-search-input:hover { border-color: #003B6FF2; }
+.da-filter-search-input:focus {
+  outline: none;
+  border-color: #003B6FF2;
+  box-shadow: 0 0 0 3px rgba(0, 59, 111, 0.15);
+}
+/* Row 2: refining controls (section/type/condition/price/sort), auto-fit wrap. */
+.da-filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
+.da-filter-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+/* Filter-bar action button: only renders in the <noscript> fallback (Sprig
+   auto-applies when JS is on). Metrics match .da-filter-select exactly so the
+   no-JS bar lines up. */
+.da-filter-apply {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  background-color: #003d5e;
+  border: 1px solid #003d5e;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.da-filter-apply:hover {
+  background-color: #00263d;
+}
+.da-filter-label {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #003B6FF2;
+}
+.da-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  font-family: Manrope, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgb(11 28 48);
+  background-color: #ffffff;
+  border: 1px solid rgb(193 199 206);
+  border-radius: 0.5rem;
+  padding: 0.625rem 2.25rem 0.625rem 0.875rem;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2372787e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.da-filter-select:hover {
+  border-color: #003B6FF2;
+}
+.da-filter-select:focus {
+  outline: none;
+  border-color: #003B6FF2;
+  box-shadow: 0 0 0 3px rgba(0, 59, 111, 0.15);
+}
+.da-inventory-wrap {
+  overflow-x: auto;
+  border: 1px solid rgb(214 222 235);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(0, 38, 61, 0.04),
+    0 18px 40px -20px rgba(0, 38, 61, 0.18);
+}
+
+/* --- Responsive inventory: stacked cards on phones + tablets ---
+   Below lg (1024px) a 5-column table with product descriptions can't fit
+   without horizontal scrolling, so each row collapses into a self-contained
+   card with label:value pairs (labels come from the cells' data-label attrs).
+   The real table returns at lg+. Keeps every cell visible without side-scroll. */
+@media (max-width: 1023.98px) {
+  /* Drop the horizontal-scroll shell; cards flow in normal block layout. */
+  .da-inventory-wrap {
+    overflow-x: visible;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+  #inventory-table {
+    display: block;
+    width: 100%;
+  }
+  #inventory-table tbody {
+    display: block;
+  }
+  /* Visually hide the header row (labels move onto each cell via data-label). */
+  #inventory-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  /* Section group-header rows become plain labels between the cards. */
+  #inventory-table tr:not(.da-inv-row) {
+    display: block;
+  }
+  #inventory-table tr:not(.da-inv-row) th {
+    display: block;
+    padding: 1.5rem 0 0.75rem !important;
+    border-bottom: 0 !important;
+  }
+  /* Each product row → a bordered card. */
+  #inventory-table tr.da-inv-row {
+    display: block;
+    border: 1px solid rgb(214 222 235);
+    border-radius: 12px;
+    background: #ffffff;
+    padding: 1rem 1.125rem;
+    margin-bottom: 0.875rem;
+    box-shadow:
+      0 1px 2px rgba(0, 38, 61, 0.04),
+      0 12px 28px -20px rgba(0, 38, 61, 0.18);
+  }
+  #inventory-table tr.da-inv-row:last-child {
+    margin-bottom: 0;
+  }
+  /* Title/description: full-width card header, no data-label. */
+  #inventory-table tr.da-inv-row th[scope="row"] {
+    display: block;
+    max-width: none;
+    padding: 0 0 0.75rem !important;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgb(214 222 235);
+  }
+  /* Data cells → label:value rows. */
+  #inventory-table tr.da-inv-row td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0 !important;
+    text-align: right;
+    white-space: normal;
+  }
+  #inventory-table tr.da-inv-row td::before {
+    content: attr(data-label);
+    flex: 0 0 auto;
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(114 120 126);
+    text-align: left;
+  }
+  /* Status pills wrap and align to the value side. */
+  #inventory-table tr.da-inv-row td[data-label="Status"] > .inline-flex {
+    justify-content: flex-end;
+  }
+}
+
+/* htmx/Sprig loading indicator: hidden until a request is in flight (htmx adds
+   .htmx-request to the element issuing the request). Not shipped by htmx itself. */
+.htmx-indicator {
+  opacity: 0;
+  transition: opacity 150ms ease-in;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  opacity: 1;
+}
+/* Dim the in-flight table so partial swaps read as "loading". */
+.sprig-component.htmx-request .da-inventory-wrap {
+  opacity: 0.6;
+  transition: opacity 150ms ease-in;
+}
+
+.btn-tertiary {
+  color: #003d5e;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.btn-tertiary:hover {
+  border-bottom-color: #003d5e;
+}
+
+/* ------------------------------------------------------------------ *
+ * .prose-body — typographic styling for CKEditor (richText / leadIntro /
+ * FAQ) content. Tailwind's preflight strips element margins, so authored
+ * rich text needs these rules to read as an article. Tokens mirror the
+ * static buying-guide pages (Newsreader headings, Manrope body, the
+ * outline/surface table treatment). Used on category Matrix body blocks.
+ * ------------------------------------------------------------------ */
+.prose-body > :first-child {
+  margin-top: 0;
+}
+.prose-body p {
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+.prose-body h2 {
+  font-family: "Newsreader", serif;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 400;
+  color: #0b1c30;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+.prose-body h3 {
+  font-family: "Newsreader", serif;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 400;
+  color: #0b1c30;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.prose-body h4 {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0b1c30;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.prose-body ul,
+.prose-body ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+}
+.prose-body ul {
+  list-style: disc;
+}
+.prose-body ol {
+  list-style: decimal;
+}
+.prose-body li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+.prose-body a {
+  color: #003B6FF2;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+.prose-body a:hover {
+  color: #f0aa10;
+}
+.prose-body strong,
+.prose-body b {
+  font-weight: 600;
+  color: #0b1c30;
+}
+/* Comparison tables ported as raw HTML (class-stripped) into richText. */
+.prose-body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  border: 1px solid #c1c7ce;
+  margin: 0 0 1rem;
+  font-size: 15px;
+}
+.prose-body thead {
+  background-color: #e6eeff;
+}
+.prose-body th,
+.prose-body td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #c1c7ce;
+  vertical-align: top;
+}
+.prose-body th {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #0b1c30;
+}
+.prose-body tbody td:first-child {
+  font-weight: 600;
+  color: #0b1c30;
+}
+.prose-body tbody tr:last-child td {
+  border-bottom: 0;
+}
+.prose-body caption {
+  caption-side: bottom;
+  text-align: left;
+  font-size: 13px;
+  color: #72787e;
+  padding-top: 0.5rem;
+}
+/* Full-width spec table (Tier-2 "Lead + Quick-Spec Comparison"): the static
+   renders this table edge-to-edge. prose-body sets tables to display:block for
+   mobile scroll, which stops columns from filling the width — restore table
+   layout here and let the wrapper div handle horizontal overflow instead. */
+.prose-body.prose-table-full table {
+  display: table;
+  table-layout: auto;
+}
+
+/* Cards & chips */
+.product-card {
+  border: 1px solid #c1c7ce;
+  background-color: #f8f9ff;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 4px 20px rgba(11, 28, 48, 0.05);
+}
+
+.spec-chip {
+  background-color: #003d5e;
+  color: #9ecbf3;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 0.125rem;
+}
+
+/* Layout helpers */
+.section-spacing {
+  margin-top: 96px;
+  margin-bottom: 96px;
+}
+
+.fluid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .fluid-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+/* Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9ff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #003d5e;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00263d;
+}
+
+/* Scroll-activated sticky header (s-80 pattern): script.js toggles
+   scroll-down / scroll-up on <body> from scroll direction. Plain CSS
+   (not utilities) so the body-state selectors survive the Tailwind purge. */
+#site-header {
+  transition: transform 300ms ease-in-out, filter 300ms ease-in-out;
+}
+
+body.scroll-down #site-header {
+  transform: translate3d(0, -100%, 0);
+}
+
+body.scroll-up #site-header {
+  filter: drop-shadow(0 6px 20px rgb(0 38 61 / 0.25));
+}
+
+/* Scroll-reveal motion. Two primitives only, sitewide:
+     data-reveal        — rise-and-settle: fade + 14px rise, 800ms, long-tail ease
+     data-reveal="fade" — pure fade (photography; movement on images reads cheap)
+   Elements inside a [data-reveal-group] stagger 90ms apart (capped in JS).
+   The hidden state is gated on html.reveal-ready (added by script.js), so
+   without JS nothing is ever hidden. Plays once; no replay on re-scroll. */
+html.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+html.reveal-ready [data-reveal="fade"] {
+  transform: none;
+}
+
+html.reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.reveal-ready [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

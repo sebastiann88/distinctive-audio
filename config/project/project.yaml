@@ -1,0 +1,153 @@
+dateModified: 1788810386
+email:
+  fromEmail: rheal@distinctiveaudio.ca
+  fromName: 'Distinctive Audio'
+  replyToEmail: null
+  template: null
+  transportSettings:
+    host: smtp.mailgun.org
+    password: $MAILGUN_PASSWORD
+    port: '587'
+    useAuthentication: '1'
+    username: postmaster@mg.distinctiveaudio.ca
+  transportType: craft\mail\transportadapters\Smtp
+fs:
+  glb3dModels:
+    hasUrls: true
+    name: 'GLB 3D Models'
+    settings:
+      path: '@webroot/images/3d-models'
+    type: craft\fs\Local
+    url: '@web/images/3d-models'
+  images:
+    hasUrls: true
+    name: Images
+    settings:
+      path: '@webroot/images'
+    type: craft\fs\Local
+    url: '@web/images'
+  products:
+    hasUrls: true
+    name: Products
+    settings:
+      path: '@webroot/images/products'
+    type: craft\fs\Local
+    url: '@web/images/products'
+meta:
+  __names__:
+    0aeedc01-1a2b-443e-b3d0-21964ec41a69: Contact # Contact
+    0f34b67b-21d9-480a-8e84-77cbc3a06661: Brands # Brands
+    1f0342f8-d677-4cf6-b5ab-c415a5152cd1: Products # Products
+    4a5ff973-643d-44ae-bdd5-c62f681af915: Contact # Contact
+    4b02a171-bec4-4840-a94d-e7644c3a9845: 'Lead Intro' # Lead Intro
+    4bd5b79c-26d0-4891-9c95-02b666aae9f7: Email # Email
+    4d2f9056-9dc2-4a58-9f44-b06d3f011d0f: Availability # Availability
+    04dc2b89-42e9-4b4b-9865-b5f6e4fd52a0: Products # Products
+    4fd14b80-fcf7-4ada-a00c-c84421f2837c: 'Icon (Material Symbol)' # Icon (Material Symbol)
+    5d6c01af-3b3f-4c43-822c-4d2611f26bee: 'Short Description' # Short Description
+    5e0a7176-afbd-4047-b7eb-61f46d1f4530: Eyebrow # Eyebrow
+    5f4d9f8d-f760-4ad4-b343-d2ce08d3a3b7: 'Product Types' # Product Types
+    06d6f074-1b0e-4add-9952-649d9bcff7b8: 'Footer Blurb' # Footer Blurb
+    6eea9a42-fe3c-43fd-bea3-d1fb16381ded: 'Product Categories' # Product Categories
+    6fd421dc-f820-422b-969e-5d28dc91395a: 'Category Page' # Category Page
+    7fbe24da-ff13-46dd-9f5a-337efc292b30: 'GLB 3D Models' # GLB 3D Models
+    08edff68-5358-43ba-bf43-b0d73f58439a: About # About
+    13d8907f-341c-4ee7-9e4c-062a8985ff18: Images # Images
+    13edd5a3-cdbe-42b5-ada6-551609a43e63: 'Contact Info' # Contact Info
+    25cd29ea-bb88-4f20-a95b-6a8ec9394171: 'Hero Image' # Hero Image
+    37ff5f56-38d8-44ff-b80b-e6380cccf4b5: Inventory # Inventory
+    46c3b585-8222-44e1-af5a-480487cfea71: 'Social Links' # Social Links
+    47cb635b-0e78-43d2-9f50-b726c474efca: Products # Products
+    49ec58fe-c007-4309-83fb-eedb44563dd2: Body # Body
+    54b5cef8-28fd-410c-809b-593b888cb38f: 'Speaker 3D' # Speaker 3D
+    55bfb796-79e7-4506-a83f-00de47e4cf15: 'All-in-One Systems' # All-in-One Systems
+    61b3f7f8-1851-4c0a-8986-758525df86e8: Inventory # Inventory
+    62ce2e20-8337-4d3f-86b6-afe0de91e88a: 'Subcategory (editorial)' # Subcategory (editorial)
+    075de05c-f942-48a0-88f6-3cc4e565dba3: City # City
+    79e46ee1-f8cf-4a38-b8e8-53ffa0d969f8: 'Spec Comparison' # Spec Comparison
+    82d3e198-5edf-4274-8b53-40d4976f454a: Footnote # Footnote
+    169c813b-ca65-47cb-bdc2-cdcfcc590ce7: Images # Images
+    357ffe78-a09d-4e36-9c30-d38d45f0a176: Answer # Answer
+    394d0871-b5d8-48f0-b107-4031c552a735: 'Business Name' # Business Name
+    572f53cf-1bb0-42b7-81c0-9a69f1aec984: 'Distinctive Audio' # Distinctive Audio
+    665e387a-d1f5-4350-845b-d9be13dd0388: 'Street Address' # Street Address
+    674c5d23-b705-414c-8024-7567dcfc8e4f: MSRP # MSRP
+    680d70fd-979a-453e-8169-7f07250b77a7: 'Spec Table' # Spec Table
+    2419b6a7-bf13-4c2d-a6cc-5f6ee998fbf8: 'All-in-One Systems' # All-in-One Systems
+    2709fb8b-745a-4275-840a-134f0c69d6cc: Phone # Phone
+    7284f24c-e828-47d7-a342-e9c2ba41a331: 'Distinctive Audio' # Distinctive Audio
+    31040b03-47b7-4bc0-9889-784338e456e7: Home # Home
+    31251e81-611d-429e-bc7c-17f26d0eb62a: 'Hero Heading' # Hero Heading
+    60264f9e-b5a5-42e4-b21a-790431576622: 'Lines We Carry' # Lines We Carry
+    570766ff-76d5-46d9-abb7-80b95953c6b2: 'Product Type' # Product Type
+    824044f7-be4e-42a0-b9bb-a49fc1fd28b9: 'Price Unit' # Price Unit
+    7105131c-c2f3-4ba4-ab0f-570bd92738c9: 'New Arrival' # New Arrival
+    92190566-4a17-4a61-a06d-d71eb690c759: Brand # Brand
+    a2a7c462-bdba-4089-8d14-aa7d8974bf36: Products # Products
+    a70fb1f3-95ca-41ce-bcca-6c69c4e27378: 'Curated Products' # Curated Products
+    a9625847-33db-4f32-8df8-10c3d007da10: 'Postal Code' # Postal Code
+    ad61966f-085d-4f6a-b669-94b4fd438ede: Text # Text
+    b8fdf6f7-ac41-4076-839e-4409d792ae99: 'Rich Text' # Rich Text
+    b2934f7e-ab0f-4c56-b272-861d2b797983: 'Lines We Carry' # Lines We Carry
+    be4693da-ee1d-4e60-b213-c29f541c37cb: 'FAQ Item' # FAQ Item
+    bf72dc78-0a17-42bf-9dea-c65a4474d294: Condition # Condition
+    c679594c-1f01-4e28-95b0-34819842ca69: About # About
+    ca6f4ca5-ba7b-409a-86dd-e93bb0245121: 'Established Year' # Established Year
+    cbb32ddf-3151-4511-8e29-e6350fb9079c: Province # Province
+    cc18a375-0c32-485f-85f4-8496f49931d6: Summary # Summary
+    d1ad97a4-a7dc-4c5e-a8e8-780a691845f8: Website # Website
+    d17369e5-5a08-48d2-8155-95678bbbc2cd: 'Public Schema' # Public Schema
+    d217465e-14aa-4688-bacd-bb62f07e8e46: 'Hero Tagline' # Hero Tagline
+    dbeb3316-302b-46f8-9678-0112f794ef48: Question # Question
+    ea099188-c9ed-422b-a813-b2606959c1f0: Content # Content
+    ed0fab8f-fade-4439-afb8-b4fa6c6ca501: 'Hero Emphasis Word' # Hero Emphasis Word
+    eed895be-42aa-43b8-acdb-9e4d517ab394: Topology # Topology
+    f3baa633-706c-4c35-b8ce-ddc1f9ab1b02: 'Sale Price' # Sale Price
+    f7f141c2-aeb8-4de9-9581-da2995532f24: Home # Home
+    f8c89319-a908-4260-b8a3-6d1a8fb346a3: Footer # Footer
+    f55cf09c-cd3f-465c-9aaf-0425762d7a08: 'Price Note' # Price Note
+    f7445992-b89d-4c78-8815-54ffcfc8b2f7: 'Opening Hours' # Opening Hours
+    fbc4553b-418b-4c00-afb8-174ae56d2e5e: Heading # Heading
+plugins:
+  ckeditor:
+    edition: standard
+    enabled: true
+    schemaVersion: 5.6.0.0
+  contact-form:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+  contact-form-honeypot:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+  seomatic:
+    edition: standard
+    enabled: true
+    licenseKey: 3CE0EO5YYJOKZ78Y1EI9F8L3
+    schemaVersion: 3.0.13
+  sherlock:
+    edition: lite
+    enabled: true
+    schemaVersion: 5.1.0
+  social-share:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.0
+  sprig:
+    edition: standard
+    enabled: true
+    schemaVersion: 1.0.1
+system:
+  edition: solo
+  live: true
+  name: 'Distinctive Audio'
+  schemaVersion: 5.11.0.2
+  timeZone: America/Toronto
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  require2fa: false
+  requireEmailVerification: true

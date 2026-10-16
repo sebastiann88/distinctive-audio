@@ -1,0 +1,43 @@
+columnSuffix: null
+handle: topology
+instructions: null
+name: Topology
+searchable: false
+settings:
+  customOptions: false
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - —
+        -
+          - value
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Tube
+        -
+          - value
+          - Tube
+    -
+      __assoc__:
+        -
+          - label
+          - Solid-State
+        -
+          - value
+          - Solid-State
+    -
+      __assoc__:
+        -
+          - label
+          - Hybrid
+        -
+          - value
+          - Hybrid
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

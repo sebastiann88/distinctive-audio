@@ -1,0 +1,35 @@
+columnSuffix: null
+handle: speaker3d
+instructions: 'Add 3D speaker'
+name: 'Speaker 3D'
+searchable: true
+settings:
+  allowSelfRelations: false
+  allowSubfolders: false
+  allowUploads: true
+  allowedKinds: null
+  branchLimit: null
+  defaultPlacement: end
+  defaultUploadLocationSource: 'volume:13d8907f-341c-4ee7-9e4c-062a8985ff18' # Images
+  defaultUploadLocationSubpath: null
+  maintainHierarchy: false
+  maxRelations: 1
+  minRelations: 1
+  previewMode: full
+  restrictFiles: false
+  restrictLocation: true
+  restrictedDefaultUploadSubpath: null
+  restrictedLocationSource: 'volume:7fbe24da-ff13-46dd-9f5a-337efc292b30' # GLB 3D Models
+  restrictedLocationSubpath: null
+  selectionLabel: 'Add 3D speaker'
+  showSearchInput: true
+  showSiteMenu: true
+  showUnpermittedFiles: false
+  showUnpermittedVolumes: false
+  sources: '*'
+  targetSiteId: null
+  validateRelatedElements: false
+  viewMode: thumbs
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Assets

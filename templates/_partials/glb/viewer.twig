@@ -1,0 +1,52 @@
+{#
+ # WebGI (Threepipe) GLB viewer — the ONE include every 3D model on the site
+ # goes through.
+ #
+ # Emits a canvas wired to the self-hosted webgi island
+ # (/experience/dist/webgi.js, built from experience/sources/webgi.js). That
+ # island is the project adaptation of the old site's per-canvas threepipe
+ # scripts: same behavior — WebGL capability probe
+ # with reduced settings on old GPUs, waits for the canvas to be visible,
+ # GBuffer/SSAA always + Bloom where safe (no SSAO — it halos silhouettes
+ # against the flat background), rotate-only controls (pinch
+ # zoom on touch) — but one shared, version-pinned code path instead of a
+ # duplicated 200-line CDN script per canvas.
+ #
+ # Params (pass with `only`):
+ #   model       REQUIRED  URL of the .glb — an asset field URL
+ #                         (entry.speaker3d.one().url) or a committed model
+ #                         (/experience/dist/assets/models/*.glb,
+ #                          /images/3d-models/*.glb)
+ #   id          optional  canvas id, for page CSS/JS that targets it
+ #   class       optional  canvas classes (e.g. 'hidden md:block')
+ #   style       optional  inline sizing — the canvas needs real dimensions
+ #   transparent optional  true = zero-alpha canvas, model floats over the
+ #                         page (homepage-hero treatment; disables Bloom)
+ #   background  optional  opaque background color (default #F8FBFF);
+ #                         ignored when transparent
+ #   configurator          optional  true = enable the WebGI material/finish
+ #                         configurator (variants authored into the GLB)
+ #   configuratorContainer optional  id of the element to pin the
+ #                         configurator UI inside (e.g. the canvas wrapper)
+ #
+ # Usage:
+ #   {% include '_partials/glb/viewer.twig' with {
+ #       model: '/experience/dist/assets/models/turntable.glb',
+ #       id: 'three-canvas-4',
+ #       style: 'width: 100%; height: 600px'
+ #   } only %}
+ #}
+{% if model is defined and model %}
+    <canvas
+        {%- if id ?? null %} id="{{ id }}"{% endif %}
+        {%- if class ?? null %} class="{{ class }}"{% endif %}
+        {%- if style ?? null %} style="{{ style }}"{% endif %}
+        data-webgi-model="{{ model }}"
+        {%- if transparent ?? false %} data-webgi-transparent{% endif %}
+        {%- if (background ?? null) and not (transparent ?? false) %} data-webgi-background="{{ background }}"{% endif %}
+        {%- if configurator ?? false %} data-webgi-configurator{% endif %}
+        {%- if configuratorContainer ?? null %} data-webgi-configurator-container="{{ configuratorContainer }}"{% endif %}
+    ></canvas>
+    {# Module scripts evaluate once per URL — safe to emit per include. #}
+    <script type="module" src="/experience/dist/webgi.js"></script>
+{% endif %}

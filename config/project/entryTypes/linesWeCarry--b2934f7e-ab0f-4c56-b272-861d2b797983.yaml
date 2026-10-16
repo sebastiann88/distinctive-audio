@@ -1,0 +1,54 @@
+allowLineBreaksInTitles: false
+color: null
+description: null
+fieldLayouts:
+  d8ada8cb-c789-41e1-9dbe-e16a7f4ac1c6:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            dateAdded: null
+            disabled: false
+            elementCondition: null
+            id: null
+            inputType: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            required: true
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 59e8d0fe-02a5-4cd1-9c3c-da809c444cba
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: b0af7dbf-93d4-474a-9a1f-1aa3be03dc86
+        userCondition: null
+    thumbFieldKey: null
+handle: linesWeCarry
+hasTitleField: true
+icon: null
+name: 'Lines We Carry'
+showSlugField: true
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site
+uiLabelFormat: '{title}'

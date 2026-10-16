@@ -15,14 +15,17 @@ module.exports = {
     // glob would bloat dist/site.css with their classes. site/brand/ is
     // REFERENCE, not output — don't scan it either.
     './site/index.html',
-    './site/webgi-demo.html',
     './site/partials/**/*.html',
+    // The Craft CMS homepage (the production render of the immersive page) and
+    // the shared footer partial it includes. Same island, CMS-emitted shell.
+    '../templates/index.twig',
+    '../templates/_partials/footer.twig',
   ],
   theme: {
     extend: {
       colors: {
         primary: '#003d5e',
-        'primary-container': '#005581',
+        'primary-container': '#003B6FF2',
         'on-primary-container': '#8ec9fb',
         secondary: '#7d5700',
         'secondary-container': '#ffba2f',
@@ -39,7 +42,7 @@ module.exports = {
         // consistency) compiles here too.
         'accent-gold': '#f0aa10',
         ground: '#f4f7fb',      // page background
-        'body-text': '#005581', // default body text
+        'body-text': '#003B6FF2', // default body text
       },
       borderRadius: {
         DEFAULT: '0.125rem',
@@ -64,6 +67,10 @@ module.exports = {
     // no pinning, no section overlaps.
     require('tailwindcss/plugin')(({ addVariant }) => {
       addVariant('xp', '.experience-on &')
+      // `short:` — height-constrained viewports (1366×768 / 1280×720 laptops,
+      // where browser chrome leaves ~620–660px). Stack with xp: to keep the
+      // pinned full-viewport stages fitting without touching the static layout.
+      addVariant('short', '@media (max-height: 700px)')
     }),
   ],
 }

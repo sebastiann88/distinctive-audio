@@ -1,0 +1,33 @@
+columnSuffix: null
+handle: priceUnit
+instructions: null
+name: 'Price Unit'
+searchable: false
+settings:
+  customOptions: false
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Each
+        -
+          - value
+          - Each
+        -
+          - default
+          - true
+    -
+      __assoc__:
+        -
+          - label
+          - Pair
+        -
+          - value
+          - Pair
+        -
+          - default
+          - false
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

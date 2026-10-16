@@ -1,5 +1,6 @@
-import { ThreeViewer, GBufferPlugin, SSAAPlugin, SSAOPlugin } from 'threepipe'
+import { ThreeViewer, GBufferPlugin, SSAAPlugin } from 'threepipe'
 import { BloomPlugin } from '@threepipe/webgi-plugins'
+import { MaterialConfiguratorPlugin } from '@threepipe/plugin-configurator'
 
 /**
  * WebGI (Threepipe) product viewer — the standalone spinnable-model island.
@@ -21,12 +22,25 @@ import { BloomPlugin } from '@threepipe/webgi-plugins'
  *
  * The data attribute is the CMS seam: the original Twig template's
  * `{{ entry.speaker3d.one().getUrl() }}` becomes the attribute value when the
- * page is rendered by Craft. Optional attributes:
- *   data-webgi-background — scene background color (default #F8FBFF)
+ * page is rendered by Craft (see templates/_partials/glb/viewer.twig, the one
+ * include every GLB viewer goes through). Optional attributes:
+ *   data-webgi-background  — scene background color (default #F8FBFF)
+ *   data-webgi-transparent — zero-alpha canvas so the model floats over the
+ *     page (the homepage-hero treatment). Requires rgbm:false (RGBM output
+ *     can't emit transparent pixels — it renders an opaque light-grey box),
+ *     a null background AND the screen-pass clip flags. Bloom is skipped
+ *     in this mode (not alpha-safe over page content); SSAA still runs for
+ *     crisp edges.
+ *   data-webgi-configurator — enable the WebGI MaterialConfiguratorPlugin
+ *     (material/finish variants authored into the GLB). Optional
+ *     data-webgi-configurator-container="<element id>" relocates the
+ *     configurator UI into that container (ported from the turntable
+ *     template's MutationObserver approach).
  *
  * Behavior kept from the original implementation:
- *   - WebGL capability probe; reduced settings on old GPUs (no MSAA/SSAO/
- *     Bloom, 0.75 render scale on PowerVR/SGX-class devices)
+ *   - WebGL capability probe; reduced settings on old GPUs (no MSAA/Bloom,
+ *     0.75 render scale on PowerVR/SGX-class devices). SSAO is dropped
+ *     everywhere: it drew a dark dashed halo around model silhouettes.
  *   - waits until the canvas is actually visible before initializing
  *     (responsive CSS hides it on mobile; tablets apply CSS late)
  *   - touch devices: zoom enabled, pan disabled; desktop: zoom and pan
@@ -53,6 +67,45 @@ function checkWebGLCapabilities()
     return { supported: true, isOldDevice, renderer }
 }
 
+/** Move the MaterialConfiguratorPlugin's floating UI into a page container
+ *  (the plugin appends to <body>). Ported from the turntable template: watch
+ *  for the UI to appear, then reparent and pin it inside the container. */
+function relocateConfiguratorUi(containerId)
+{
+    const container = document.getElementById(containerId)
+    if(!container)
+        return
+
+    const selectors = [
+        '[class*="material-configurator"]',
+        '[class*="MaterialConfigurator"]',
+        '[class*="configurator-ui"]',
+        '[id*="configurator"]',
+        '.tp-root'
+    ]
+
+    const observer = new MutationObserver(() =>
+    {
+        for(const selector of selectors)
+        {
+            const ui = document.querySelector(selector)
+            if(!ui || container.contains(ui))
+                continue
+
+            container.appendChild(ui)
+            if(window.getComputedStyle(ui).position === 'static')
+                ui.style.position = 'absolute'
+            if(!ui.style.top && !ui.style.bottom)
+                ui.style.top = '10px'
+            if(!ui.style.right && !ui.style.left)
+                ui.style.right = '10px'
+            ui.style.zIndex = '1000'
+            ui.style.overflow = 'hidden'
+        }
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+}
+
 async function initViewer(canvas)
 {
     if(canvas.__webgiViewer)
@@ -76,12 +129,29 @@ async function initViewer(canvas)
     const useMSAA = !webglCaps.isOldDevice
     const renderScale = webglCaps.isOldDevice ? 0.75 : 'auto'
 
+    const transparent = canvas.hasAttribute('data-webgi-transparent')
+
     const viewer = new ThreeViewer({
         canvas,
         renderScale,
-        msaa: useMSAA
+        msaa: useMSAA,
+        ...(transparent ? { rgbm: false, backgroundColor: null } : {})
     })
     canvas.__webgiViewer = viewer
+
+    /** Transparent mode: null the background and clip it in the screen pass —
+     *  re-asserted after load, which can touch the background. */
+    const applyTransparency = () =>
+    {
+        viewer.scene.background = null
+        viewer.scene.backgroundColor = null
+        const screenPass = viewer.renderManager && viewer.renderManager.screenPass
+        if(screenPass)
+        {
+            screenPass.clipBackground = true
+            screenPass.clipBackgroundForce = true
+        }
+    }
 
     // Plugins, each tolerated to fail on constrained devices.
     try { await viewer.addPlugin(GBufferPlugin) }
@@ -90,17 +160,36 @@ async function initViewer(canvas)
     try { await viewer.addPlugin(SSAAPlugin) }
     catch(e) { console.warn('SSAAPlugin failed to load:', e) }
 
-    if(!webglCaps.isOldDevice)
+    if(!webglCaps.isOldDevice && !transparent)
     {
-        // SSAO and Bloom are resource-intensive on older GPUs.
-        try { await viewer.addPlugin(SSAOPlugin) }
-        catch(e) { console.warn('SSAOPlugin failed to load:', e) }
-
+        // Bloom is resource-intensive on older GPUs and not alpha-safe over a
+        // transparent canvas. (No SSAO: against the empty background its
+        // occlusion sampling drew a dark dashed halo around the model's
+        // silhouette — the amp screenshot artifact.)
         try { await viewer.addPlugin(BloomPlugin) }
         catch(e) { console.warn('BloomPlugin failed to load:', e) }
     }
 
-    await viewer.scene.setBackgroundColor(canvas.dataset.webgiBackground || '#F8FBFF')
+    if(canvas.hasAttribute('data-webgi-configurator'))
+    {
+        // Material/finish variants authored into the GLB (WebGI editor).
+        // Added before load so the model's configurator config applies.
+        try
+        {
+            const configurator = viewer.addPluginSync(new MaterialConfiguratorPlugin())
+            configurator.enableEditContextMenus = true
+            configurator.animateApply = true
+            configurator.animateApplyDuration = 1000
+            if(canvas.dataset.webgiConfiguratorContainer)
+                relocateConfiguratorUi(canvas.dataset.webgiConfiguratorContainer)
+        }
+        catch(e) { console.warn('MaterialConfiguratorPlugin failed to load:', e) }
+    }
+
+    if(transparent)
+        applyTransparency()
+    else
+        await viewer.scene.setBackgroundColor(canvas.dataset.webgiBackground || '#F8FBFF')
 
     try
     {
@@ -110,19 +199,18 @@ async function initViewer(canvas)
             autoScale: true
         })
 
+        if(transparent)
+            applyTransparency()
+
         const controls = viewer.scene.mainCamera.controls
         if(controls)
         {
-            if('ontouchstart' in document.documentElement)
-            {
-                controls.enableZoom = true
-                controls.enablePan = false
-            }
-            else
-            {
-                controls.enableZoom = false
-                controls.enablePan = false
-            }
+            // Drag to rotate; pan stays off. Zoom only on touch (mouse-wheel
+            // zoom would hijack page scroll on desktop).
+            controls.enableRotate = true
+            controls.autoRotate = false
+            controls.enablePan = false
+            controls.enableZoom = 'ontouchstart' in document.documentElement
         }
     }
     catch(error)

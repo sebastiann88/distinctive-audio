@@ -1,0 +1,67 @@
+columnSuffix: null
+handle: condition
+instructions: null
+name: Condition
+searchable: false
+settings:
+  customOptions: false
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - 'Brand New'
+        -
+          - value
+          - 'Brand New'
+    -
+      __assoc__:
+        -
+          - label
+          - 'Almost New'
+        -
+          - value
+          - 'Almost New'
+    -
+      __assoc__:
+        -
+          - label
+          - Display
+        -
+          - value
+          - Display
+    -
+      __assoc__:
+        -
+          - label
+          - 'Floor Demo'
+        -
+          - value
+          - 'Floor Demo'
+    -
+      __assoc__:
+        -
+          - label
+          - 'Trade In'
+        -
+          - value
+          - 'Trade In'
+    -
+      __assoc__:
+        -
+          - label
+          - Consignment
+        -
+          - value
+          - Consignment
+    -
+      __assoc__:
+        -
+          - label
+          - Used
+        -
+          - value
+          - Used
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

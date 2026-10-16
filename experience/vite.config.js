@@ -1,4 +1,3 @@
-import glsl from 'vite-plugin-glsl'
 import { defineConfig } from 'vite'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -133,8 +132,10 @@ export default defineConfig(({ command }) =>
             open: '/site/index.html'
         },
         build: {
-            outDir: '../dist',
-            // dist/ is SHARED with the Tailwind CLI output (dist/site.css). Never
+            // Emit straight into the Craft docroot: the bundle is served at
+            // /experience/dist/… by the site (templates/index.twig references it).
+            outDir: '../../web/experience/dist',
+            // The outDir is SHARED with the Tailwind CLI output (site.css). Never
             // empty it from here or `npm run build` silently deletes the UI layer.
             emptyOutDir: false,
             // No production source maps: they added ~8 MB to every deploy for a
@@ -154,6 +155,6 @@ export default defineConfig(({ command }) =>
                 }
             }
         },
-        plugins: [glsl(), devIslandRewrite(), classicAssets()]
+        plugins: [devIslandRewrite(), classicAssets()]
     }
 })

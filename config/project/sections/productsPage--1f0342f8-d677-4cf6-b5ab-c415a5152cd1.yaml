@@ -1,0 +1,21 @@
+defaultPlacement: end
+enableVersioning: true
+entryTypes:
+  -
+    uid: 04dc2b89-42e9-4b4b-9865-b5f6e4fd52a0 # Products
+handle: productsPage
+maxAuthors: 1
+minAuthors: 1
+name: Products
+previewTargets:
+  -
+    label: 'Primary entry page'
+    urlFormat: '{url}'
+propagationMethod: all
+siteSettings:
+  7284f24c-e828-47d7-a342-e9c2ba41a331: # Distinctive Audio
+    enabledByDefault: true
+    hasUrls: true
+    template: products/index
+    uriFormat: products
+type: single

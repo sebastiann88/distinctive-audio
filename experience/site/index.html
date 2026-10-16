@@ -133,12 +133,16 @@
     {
       "assets": [
         { "name": "base", "data": {}, "items": [
-          { "name": "floorstanding-loudspeaker", "source": "../dist/assets/models/floorstanding-loudspeaker.glb" },
+          { "name": "floorstanding-loudspeaker", "source": "../dist/assets/models/floorstanding-loudspeaker.glb" }
+        ] },
+        { "name": "environment", "data": {}, "items": [
+          { "name": "environment", "source": "../dist/assets/exr/atmosphere.exr" }
+        ] },
+        { "name": "extras", "data": {}, "items": [
           { "name": "cd-player", "source": "../dist/assets/models/cd-player.glb" },
           { "name": "integrated-amplifier", "source": "../dist/assets/models/integrated-amplifier.glb" },
           { "name": "turntable", "source": "../dist/assets/models/turntable.glb" },
-          { "name": "low-listening-chair", "source": "../dist/assets/models/low-listening-chair.glb" },
-          { "name": "environment", "source": "../dist/assets/exr/environment.exr" }
+          { "name": "low-listening-chair", "source": "../dist/assets/models/low-listening-chair.glb" }
         ] }
       ],
       "sceneConfig": {
@@ -218,15 +222,25 @@
 
     <!-- section 01 · frame-index-01 · hero.
          Static: copy card + poster image in normal flow.
-         xp: 40vh scripted pin; copy pins over the left half, the speaker
-         holds the right of the WebGL frame. -->
-    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative xp:h-[140vh]">
+         xp: 30vh scripted pin (trimmed from 40 — the copy card fades half-way
+         through the pin, so the extra span was empty drift); copy pins over
+         the left half, the speaker holds the right of the WebGL frame. -->
+    <section id="hero" data-beat="frame-index-01" data-section-ref="index.html section 01" class="relative xp:h-[130vh]">
+      <!-- Static-layout backdrop: the scene's environment EXR, tone-mapped to a
+           JPG (browsers can't decode EXR), fills the hero so the top of the page
+           isn't a flat ground tone; a bottom gradient melts it into bg-ground.
+           Hidden while the live experience renders behind the page — a section
+           background would cover the fixed WebGL canvas. -->
+      <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden xp:hidden" aria-hidden="true">
+        <img class="h-full w-full object-cover object-center" src="../dist/assets/exr/environment-backdrop.jpg" width="1536" height="864" decoding="async" alt="">
+        <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ground"></div>
+      </div>
       <div class="xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-center" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 pb-14 pt-10 md:px-8 xp:py-0">
-          <div class="max-w-xl rounded-xl bg-primary-container/95 p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] lg:p-14" data-reveal="hero-copy">
+          <div class="max-w-xl rounded-xl bg-[#003B6FF2] p-8 text-surface shadow-[0_4px_20px_rgba(11,28,48,0.1)] lg:p-14 xp:short:p-10" data-reveal="hero-copy">
             <p class="eyebrow text-secondary-container">ESTABLISHED 1986</p>
-            <h1 class="mt-6 font-headline text-4xl leading-tight lg:text-6xl">
-              Ottawa's <span class="italic text-accent">High-End</span> Audio Store
+            <h1 class="mt-6 text-balance font-headline text-4xl leading-tight lg:text-6xl xp:short:text-5xl">
+              Ottawa's <span class="whitespace-nowrap italic text-accent">High-End</span> Audio Store
             </h1>
             <p class="mt-6 max-w-md text-lg text-on-primary-container">
               Helping the Ottawa–Gatineau region listen better for nearly 40 years.
@@ -240,10 +254,14 @@
                Hidden while the live experience renders behind the page. -->
           <img class="mt-8 aspect-[4/3] w-full max-w-xl rounded-xl object-cover object-center shadow-[0_4px_20px_rgba(11,28,48,0.1)] xp:hidden" src="../dist/assets/poster.jpg" width="918" height="1224" decoding="async" alt="A floorstanding loudspeaker in the pale Distinctive Audio listening gallery">
         </div>
-        <span class="absolute bottom-8 left-1/2 hidden -translate-x-1/2 text-primary xp:block" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="animate-bounce"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
       </div>
+      <!-- Scroll hint: fixed to the viewport — outside [data-stage-content] so
+           it neither rides the pinned stage nor joins the hero card's depart
+           fade. Visible from first paint; Motion.js fades it out over the
+           first quarter-screen of scroll. -->
+      <span class="pointer-events-none fixed bottom-8 left-1/2 z-20 hidden -translate-x-1/2 text-primary xp:block" data-scroll-hint aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="animate-bounce"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
     </section>
 
     <!-- section 02 · frame-index-02 (signature).
@@ -342,25 +360,26 @@
 
     <!-- section 04 · frame-index-04 · founder.
          Static: biography in normal flow.
-         xp: 90vh scripted pin; biography floats in the open wall area above
-         the audition table. -->
-    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative xp:-mt-[70vh] xp:h-[190vh]">
-      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-start xp:py-0 xp:pt-32 xp:md:pt-40" data-stage-content>
+         xp: 60vh scripted pin (trimmed from 90 — the biography was fully read
+         well before the pin released, leaving a long dead tail); biography
+         floats in the open wall area above the audition table. -->
+    <section id="meet-rheal-nadeau" data-beat="frame-index-04" data-section-ref="index.html section 04" class="relative xp:-mt-[70vh] xp:h-[160vh]">
+      <div class="py-14 md:py-20 xp:sticky xp:top-0 xp:flex xp:h-screen xp:items-start xp:py-0 xp:pt-24 xp:short:!pt-14" data-stage-content>
         <div class="mx-auto w-full max-w-6xl px-5 md:px-8">
           <div class="max-w-2xl">
             <div data-reveal="founder-heading">
               <p class="eyebrow text-accent">Our Founder</p>
-              <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl">
+              <h2 class="mt-4 font-headline text-3xl text-on-surface md:text-5xl xp:short:text-4xl">
                 Meet <span class="text-accent">Rhéal</span> Nadeau
               </h2>
             </div>
-            <p class="mt-6 max-w-prose text-lg" data-reveal="founder-copy">
-              As the owner and president since 1988, Rhéal Nadeau has curated a wide-ranging collection of high-fidelity audio equipment at our Ottawa location. His deep understanding of analog warmth and acoustic engineering has made Distinctive Audio a destination for audiophiles seeking precision and soul.
+            <p class="mt-6 max-w-prose text-lg xp:short:mt-4 xp:short:text-base" data-reveal="founder-copy">
+              Owner and president since 1988, Rhéal Nadeau has curated a wide-ranging collection of high-fidelity audio equipment at our Ottawa location — a destination for audiophiles seeking precision and soul.
             </p>
-            <p class="mt-4 max-w-prose text-lg" data-reveal="founder-copy">
-              Every system is meticulously selected and auditioned by Rhéal himself, ensuring that our showroom reflects a lifelong dedication to the art of sound.
+            <p class="mt-4 max-w-prose text-lg xp:short:text-base" data-reveal="founder-copy">
+              Every system is auditioned by Rhéal himself.
             </p>
-            <a class="mt-8 inline-flex items-center gap-2 border-b border-primary-container pb-1 font-label text-sm font-semibold text-primary-container transition-colors hover:border-on-surface hover:text-on-surface" href="about.html" data-reveal="founder-cta">
+            <a class="mt-8 inline-flex items-center gap-2 border-b border-primary-container pb-1 font-label text-sm font-semibold text-primary-container transition-colors hover:border-on-surface hover:text-on-surface xp:short:mt-5" href="about.html" data-reveal="founder-cta">
               Read our story
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -425,9 +444,10 @@
 
     <!-- section 07 · frame-index-07 · closing CTA.
          Static: centred block in normal flow.
-         xp: 90vh scripted pin; copy centres in the negative space between the
-         stereo pair. -->
-    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative xp:h-[190vh]">
+         xp: 60vh scripted pin (trimmed from 90 — one heading + one button
+         doesn't earn a 90vh hold); copy centres in the negative space between
+         the stereo pair. -->
+    <section id="final-cta" data-beat="frame-index-07" data-section-ref="index.html section 07" class="relative xp:h-[160vh]">
       <div class="py-20 text-center md:py-28 xp:sticky xp:top-0 xp:flex xp:h-screen xp:flex-col xp:items-center xp:justify-center xp:py-0 xp:pb-24" data-stage-content>
         <div class="mx-auto max-w-3xl px-5 md:px-8">
           <h2 class="font-headline text-3xl text-on-surface md:text-5xl" data-reveal="closing-heading">

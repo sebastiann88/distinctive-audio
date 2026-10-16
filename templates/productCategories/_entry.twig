@@ -1,0 +1,368 @@
+{#
+ # productCategories/_entry.twig — shared Category Page template (Tier-1 + Tier-2)
+ #
+ # ONE template serves all ~28 category/sub-category entries in the
+ # `productCategories` Structure section. Tier is derived from structure level:
+ #   level 1 (e.g. Amplification)        → auto child-category grid (#categories)
+ #   level 2 (e.g. Integrated Amplifiers)→ curated product grid (#products)
+ # Ported from the gold-standard static pages amplification.html (Tier-1) and
+ # integrated-amplifiers.html (Tier-2). Dark mode is cut for v1 (no `dark:`).
+ #
+ # FIELD CONTRACT (Category Page entry type) — drives the #7 project-config build:
+ #   Title (native)                = category name
+ #   heroHeading   PlainText       (optional). H1 is ALWAYS "[product] in Ottawa":
+ #                                 an "in Ottawa" heroHeading is used verbatim,
+ #                                 anything else renders as the below-hero H2 and
+ #                                 the H1 falls back to "[Title] in Ottawa"
+ #   heroTagline   PlainText       short hero sub-line
+ #   heroImage     Assets (1)      hero image (optional)
+ #   icon          PlainText       Material Symbols name, used when this entry is
+ #                                 rendered as a child card on its parent (Tier-1)
+ #   summary       PlainText       short blurb, used in the child card + meta
+ #   body          Matrix, block (entry) types:
+ #     · leadIntro       { eyebrow PlainText, heading PlainText, text CKEditor }
+ #     · specComparison  { heading PlainText, specs Table, footnote PlainText }
+ #     · curatedProducts { heading PlainText, products Entries→inventory }
+ #     · richText        { content CKEditor }
+ #     · faq             { heading PlainText, intro PlainText,
+ #                         items Matrix→faqItem { question PlainText, answer CKEditor } }
+ #
+ # INVENTORY CONTRACT (curated grid + fallback) — see tasks #7/#14:
+ #   title, condition (Dropdown), msrp (Money), salePrice (Money, optional),
+ #   priceUnit (Each|Pair), image (Assets), availability (Available|Reserved|Sold),
+ #   subcategory (Entries→Tier-2). Cards link to the Contact single (Enquire only).
+ #
+ # NOTE: not yet render-verified end-to-end — the productCategories section/fields
+ # do not exist until the #7 build lands. Written to the agreed contract; guarded
+ # with defaults so partial data renders rather than fatals.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{# H1 rule (owner directive): every category page's H1 is "[product] in Ottawa".
+   A heroHeading already in that form is used verbatim (it may carry SEO phrasing
+   the Title lacks, e.g. "Hi-Fi Equipment Racks in Ottawa"); anything else is
+   treated as a descriptive line and demoted to the below-hero H2. #}
+{% set heroHeadingRaw = (entry.heroHeading ?? '')|trim %}
+{% set h1Text = 'in ottawa' in heroHeadingRaw|lower ? heroHeadingRaw : "#{entry.title} in Ottawa" %}
+{% set descriptiveHeading = h1Text == heroHeadingRaw ? null : (heroHeadingRaw ?: null) %}
+
+{# Lowercased title for mid-sentence use, preserving all-caps tokens ("AC Power
+   Cords" → "AC power cords", not "ac power cords"). #}
+{% set titleLc = entry.title|split(' ')|map(w => w == w|upper ? w : w|lower)|join(' ') %}
+
+{% block title %}{{ h1Text }}{% endblock %}
+{% block metaDescription %}{{ entry.summary|default(entry.heroTagline)|default("High-end #{entry.title} at Distinctive Audio in Ottawa.") }}{% endblock %}
+
+
+{% block content %}
+  {# Products is a Single; its URI anchors the breadcrumb above the structure ancestors. #}
+  {% set productsSingle = craft.entries().section('productsPage').one() %}
+
+  <!-- Breadcrumb -->
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+    <nav aria-label="Breadcrumb" class="flex text-sm text-outline font-label-md">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a class="hover:text-primary-container transition-colors" href="/">Home</a>
+        </li>
+        {% set crumbs = [productsSingle]|merge(entry.getAncestors().all()) %}
+        {% for crumb in crumbs|filter(c => c) %}
+          <li>
+            <div class="flex items-center">
+              <span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+              <a class="hover:text-primary-container transition-colors" href="{{ crumb.url }}">{{ crumb.title }}</a>
+            </div>
+          </li>
+        {% endfor %}
+        <li>
+          <div class="flex items-center">
+            <span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+            <span aria-current="page" class="text-on-surface">{{ entry.title }}</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Hero Section -->
+  {# Heading with the signature gold-italic emphasis word restored. #}
+  {% set heroH = h1Text %}
+  {% if entry.heroEmphasisWord and (entry.heroEmphasisWord|lower in heroH|lower) %}
+    {% set heroH = heroH|replace({(entry.heroEmphasisWord): '<span class="text-accent-gold italic">' ~ entry.heroEmphasisWord ~ '</span>'}) %}
+  {% endif %}
+  {% set hasHeroImg = entry.heroImage|length %}
+  <section class="bg-primary-container text-on-primary px-margin-mobile md:px-margin-desktop py-16 md:py-24 relative overflow-hidden">
+    {# Collapse to a single column when there is no hero image (no half-empty grid). #}
+    <div class="max-w-container-max mx-auto {{ hasHeroImg ? 'grid grid-cols-1 md:grid-cols-2 gap-12 items-center' : 'max-w-3xl' }}">
+      <div class="space-y-6" data-reveal-group>
+        <div class="space-y-2" data-reveal>
+          <div class="w-12 h-0.5 bg-accent-gold"></div>
+          <p class="font-label-md text-label-md tracking-[0.1em] uppercase {{ entry.level == 1 ? 'text-tertiary-fixed-dim' : 'text-accent-gold' }}">
+            {{ entry.parent.title ?? entry.title }}
+          </p>
+        </div>
+        <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight text-on-primary" data-reveal>
+          {{ heroH|raw }}
+        </h1>
+        {% if entry.heroTagline %}
+          <p class="font-body-lg text-body-lg leading-relaxed text-on-primary-container max-w-lg" data-reveal>
+            {{ entry.heroTagline }}
+          </p>
+        {% endif %}
+        <div class="flex flex-col sm:flex-row gap-4 pt-4" data-reveal>
+          <a href="/contact" class="inline-flex items-center justify-center bg-accent-gold text-on-secondary-fixed px-8 py-3 rounded-[2px] font-label-lg text-label-lg hover:bg-secondary-fixed-dim transition-colors">
+            Book a Listening Demo
+          </a>
+          <a href="{{ entry.level == 1 ? '#categories' : '#products' }}" class="inline-flex items-center justify-center border border-on-primary text-on-primary bg-transparent px-8 py-3 rounded-[2px] font-label-lg text-label-lg hover:bg-on-primary hover:text-primary transition-colors">
+            {{ entry.level == 1 ? 'Browse the Range' : 'Our Selection' }}
+          </a>
+        </div>
+      </div>
+      {% if hasHeroImg %}
+        {% set hero = entry.heroImage.one() %}
+        <div class="relative aspect-video md:aspect-[16/9] rounded-xl overflow-hidden shadow-sm" data-reveal="fade">
+          <img alt="{{ hero.alt|default(entry.title) }}" class="object-cover w-full h-full" src="{{ hero.url }}" />
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {# ---- Feature highlights (page-specific benefit cards, mirrors the static
+       feature row that sits directly under the hero). Keyed by slug; the card
+       copy here is presentational and lives in the template, not the CMS. ---- #}
+  {% set featureCards = {
+    'subwoofers': [
+      { icon: 'tune',                    title: 'Sealed & Ported Options', text: 'Choose the right topology for your musical or cinematic needs.' },
+      { icon: 'graphic_eq',              title: 'Clean Integration',       text: 'Expert setup to ensure your sub vanishes into the soundstage.' },
+      { icon: 'settings_input_antenna',  title: 'Room Calibration',        text: 'Advanced tuning to overcome the bass nodes in your unique space.' },
+      { icon: 'waves',                   title: 'Add Depth & Impact',      text: 'Experience the physical weight and authority of true low frequency.' },
+    ],
+  } %}
+  {% set pageCards = featureCards[entry.slug] ?? [] %}
+  {% if pageCards %}
+    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter" data-reveal-group>
+        {% for card in pageCards %}
+          <div class="p-6 border border-outline-variant rounded bg-surface flex flex-col h-full transition-shadow hover:shadow-lg hover:shadow-tertiary-fixed-dim/5" data-reveal>
+            <span class="material-symbols-outlined text-primary-container mb-4 text-[32px]">{{ card.icon }}</span>
+            <h3 class="font-title-lg text-title-lg text-on-background mb-3">{{ card.title }}</h3>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-auto">{{ card.text }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if entry.level == 1 %}
+    {# ---- TIER-1: intro + child-category grid (from structure children) ---- #}
+    <section id="categories" class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-24">
+      <div class="max-w-3xl mb-16" data-reveal>
+        {# The H1 now owns "[Title] in Ottawa"; the descriptive line the hero used
+           to carry (e.g. "The Heart of Your System") moves down here. #}
+        <h2 class="font-display-lg text-headline-md md:text-headline-lg text-on-surface mb-6">{{ descriptiveHeading ?? entry.title }}</h2>
+        {# Show the summary here only when it adds something — on Tier-1 the summary
+           often falls back to the hero tagline, which the hero already shows; rendering
+           it again echoes the same paragraph right under the hero. #}
+        {% if entry.summary and entry.summary|trim != entry.heroTagline|trim %}
+          <p class="font-body-lg text-body-lg text-on-surface-variant">{{ entry.summary }}</p>
+        {% endif %}
+      </div>
+      {% set children = entry.children.all() %}
+      {% if children|length %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter" data-reveal-group>
+          {% for child in children %}
+            <a class="group flex flex-col bg-surface border border-outline-variant rounded-lg p-8 hover:border-accent-gold hover:shadow-lg hover:shadow-tertiary-fixed-dim/10 transition-all" href="{{ child.url }}" data-reveal>
+              <div class="flex items-center justify-center size-14 rounded-full bg-surface-container-high text-primary-container group-hover:bg-accent-gold group-hover:text-on-surface transition-colors mb-6">
+                <span class="material-symbols-outlined text-[28px]">{{ child.cardIcon|default('category') }}</span>
+              </div>
+              <h3 class="font-headline-md text-title-lg text-on-surface mb-2">{{ child.title }}</h3>
+              <p class="font-body-md text-body-md text-on-surface-variant mb-6 flex-grow">{{ child.summary }}</p>
+              <span class="font-label-lg text-label-lg text-primary-container group-hover:text-accent-gold inline-flex items-center transition-colors">
+                Explore
+                <span class="material-symbols-outlined ml-1 text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  {# ---- Matrix body blocks (shared; authored order). FAQ items are collected
+       and rendered as one section after the other blocks. ---- #}
+  {% set bodyBlocks = entry.body.all() %}
+  {% set nonFaq = bodyBlocks|filter(b => b.type.handle != 'faqItem') %}
+  {% set tier2 = entry.level == 2 %}
+  {# On Tier-2 the buying-guide prose (a richText block with no <table>) renders
+     AFTER the "Our Selection" grid (Designer ruling: stock first, not buried).
+     The leadIntro + the spec-table richText render before it. Tier-1 has no grid
+     here, so all blocks render in authored order. ---- #}
+  {# Pre-sort the body blocks. The static "Lead + Quick-Spec Comparison" layout
+     pairs a lead intro (constrained to max-w-3xl) with a FULL-WIDTH spec table in
+     ONE section. We reproduce that when a leadIntro is present; pages without one
+     keep the table inside the narrow buying-guide article (authored order). ---- #}
+  {% set leadBlock  = nonFaq|filter(b => b.type.handle == 'leadIntro')|first %}
+  {% set tableBlock = nonFaq|filter(b => b.type.handle == 'richText' and '<table' in b.content|string)|first %}
+
+  {% if leadBlock %}
+    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:pt-24 md:pb-0">
+      <div class="max-w-3xl" data-reveal>
+        {% if leadBlock.eyebrow %}
+          <p class="font-label-md text-label-md uppercase tracking-widest text-outline mb-4">{{ leadBlock.eyebrow }}</p>
+        {% endif %}
+        {% if leadBlock.heading %}
+          <h2 class="font-display-lg text-headline-md md:text-headline-lg text-on-surface mb-6">{{ leadBlock.heading }}</h2>
+        {% endif %}
+        <div class="prose-body font-body-lg text-body-lg text-on-surface-variant">{{ leadBlock.text }}</div>
+      </div>
+      {% if tableBlock %}
+        {# Table sits at the text column width (max-w-3xl), aligned with the intro
+           above it. prose-table-full restores table layout so the columns fill
+           that width instead of bunching at the left. #}
+        <div class="max-w-3xl prose-body prose-table-full mt-10 overflow-x-auto" data-reveal>{{ tableBlock.content }}</div>
+      {% endif %}
+    </section>
+  {% elseif not tier2 %}
+    {# Tier-1 landers (no grid, no leadIntro): full-width table, then the
+       buying-guide prose — authored article order. #}
+    {% if tableBlock %}{{ _self.tableSection(tableBlock) }}{% endif %}
+    {% for block in nonFaq|filter(b => b.type.handle == 'richText' and '<table' not in b.content|string) %}
+      {{ _self.richTextSection(block) }}
+    {% endfor %}
+  {% endif %}
+  {# Grid-first Tier-2 pages (no leadIntro) render nothing above the grid — the
+     static puts "Our Selection" directly under the hero, buying guide + table below. #}
+
+  {# ---- Our Selection (Tier-2): curated relation + availability fallback + empty
+       state. Always rendered on Tier-2 so the hero #products anchor stays valid. ---- #}
+  {% if entry.level == 2 %}
+    {% set curatedBlock = bodyBlocks|filter(b => b.type.handle == 'curatedProducts')|first %}
+    {% set picks = curatedBlock ? curatedBlock.products.availability('available').all() : [] %}
+    {% if picks|length < 4 %}
+      {% set autoFill = craft.entries().section('inventory').availability('available')
+        .relatedTo({ targetElement: entry, field: 'subcategory' })
+        .id(['not']|merge(picks|map(p => p.id)))
+        .limit(4 - picks|length).all() %}
+      {% set picks = picks|merge(autoFill) %}
+    {% endif %}
+    <section id="products" class="py-16 md:pt-24 md:pb-28 px-margin-mobile md:px-margin-desktop bg-surface-bright">
+      <div class="max-w-container-max mx-auto">
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-8" data-reveal>{{ (curatedBlock ? curatedBlock.heading : null)|default('Our Selection') }}</h2>
+        {% if picks|length %}
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter" data-reveal-group>
+            {% for product in picks %}{{ _self.productCard(product) }}{% endfor %}
+          </div>
+        {% else %}
+          <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            Our selection of {{ titleLc }} changes frequently.
+            <a href="/contact" class="text-primary-container hover:text-accent-gold transition-colors underline">Contact us</a>
+            for current stock and to arrange a listening demo.
+          </p>
+        {% endif %}
+      </div>
+    </section>
+
+    {# Below the grid: buying-guide prose. On grid-first pages (no leadIntro) the
+       spec table belongs in this article too — the static keeps it here. #}
+    {% for block in nonFaq|filter(b => b.type.handle == 'richText' and '<table' not in b.content|string) %}
+      {{ _self.richTextSection(block) }}
+    {% endfor %}
+    {% if not leadBlock and tableBlock %}{{ _self.tableSection(tableBlock) }}{% endif %}
+  {% endif %}
+
+  {# ---- FAQ (collected faqItem blocks) ---- #}
+  {% set faqItems = bodyBlocks|filter(b => b.type.handle == 'faqItem') %}
+  {% if faqItems|length %}
+    <section class="py-16 md:py-24 bg-surface-container-low">
+      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <div class="lg:col-span-1" data-reveal>
+            <h2 class="font-headline-md text-headline-lg text-on-surface mb-4">Frequently Asked Questions</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Expert guidance on choosing the right {{ titleLc }} for your system.</p>
+          </div>
+          <div class="lg:col-span-2" data-reveal-group>
+            {% for item in faqItems %}
+              <details class="group border-b border-outline-variant [&_summary::-webkit-details-marker]:hidden" data-reveal>
+                <summary class="flex items-center justify-between gap-6 cursor-pointer list-none py-5 font-title-lg text-title-lg text-on-surface hover:text-primary transition-colors">
+                  <span>{{ item.question }}</span>
+                  <span class="material-symbols-outlined shrink-0 text-outline transition-transform duration-300 group-open:rotate-180" data-icon="expand_more">expand_more</span>
+                </summary>
+                <div class="pb-6 pr-12 prose-body font-body-lg text-body-lg text-on-surface-variant">{{ item.answer }}</div>
+              </details>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Final CTA & Related Links -->
+  {% set relatedPills = entry.level == 1 ? entry.children.all() : [entry.parent]|merge(entry.parent.children.all()) %}
+  <section class="bg-surface py-24 border-y border-outline-variant">
+    <div class="max-w-3xl mx-auto text-center px-margin-mobile" data-reveal>
+      <h2 class="font-display-lg text-headline-md md:text-display-lg text-on-surface mb-8">Ready to hear the difference?</h2>
+      <a class="inline-flex justify-center items-center bg-accent-gold text-on-surface px-10 py-5 rounded font-label-lg uppercase tracking-wide hover:opacity-90 transition-opacity mb-16 shadow-lg shadow-tertiary-fixed-dim/20" href="/contact">
+        Book a Listening Demo
+      </a>
+      {% if relatedPills|length %}
+        <div class="pt-12 border-t border-outline-variant">
+          <div class="flex flex-wrap justify-center gap-3">
+            {% for pill in relatedPills|filter(pill => pill and pill.id != entry.id) %}
+              <a class="px-5 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary-container hover:text-primary-container transition-colors bg-background" href="{{ pill.url }}">{{ pill.title }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}
+
+{% macro richTextSection(block) %}
+  <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 border-t border-outline-variant/30">
+    <article class="max-w-3xl mx-auto prose-body font-body-lg text-body-lg text-on-surface-variant" data-reveal>
+      {{ block.content }}
+    </article>
+  </section>
+{% endmacro %}
+
+{# Standalone spec table at the text column width (max-w-3xl), aligned with the
+   surrounding prose. prose-body styles the bare CKEditor <table>; prose-table-full
+   restores table layout so the columns fill that width rather than bunching at the
+   left. Used for Tier-1 + grid-first tables (intro-first pages render the same
+   treatment inline inside the lead section). #}
+{% macro tableSection(block) %}
+  <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24 border-t border-outline-variant/30">
+    <div class="max-w-3xl mx-auto prose-body prose-table-full overflow-x-auto" data-reveal>{{ block.content }}</div>
+  </section>
+{% endmacro %}
+
+{# Text-only card matching the New Arrivals format (products/index.twig): no
+   product photo, eyebrow → title → short description → dashed-top footer with
+   the MSRP price + Enquire. Condition/availability badges are retained (fixed
+   CSS classes) since used/demo stock status is core to Our Selection. #}
+{% macro productCard(product) %}
+  {% import '_partials/badges.twig' as badges %}
+  {% set price = product.msrp %}
+  {% set isSold = (product.availability|string) == 'sold' %}
+  {% set availBadge = badges.availability(product) %}
+  {% set sub = product.subcategory.one() %}
+  {% set eyebrow = sub ? (sub.parent ? sub.parent.title : sub.title) : '' %}
+  <div class="bg-surface border border-outline-variant rounded-lg p-6 group flex flex-col {{ isSold ? 'product-card--sold' }}" data-reveal>
+    <div class="flex-grow">
+      {% if eyebrow %}<p class="font-label-md text-outline mb-1 uppercase tracking-wider">{{ eyebrow }}</p>{% endif %}
+      <div class="flex flex-wrap items-center gap-2 mb-2">
+        {{ badges.condition(product) }}
+        {% if availBadge|trim %}{{ availBadge }}{% endif %}
+        {% if product.topology %}<span class="bg-surface-container text-on-surface text-[10px] px-1.5 py-0.5 rounded font-medium">{{ product.topology }}</span>{% endif %}
+      </div>
+      <h4 class="font-title-lg text-title-lg text-on-surface mb-2">{{ product.title }}</h4>
+      {% if product.shortDescription %}
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4 line-clamp-2">{{ product.shortDescription }}</p>
+      {% endif %}
+    </div>
+    <div class="flex justify-between items-center mt-auto pt-4 border-t border-outline-variant border-dashed">
+      <span class="product-card__price font-title-lg text-on-surface">{{ price ? '$' ~ (price.amount / 100)|number_format(2, '.', ',') }}{{ product.priceUnit == 'Pair' ? ' / pr' }}</span>
+      <a href="/contact" class="font-label-lg text-label-lg uppercase tracking-wide text-primary-container hover:text-accent-gold transition-colors">{{ isSold ? 'Enquire about similar' : 'Enquire' }}</a>
+    </div>
+  </div>
+{% endmacro %}

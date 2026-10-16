@@ -1,0 +1,145 @@
+{#
+ # lines-we-carry.twig — Lines We Carry (the "linesWeCarry" Single)
+ # Ported from web/lines-we-carry.html. Brand grid is data-driven; logos live in
+ # web/images/brand-logos/. Brand card links are placeholders (#) until real
+ # brand URLs land (task #17). Dark mode cut; links → Craft routes.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}Lines We Carry — High-End Audio Brands in Ottawa{% endblock %}
+{% block metaDescription %}A curated selection of high-fidelity audio brands — Pro-Ject, Audiolab, MartinLogan, PS Audio and more — chosen for musicality and build quality by Distinctive Audio in Ottawa.{% endblock %}
+
+{% set brandGroups = [
+  { name: 'Turntables & Analogue', brands: [
+    { alt: 'Benz Micro', logo: 'benz-micro.jpg' }, { alt: 'Charisma Audio', logo: 'charisma-audio.jpg' },
+    { alt: 'Clearaudio', logo: 'clearaudio.jpg' }, { alt: 'Dynavector', logo: 'dynavector.jpg' },
+    { alt: 'Gold Note', logo: 'gold-note.jpg' }, { alt: 'Graham', logo: 'graham.jpg' },
+    { alt: 'Hana', logo: 'hana.jpg' }, { alt: 'Oracle Audio', logo: 'oracle-audio.jpg' },
+    { alt: 'Ortofon', logo: 'ortofon.jpg' }, { alt: 'Pro-Ject', logo: 'pro-ject.jpg' },
+    { alt: 'Reed', logo: 'reed.jpg' }, { alt: 'Rekkord', logo: 'rekkord.jpg' },
+  ] },
+  { name: 'Amplification', brands: [
+    { alt: 'Audio Space', logo: 'audio-space.jpg' }, { alt: 'Audiolab', logo: 'audio-lab.jpg' },
+    { alt: 'ModWright', logo: 'modwright.jpg' }, { alt: 'Musical Fidelity', logo: 'musical-fidelity.jpg' },
+    { alt: 'PrimaLuna', logo: 'prima-luna.jpg' }, { alt: 'PS Audio', logo: 'ps-audio.jpg' },
+    { alt: 'Tri-Art', logo: 'tri-art.jpg' }, { alt: 'Unison Research', logo: 'unison-research.jpg' },
+    { alt: 'Zesto Audio', logo: 'zesto-audio.jpg' },
+  ] },
+  { name: 'Loudspeakers', brands: [
+    { alt: 'MartinLogan', logo: 'martin-logan.jpg' }, { alt: 'Unity Audio', logo: 'unity-audio.jpg' },
+  ] },
+  { name: 'Digital & Streaming', brands: [
+    { alt: 'Magnetar', logo: 'magnetar.jpg' }, { alt: 'Shanling', logo: 'shanling.jpg' },
+  ] },
+  { name: 'Cables & Connectors', brands: [
+    { alt: 'Cardas', logo: 'cardas.jpg' }, { alt: 'Transparent', logo: 'transparent.jpg' }, { alt: 'WBT', logo: 'wbt.jpg' },
+  ] },
+  { name: 'Power & Support', brands: [
+    { alt: 'Black Diamond Racing', logo: 'black-diamond-racing.jpg' }, { alt: 'IsoAcoustics', logo: 'iso-acoustics.jpg' },
+  ] },
+] %}
+
+{% block content %}
+  <div class="pt-12 pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-12">
+      <ol class="flex items-center space-x-2 font-label-md text-label-md text-primary-container">
+        <li><a class="hover:underline hover:text-accent-gold transition-colors" href="/">Home</a></li>
+        <li><span class="material-symbols-outlined text-sm opacity-50">chevron_right</span></li>
+        <li aria-current="page" class="text-on-surface-variant">Lines We Carry</li>
+      </ol>
+    </nav>
+
+    <!-- Hero -->
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-gutter mb-32 items-center">
+      <div class="md:col-span-6 md:col-start-1 md:pr-12" data-reveal>
+        <div class="mb-6 flex items-center space-x-4">
+          <div class="h-px w-8 bg-accent-gold"></div>
+          <span class="font-label-lg text-label-lg text-primary-container uppercase tracking-widest">Our Brands</span>
+        </div>
+        <h1 class="font-display-lg text-display-lg text-primary mb-8 md:text-[64px] text-headline-lg-mobile leading-tight">
+          The <span class="text-accent-gold">Lines</span> We Carry
+        </h1>
+        <p class="font-body-lg text-body-lg text-primary-container md:max-w-md leading-relaxed">
+          A curated, not exhaustive, selection of brands chosen for musicality and build — ask us what's in stock.
+        </p>
+      </div>
+      <div class="md:col-span-5 md:col-start-8 mt-12 md:mt-0" data-reveal="fade">
+        <div class="aspect-[4/3] w-full border border-outline-variant rounded overflow-hidden relative">
+          <img alt="Distinctive Audio showroom featuring high-end speakers and equipment" class="w-full h-full object-cover" src="/images/products/lines-we-carry.jpg" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand grids -->
+    {# Manufacturer website per brand is CMS-driven: editable at CP → Categories →
+       Brands → [brand] → Website. A card links out only when a URL is set (else it
+       renders non-linked — no dead href). Matched to the curated grid by title. #}
+    {% set brandSites = {} %}
+    {% for b in craft.categories().group('brands').all() %}
+      {% if b.website %}{% set brandSites = brandSites|merge({ (b.title): b.website }) %}{% endif %}
+    {% endfor %}
+    {% set cardClass = 'group border border-outline-variant rounded overflow-hidden flex items-center justify-center transition-all duration-300 bg-surface-container-lowest h-44' %}
+    <section class="mb-32">
+      {% for group in brandGroups %}
+        <div class="mb-20">
+          <div class="flex items-center space-x-4 mb-8" data-reveal>
+            <div class="h-px w-6 bg-accent-gold"></div>
+            <h2 class="font-headline-md text-headline-md text-primary">{{ group.name }}</h2>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6" data-reveal-group>
+            {% for brand in group.brands %}
+              {% set site = brandSites[brand.alt] ?? null %}
+              {% if site %}
+                <a class="{{ cardClass }} hover:shadow-[0_4px_20px_rgba(11,28,48,0.05)]" data-reveal href="{{ site }}" target="_blank" rel="noopener" title="Visit {{ brand.alt }}">
+                  <img alt="{{ brand.alt }} logo" class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" loading="lazy" src="/images/brand-logos/{{ brand.logo }}" />
+                </a>
+              {% else %}
+                <div class="{{ cardClass }}" data-reveal>
+                  <img alt="{{ brand.alt }} logo" class="h-full w-full object-cover opacity-90" loading="lazy" src="/images/brand-logos/{{ brand.logo }}" />
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </section>
+
+    <!-- Featured System Strip -->
+    <section class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden mb-32">
+      <div class="grid grid-cols-1 md:grid-cols-2" data-reveal-group>
+        <div class="aspect-[3/4] md:aspect-auto h-full relative" data-reveal="fade">
+          <img alt="Oracle turntable with Cardas branding" class="w-full h-full object-cover" src="/images/products/oracle-turntable-high-end-3.jpg" />
+        </div>
+        <div class="p-12 md:p-16 flex flex-col justify-center" data-reveal>
+          <h3 class="font-headline-lg text-headline-lg text-primary mb-6">Synergistic Systems</h3>
+          <p class="font-body-lg text-body-lg text-primary-container mb-8 max-w-md">
+            Great audio isn't just about individual specifications; it's about how components breathe together. We help you build systems across brands that reveal the true emotion of your recordings.
+          </p>
+          <a class="inline-flex items-center text-primary-container font-label-lg text-label-lg group w-fit relative" href="/products">
+            Explore Our Products
+            <span class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            <div class="h-px w-full bg-primary-container absolute bottom-0 left-0 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA & Related Pills -->
+    <section class="text-center mb-16">
+      <a class="inline-block bg-accent-gold text-on-background font-label-lg text-label-lg px-8 py-4 rounded hover:opacity-90 transition-opacity mb-16" href="/products">
+        View Our Curated Selection
+      </a>
+      <div class="flex flex-wrap justify-center gap-4 max-w-2xl mx-auto">
+        {% set pills = [
+          { label: 'Products', url: '/products' }, { label: 'Amplifiers', url: catUrl['amplification'] },
+          { label: 'Speakers', url: catUrl['loudspeakers'] }, { label: 'Turntables', url: catUrl['turntables'] },
+          { label: 'About', url: '/about' }, { label: 'Contact', url: '/contact' },
+        ] %}
+        {% for pill in pills %}
+          <a class="px-4 py-2 border border-outline-variant rounded-full text-primary-container font-label-md text-label-md hover:bg-surface-container transition-colors" href="{{ pill.url }}">{{ pill.label }}</a>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+{% endblock %}

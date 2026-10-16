@@ -1,0 +1,127 @@
+{#
+ # header.twig — site header + primary navigation
+ #
+ # Ported from the static web/*.html <header>. The nav is small and stable, so
+ # it is driven by the hard-coded `primaryNav` array (set in base.twig) rather
+ # than a nav plugin. Active state is derived from the first URL segment.
+ #}
+{#
+ # The <header> itself is fixed on every page and scroll-activated (s-80 style):
+ # script.js toggles `scroll-down` / `scroll-up` on <body>, and #site-header
+ # rules in src/input.css slide it out of view when scrolling down and reveal
+ # it (with a drop shadow) when scrolling back up. Non-overlay pages get a
+ # same-height spacer below so page content doesn't shift under the fixed bar.
+ #
+ # heroOverlay (bool, default false): on the homepage the nav is laid over the
+ # full-bleed cinematic hero — transparent, and solidified on scroll by
+ # the hero script (adds `bg-primary-container shadow` to #main-nav past 40px).
+ #}
+{% set heroOverlay = heroOverlay ?? false %}
+{% set activeSegment = craft.app.request.getSegment(1) %}
+
+<header id="site-header" class="fixed inset-x-0 top-0 z-50">
+  <nav
+    {{ heroOverlay ? 'id="main-nav"' }}
+    class="{{ heroOverlay
+      ? 'transition-colors duration-500'
+      : 'bg-primary-container shadow' }}"
+  >
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 justify-between">
+        <div class="flex flex-1">
+          <div class="flex shrink-0 items-center">
+            <a href="/">
+              <img
+                src="/images/distinctive-audio-logo.webp"
+                width="742"
+                height="168"
+                alt="Distinctive Audio"
+                class="h-14 w-auto"
+              />
+            </a>
+          </div>
+          <div class="hidden sm:ml-auto sm:flex sm:space-x-8">
+            {% for item in primaryNav %}
+              {% set isActive = item.segment == activeSegment %}
+              <a
+                href="{{ item.url }}"
+                class="inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium {{ isActive
+                  ? 'border-accent-gold text-accent-gold'
+                  : 'border-transparent text-white hover:border-white/40 hover:text-white/80' }}"
+                {{ isActive ? 'aria-current="page"' }}
+                >{{ item.label }}</a
+              >
+            {% endfor %}
+          </div>
+        </div>
+        <div class="-mr-2 flex items-center sm:hidden">
+          <!-- Mobile menu button -->
+          <button
+            type="button"
+            command="--toggle"
+            commandfor="mobile-menu"
+            class="relative inline-flex items-center justify-center rounded-md p-2 text-white/80 hover:bg-white/10 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-accent-gold"
+          >
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Open main menu</span>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              data-slot="icon"
+              aria-hidden="true"
+              class="size-6 [[aria-expanded='true']_&]:hidden"
+            >
+              <path
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              data-slot="icon"
+              aria-hidden="true"
+              class="size-6 [&:not([aria-expanded='true']_*)]:hidden"
+            >
+              <path
+                d="M6 18 18 6M6 6l12 12"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <el-disclosure
+      id="mobile-menu"
+      hidden
+      class="sm:hidden [&:not([hidden])]:block {{ heroOverlay ? 'bg-primary-container shadow-lg' }}"
+    >
+      <div class="space-y-1 pb-3 pt-2">
+        {% for item in primaryNav %}
+          {% set isActive = item.segment == activeSegment %}
+          <a
+            href="{{ item.url }}"
+            class="block border-l-4 py-2 pl-3 pr-4 text-base font-medium {{ isActive
+              ? 'border-accent-gold bg-accent-gold/10 text-accent-gold'
+              : 'border-transparent text-white/80 hover:border-accent-gold hover:bg-white/10 hover:text-white' }}"
+            {{ isActive ? 'aria-current="page"' }}
+            >{{ item.label }}</a
+          >
+        {% endfor %}
+      </div>
+    </el-disclosure>
+  </nav>
+</header>
+{% if not heroOverlay %}
+  {# Fixed-header spacer: matches the h-16 nav row so in-flow content starts
+     exactly where the old in-flow bar left it. #}
+  <div class="h-16" aria-hidden="true"></div>
+{% endif %}

@@ -1,0 +1,46 @@
+fieldLayouts:
+  06174c1b-c3ee-42bc-a30c-f916d5e16225:
+    cardThumbAlignment: end
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 06d6f074-1b0e-4add-9952-649d9bcff7b8 # Footer Blurb
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 1d1e73d1-cd0b-4fa2-bcf4-d08c8e6e388f
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            dateAdded: null
+            editCondition: null
+            elementCondition: null
+            elementEditCondition: null
+            fieldUid: 46c3b585-8222-44e1-af5a-480487cfea71 # Social Links
+            handle: null
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 85b0864c-4c57-46d5-a101-d8dbb7d15d63
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: db1a5267-11db-4f1e-966a-b81701fd26ba
+        userCondition: null
+    thumbFieldKey: null
+handle: footer
+name: Footer
+sortOrder: 2

@@ -25,6 +25,15 @@ export default class Resources extends EventEmitter
         this.groups.current = null
         this.loadNextGroup()
 
+        // Mid-file byte progress (GLB/EXR): expose a fractional group ratio so
+        // the page loader's meter can sweep smoothly through big downloads.
+        this.loader.on('fileProgress', (_resource, _fraction) =>
+        {
+            const group = this.groups.current
+            group.ratio = (group.loaded + _fraction) / group.toLoad
+            this.trigger('progress', [group, _resource, _fraction])
+        })
+
         // File-loaded event
         this.loader.on('fileEnd', (_resource, _data) =>
         {
@@ -52,6 +61,7 @@ export default class Resources extends EventEmitter
             this.items[_resource.name] = data
 
             this.groups.current.loaded++
+            this.groups.current.ratio = this.groups.current.loaded / this.groups.current.toLoad
             this.trigger('progress', [this.groups.current, _resource, data])
         })
 

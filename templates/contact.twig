@@ -1,0 +1,252 @@
+{#
+ # contact.twig — Contact (the "contact" Single)
+ # Ported from web/contact.html. Form wired to the craftcms/contact-form plugin
+ # with Writer's microcopy. Store details read from the contactInfo global with
+ # canonical fallbacks. Dark mode cut; links → Craft routes.
+ #}
+{% extends '_layouts/base.twig' %}
+
+{% block title %}Contact Us — Book an Ottawa Showroom Demo{% endblock %}
+{% block metaDescription %}Contact Distinctive Audio in Ottawa, ON. Book a private showroom demo, request a custom cable quote, or enquire about our high-fidelity audio equipment.{% endblock %}
+
+{% set submitted = craft.app.request.getParam('submitted') %}
+
+{% block content %}
+  <!-- HERO -->
+  <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto py-16 md:py-24 text-center md:text-left">
+    <div class="max-w-3xl" data-reveal-group>
+      <div class="flex items-center justify-center md:justify-start gap-4 mb-6" data-reveal>
+        <span class="font-label-lg text-label-lg text-accent-teal uppercase tracking-widest">VISIT US</span>
+        <div class="h-px bg-accent-gold w-16"></div>
+      </div>
+      <h1 class="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-on-background mb-8" data-reveal>
+        <span class="text-accent-gold">Contact</span> Distinctive Audio
+      </h1>
+      <p class="font-body-lg text-body-lg text-accent-teal max-w-2xl leading-relaxed" data-reveal>
+        Do you have a question, comment or suggestion? Feel free to use the contact form below to get in touch. Distinctive Audio is centrally located on Carling Avenue close to Dow's Lake and Little Italy.
+      </p>
+    </div>
+  </section>
+
+  <section class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16">
+    <div class="w-full rounded-xl overflow-hidden border border-outline-variant shadow-ambient aspect-[21/9]" data-reveal="fade">
+      <img alt="Distinctive Audio Storefront Street View" class="w-full h-full object-cover object-center" src="/images/contact.jpg" />
+    </div>
+  </section>
+
+  <section class="py-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-16">
+      <!-- Store info -->
+      <div class="lg:col-span-4 space-y-12" data-reveal>
+        <div class="w-full rounded-xl overflow-hidden border border-outline-variant shadow-ambient bg-surface-container-low">
+          <img alt="Distinctive Audio Signage" class="w-full h-auto object-cover" src="/images/contact-3.jpg" />
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-8">
+          <h3 class="font-title-lg text-title-lg text-on-background mb-6">Store Information</h3>
+          <div class="space-y-6">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-accent-gold">location_on</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-background uppercase mb-1">Address</p>
+                <p class="font-body-md text-body-md text-accent-teal">
+                  {{ contactInfo.streetAddress|default('903 Carling Avenue') }}<br />{{ contactInfo.addressLocality|default('Ottawa') }}, {{ contactInfo.addressRegion|default('ON') }} {{ contactInfo.postalCode|default('K1Y 4E7') }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-accent-gold">schedule</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-background uppercase mb-1">Hours</p>
+                <p class="font-body-md text-body-md text-accent-teal">See below for details.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-accent-gold">call</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-background uppercase mb-1">Phone</p>
+                {% set phone = contactInfo.contactPhone|default('613-722-6902') %}
+                <a class="font-body-md text-body-md text-accent-teal hover:text-accent-gold transition-colors" href="tel:{{ phone|replace({'-': '', ' ': '', '(': '', ')': ''}) }}">{{ phone }}</a>
+              </div>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-accent-gold">mail</span>
+              <div>
+                <p class="font-label-lg text-label-lg text-on-background uppercase mb-1">Email</p>
+                {% set email = contactInfo.contactEmail|default('rheal@distinctiveaudio.ca') %}
+                <a class="font-body-md text-body-md text-accent-teal hover:text-accent-gold transition-colors" href="mailto:{{ email }}">{{ email }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enquiry form -->
+      <div class="lg:col-span-8" data-reveal>
+        {% if submitted %}
+          <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-ambient p-10">
+            <h2 class="font-headline-md text-headline-md text-on-background mb-4">Message received</h2>
+            <p class="font-body-lg text-body-lg text-on-surface-variant">
+              Thank you — your message is on its way. We'll be in touch within one business day. For anything urgent, call us at 613-722-6902.
+            </p>
+          </div>
+        {% else %}
+          <h2 class="font-headline-md text-headline-md text-on-background mb-8">Send an Enquiry</h2>
+          {% macro errorList(errors) %}
+            {% if errors %}
+              {{ ul(errors, {class: 'font-label-md text-label-md text-error mt-2 list-disc list-inside'}) }}
+            {% endif %}
+          {% endmacro %}
+          {# On failed validation contact-form re-renders this template with `submission` set. #}
+          {% set submission = submission ?? null %}
+          {% set flashError = craft.app.session.getFlash('error') %}
+          {% if flashError %}
+            <p class="mb-6 font-body-md text-body-md text-error">
+              Something went wrong sending your message. Please try again, or email us directly at rheal@distinctiveaudio.ca.
+            </p>
+          {% endif %}
+          <form method="post" accept-charset="UTF-8" class="space-y-8">
+            {{ csrfInput() }}
+            {{ actionInput('contact-form/send') }}
+            {{ redirectInput('contact?submitted=1') }}
+            {# Honeypot: bots fill this hidden field; contact-form-honeypot rejects it. Name matches config/contact-form-honeypot.php. #}
+            <div class="hidden" aria-hidden="true">
+              <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" value="" /></label>
+            </div>
+            <input type="hidden" name="subject" value="Website enquiry" />
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="relative">
+                <label class="block font-label-md text-label-md text-on-surface-variant uppercase mb-2" for="fromName">Name</label>
+                <input class="w-full bg-transparent border-0 border-b border-outline text-body-md text-on-background focus:ring-0 focus:border-accent-teal px-0 py-2 transition-colors" id="fromName" name="fromName" placeholder="Your name" required type="text" value="{{ submission.fromName ?? '' }}" />
+                {{ submission ? _self.errorList(submission.getErrors('fromName')) }}
+              </div>
+              <div class="relative">
+                <label class="block font-label-md text-label-md text-on-surface-variant uppercase mb-2" for="phone">Phone <span class="normal-case text-outline">(optional)</span></label>
+                <input class="w-full bg-transparent border-0 border-b border-outline text-body-md text-on-background focus:ring-0 focus:border-accent-teal px-0 py-2 transition-colors" id="phone" name="message[Phone]" placeholder="(613) 000-0000" type="tel" value="{{ submission.message.Phone ?? '' }}" />
+              </div>
+            </div>
+            <div class="relative">
+              <label class="block font-label-md text-label-md text-on-surface-variant uppercase mb-2" for="fromEmail">Email Address</label>
+              <input class="w-full bg-transparent border-0 border-b border-outline text-body-md text-on-background focus:ring-0 focus:border-accent-teal px-0 py-2 transition-colors" id="fromEmail" name="fromEmail" placeholder="you@example.com" required type="email" value="{{ submission.fromEmail ?? '' }}" />
+              {{ submission ? _self.errorList(submission.getErrors('fromEmail')) }}
+            </div>
+            <div class="relative">
+              <label class="block font-label-md text-label-md text-on-surface-variant uppercase mb-2" for="interest">What are you interested in?</label>
+              <select class="w-full bg-transparent border-0 border-b border-outline text-body-md text-on-background focus:ring-0 focus:border-accent-teal px-0 py-2 transition-colors appearance-none" id="interest" name="message[Interest]">
+                <option value="">Select an option</option>
+                {% set selectedInterest = submission.message.Interest ?? '' %}
+                {% for option in ['Showroom Demo', 'Custom Cables', 'Product Enquiry', 'Trade-In', 'Other'] %}
+                  <option value="{{ option }}" {{ option == selectedInterest ? 'selected' }}>{{ option }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="relative">
+              <label class="block font-label-md text-label-md text-on-surface-variant uppercase mb-2" for="message">Message</label>
+              <textarea class="w-full bg-transparent border-0 border-b border-outline text-body-md text-on-background focus:ring-0 focus:border-accent-teal px-0 py-2 transition-colors resize-none" id="message" name="message[body]" maxlength="500" placeholder="Tell us about your room, your current system, or the music you love — and how we can help." required rows="6">{{ submission.message.body ?? '' }}</textarea>
+              {{ submission ? _self.errorList(submission.getErrors('message')) }}
+              <p class="font-label-md text-label-md text-outline mt-2 text-right">Max 500 characters</p>
+            </div>
+            <button class="bg-accent-gold text-on-background px-8 py-4 rounded font-label-lg text-label-lg uppercase tracking-wider hover:bg-secondary-container transition-colors w-full md:w-auto mt-4 inline-flex items-center justify-center gap-2" type="submit">
+              Send Message
+              <span class="material-symbols-outlined" style="font-size: 20px">arrow_forward</span>
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Store Hours -->
+  <section class="mb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="flex items-center gap-4 mb-8" data-reveal>
+      <span class="material-symbols-outlined text-accent-gold">schedule</span>
+      <h2 class="font-headline-md text-headline-md text-on-background">Store Hours</h2>
+    </div>
+    <div class="rounded-xl overflow-hidden border border-outline-variant shadow-ambient bg-surface-container-lowest" data-reveal>
+      <table class="w-full border-collapse text-left">
+        <caption class="sr-only">Distinctive Audio store opening hours by day of the week</caption>
+        <thead>
+          <tr class="border-b border-outline-variant">
+            <th scope="col" class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4">Day of the Week</th>
+            <th scope="col" class="font-label-lg text-label-lg text-accent-teal uppercase tracking-wider px-6 py-4">Hours</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set hours = [
+            { day: 'Monday', time: 'Closed' },
+            { day: 'Tuesday', time: '10am – 6pm' },
+            { day: 'Wednesday', time: 'Closed' },
+            { day: 'Thursday', time: '10am – 6pm' },
+            { day: 'Friday', time: '10am – 6pm' },
+            { day: 'Saturday', time: '10am – 5pm' },
+            { day: 'Sunday', time: 'Closed' },
+          ] %}
+          {% for row in hours %}
+            <tr class="{{ loop.index is odd ? 'bg-background' }}">
+              <th scope="row" class="font-body-md text-body-md text-on-background font-medium px-6 py-4">{{ row.day }}</th>
+              <td class="font-body-md text-body-md text-accent-teal px-6 py-4">{{ row.time }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <!-- MAP -->
+  <section class="container-fluid google-map">
+    <style>
+      /* Size the map container */
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <!-- The div element for the map -->
+    <div id="map"></div>
+    {% verbatim %}
+    <script>
+      // Modern async bootstrap loader — appends the API script dynamically,
+      // which satisfies the "loading=async" best practice automatically.
+      (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+        key: "AIzaSyADOQbbF0EOUq7KbOkjUvKS60XWVnVAwws",
+        v: "weekly",
+      });
+
+      // Initialize and add the map using the modern libraries + AdvancedMarkerElement.
+      async function initMap() {
+        const { Map, InfoWindow } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+        // The location of Distinctive Audio (903 Carling Avenue)
+        const myLatLng = { lat: 45.39607, lng: -75.71202 };
+
+        const map = new Map(document.getElementById("map"), {
+          zoom: 15,
+          center: myLatLng,
+          mapId: "DEMO_MAP_ID", // Required for Advanced Markers; replace with a real Map ID before launch.
+        });
+
+        const marker = new AdvancedMarkerElement({
+          map,
+          position: myLatLng,
+          title: "903 Carling Avenue, Ottawa, ON, Canada",
+          gmpClickable: true, // AdvancedMarkers are NOT clickable unless this is set.
+        });
+
+        const infoWindow = new InfoWindow({
+          content:
+            '<div style="font-family: sans-serif; max-width: 220px;">' +
+            '<strong>Distinctive Audio</strong><br>903 Carling Avenue<br>Ottawa, ON K1Y 4E7<br>' +
+            '<a href="https://www.google.com/maps/dir/?api=1&destination=903+Carling+Avenue+Ottawa+ON" target="_blank" rel="noopener">Get directions</a>' +
+            "</div>",
+        });
+
+        marker.addListener("gmp-click", () => {
+          infoWindow.open({ anchor: marker, map });
+        });
+      }
+
+      initMap();
+    </script>
+    {% endverbatim %}
+  </section>
+{% endblock %}

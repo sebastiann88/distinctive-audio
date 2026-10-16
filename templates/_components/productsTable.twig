@@ -1,0 +1,232 @@
+{#
+ # _components/productsTable.twig — Sprig component: the Products catalogue table.
+ #
+ # Reactive filter/search/sort via Sprig (htmx) partial refreshes — no full reload.
+ # The element-query logic is unchanged from the original server-rendered #10 build;
+ # Sprig just re-renders this component server-side on each interaction and swaps it.
+ #
+ # - Form-level s-trigger: any control change (or debounced search keyup) re-renders
+ #   the component with ALL current filter values included.
+ # - s-push-url (set on the sprig() call in products/index.twig) keeps the querystring
+ #   bookmarkable/back-button-friendly; initial state is read from the query params.
+ # - Keeps the 4-section grouping, condition badges, per-row Enquire, zero/empty states.
+ # - Loading indicator (htmx-indicator) + aria-live results count for accessibility.
+ #}
+{% set sectionOrder = ['Electronics', 'Analogue', 'Loudspeakers', 'Cables & Accessories'] %}
+{% set priceBuckets = {
+  '10-500': '$10 – $500',
+  '500-2000': '$500 – $2,000',
+  '2000-5000': '$2,000 – $5,000',
+  '5000-12000': '$5,000 – $12,000',
+} %}
+
+{# ---- Filter params (from query string on first load; forwarded by Sprig on refresh) ---- #}
+{% set fType = craft.app.request.getParam('type') %}
+{% set fCondition = craft.app.request.getParam('condition') %}
+{% set fSection = craft.app.request.getParam('section') %}
+{% set fPrice = craft.app.request.getParam('price') %}
+{% set q = craft.app.request.getParam('q') %}
+{% set sort = craft.app.request.getParam('sort') %}
+{% set hasFilters = fType or fCondition or fSection or fPrice or q %}
+
+{# Bookmarkable filters: on each Sprig refresh, reflect the active filters in the
+   address bar via HX-Replace-Url (replace, NOT push — avoids flooding history on
+   every debounced keystroke; owner's call). This also emits the friendly /products?…
+   URL so a reload returns the full page (not the bare sprig render endpoint). Initial
+   full-page loads already carry the params, so only run on Sprig (HX-Request) refreshes. #}
+{% if craft.app.request.headers.has('HX-Request') %}
+  {% set urlParams = { q: q, section: fSection, type: fType, condition: fCondition, price: fPrice, sort: sort }|filter(v => v is not empty) %}
+  {% do sprig.replaceUrl('/products' ~ (urlParams|length ? '?' ~ urlParams|url_encode : '')) %}
+{% endif %}
+
+{# ---- Base element query ----
+   Show in-stock items: availability 'available' OR unset (:empty:). Only items the
+   owner explicitly marks Reserved/Sold are hidden. This tolerates the availability
+   field being blank (import/field gaps) so the catalogue can't be silently emptied. #}
+{# Eager-load the type + its parent (the section): the loop below reads both per
+   row, and this component re-renders on every debounced keystroke — without
+   .with() that's ~2 queries per item per refresh (classic N+1). #}
+{% set query = craft.entries().section('inventory').availability(['available', ':empty:']).with(['productType.parent']) %}
+{% if fCondition %}{% do query.condition(fCondition) %}{% endif %}
+{# Type filter is by TITLE (productTypes has per-section instances, so the same
+   type name exists under >1 section). Match items related to ANY same-titled
+   type category, not a single id — keeps the section-grouping model. #}
+{% if fType %}
+  {% set typeIds = craft.categories().group('productTypes').level(2).title(fType).ids() %}
+  {% do query.relatedTo({ targetElement: typeIds, field: 'productType' }) %}
+{% endif %}
+{% if q %}{% do query.title('*' ~ q ~ '*') %}{% endif %}
+
+{# ---- Resolve section + price per item; apply section/price filters in Twig ---- #}
+{% set rows = [] %}
+{% for item in query.all() %}
+  {% set type = item.productType.one() %}
+  {% set sec = (type and type.parent) ? type.parent.title : 'Other' %}
+  {% set priceObj = item.salePrice ?: item.msrp %}
+  {% set amount = priceObj ? (priceObj.amount / 100) : null %}
+  {% set keep = true %}
+  {% if fSection and sec != fSection %}{% set keep = false %}{% endif %}
+  {% if keep and fPrice %}
+    {% set b = fPrice|split('-') %}
+    {% if amount is null or amount < b[0] or amount > b[1] %}{% set keep = false %}{% endif %}
+  {% endif %}
+  {% if keep %}
+    {% set rows = rows|merge([{ entry: item, type: type, section: sec, amount: amount }]) %}
+  {% endif %}
+{% endfor %}
+
+{# Filter bar. The reactive trigger is on the Sprig component root (see
+   products/index.twig) — events bubble up from these controls. method=get +
+   action keep the <noscript> Apply working as a no-JS fallback. #}
+<form method="get" action="/products" class="da-filter-form">
+  {# Row 1: primary search, full width. #}
+  <div class="da-filter-group da-filter-search">
+    <label class="da-filter-label" for="q">Search</label>
+    <input type="search" id="q" name="q" value="{{ q }}" placeholder="Search products…" class="da-filter-search-input" />
+  </div>
+  {# Row 2: refining controls, auto-fit wrapping group. #}
+  <div class="da-filter-bar">
+    <div class="da-filter-group">
+      <label class="da-filter-label" for="section">Section</label>
+      <select id="section" name="section" class="da-filter-select">
+        <option value="">All Sections</option>
+        {% for s in sectionOrder %}
+          <option value="{{ s }}" {{ fSection == s ? 'selected' }}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="da-filter-group">
+      <label class="da-filter-label" for="type">Type</label>
+      <select id="type" name="type" class="da-filter-select">
+        <option value="">All Types</option>
+        {# Dedupe by title — productTypes has per-section instances of the same name. #}
+        {% set seenTypes = [] %}
+        {% for t in craft.categories().group('productTypes').level(2).orderBy('title asc').all() %}
+          {% if t.title not in seenTypes %}
+            {% set seenTypes = seenTypes|merge([t.title]) %}
+            <option value="{{ t.title }}" {{ fType == t.title ? 'selected' }}>{{ t.title }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="da-filter-group">
+      <label class="da-filter-label" for="condition">Condition</label>
+      <select id="condition" name="condition" class="da-filter-select">
+        <option value="">All Conditions</option>
+        {% for c in ['Brand New', 'Almost New', 'Display', 'Floor Demo', 'Trade In', 'Consignment', 'Used'] %}
+          <option value="{{ c }}" {{ fCondition == c ? 'selected' }}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="da-filter-group">
+      <label class="da-filter-label" for="price">Price</label>
+      <select id="price" name="price" class="da-filter-select">
+        <option value="">Any Price</option>
+        {% for key, label in priceBuckets %}
+          <option value="{{ key }}" {{ fPrice == key ? 'selected' }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="da-filter-group">
+      <label class="da-filter-label" for="sort">Sort</label>
+      <select id="sort" name="sort" class="da-filter-select">
+        <option value="" {{ not sort ? 'selected' }}>Grouped by section</option>
+        <option value="name" {{ sort == 'name' ? 'selected' }}>Name (A–Z)</option>
+        <option value="price-asc" {{ sort == 'price-asc' ? 'selected' }}>Price (low → high)</option>
+        <option value="price-desc" {{ sort == 'price-desc' ? 'selected' }}>Price (high → low)</option>
+      </select>
+    </div>
+  </div>
+  {# Fully reactive: Sprig auto-applies every control (selects on change, search on
+     debounced keyup). The Apply submit only renders without JS, as a graceful fallback. #}
+  <noscript>
+    <div class="da-filter-group mt-4">
+      <button type="submit" class="da-filter-apply">Apply</button>
+    </div>
+  </noscript>
+</form>
+
+<p class="font-label-md text-label-md text-on-surface-variant mt-4 mb-8" aria-live="polite">
+  {{ rows|length }} item{{ rows|length == 1 ? '' : 's' }}{{ hasFilters ? ' (filtered)' }}
+  <span class="htmx-indicator italic text-outline">· updating…</span>
+  {% if hasFilters %}<a href="/products" class="font-label-md text-label-md text-primary-container hover:text-accent-gold ml-3">Reset</a>{% endif %}
+</p>
+
+{% if rows|length %}
+  <div class="da-inventory-wrap rounded-xl border border-outline-variant shadow-ambient bg-surface-container-lowest overflow-x-auto">
+    <table id="inventory-table" class="w-full border-collapse text-left">
+      <caption class="sr-only">Distinctive Audio inventory with type, condition, MSRP and sale price</caption>
+      <thead>
+        <tr class="border-b-2 border-outline-variant bg-surface-container-lowest">
+          <th scope="col" class="font-label-md text-label-md font-medium text-on-surface-variant uppercase tracking-wider px-6 py-4">Product</th>
+          <th scope="col" class="font-label-md text-label-md font-medium text-on-surface-variant uppercase tracking-wider px-6 py-4">Type</th>
+          <th scope="col" class="font-label-md text-label-md font-medium text-on-surface-variant uppercase tracking-wider px-6 py-4">Status</th>
+          <th scope="col" class="font-label-md text-label-md font-medium text-on-surface-variant uppercase tracking-wider px-6 py-4 text-right">MSRP</th>
+          <th scope="col" class="font-label-md text-label-md font-medium text-on-surface-variant uppercase tracking-wider px-6 py-4 text-right">Sale Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if sort %}
+          {% if sort == 'name' %}
+            {% set rows = rows|sort((a, b) => a.entry.title <=> b.entry.title) %}
+          {% elseif sort == 'price-asc' %}
+            {% set rows = rows|sort((a, b) => (a.amount ?? 0) <=> (b.amount ?? 0)) %}
+          {% elseif sort == 'price-desc' %}
+            {% set rows = rows|sort((a, b) => (b.amount ?? 0) <=> (a.amount ?? 0)) %}
+          {% endif %}
+          {% for row in rows %}{{ _self.inventoryRow(row) }}{% endfor %}
+        {% else %}
+          {% for sec in sectionOrder %}
+            {# Within each section: effective price (salePrice ?? msrp) ascending,
+               no-price last; title as the tie-breaker for stable ordering. #}
+            {% set group = rows|filter(r => r.section == sec)|sort((a, b) =>
+              ((a.amount ?? 9999999999) <=> (b.amount ?? 9999999999)) ?: (a.entry.title <=> b.entry.title)
+            ) %}
+            {% if group|length %}
+              <tr>
+                <th scope="colgroup" colspan="5" class="px-6 pb-4 border-b border-outline-variant text-left {{ loop.first ? 'pt-6' : 'pt-4' }}">
+                  <span class="inline-flex items-center gap-3">
+                    <span class="w-10 h-0.5 bg-accent-gold"></span>
+                    <span class="font-title-lg text-title-lg font-semibold tracking-wide text-on-surface">{{ sec }}</span>
+                  </span>
+                </th>
+              </tr>
+              {% for row in group %}{{ _self.inventoryRow(row) }}{% endfor %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="rounded-xl border border-outline-variant bg-surface-container-lowest p-12 text-center">
+    <p class="font-title-lg text-title-lg text-on-surface mb-3">No matching products</p>
+    <p class="font-body-md text-body-md text-on-surface-variant mb-6">
+      Nothing matches those filters right now. Try widening your search, or contact us — stock changes weekly and we can source specific items.
+    </p>
+    <a href="/products" class="inline-block bg-primary-container text-on-primary px-6 py-3 rounded font-label-lg text-label-lg uppercase tracking-wide hover:bg-primary transition-colors">Clear filters</a>
+  </div>
+{% endif %}
+
+{% macro inventoryRow(row) %}
+  {% import '_partials/badges.twig' as badges %}
+  {% set e = row.entry %}
+  <tr class="da-inv-row border-b border-outline-variant last:border-b-0 {{ (e.availability|string) == 'sold' ? 'is-sold' }}">
+    <th scope="row" class="align-top px-6 py-4 max-w-md">
+      <span class="block font-body-lg text-body-lg text-on-surface font-semibold">{{ e.title }}</span>
+      {% if e.shortDescription %}
+        <span class="block font-body-md text-body-md text-on-surface-variant font-normal mt-1">{{ e.shortDescription }}</span>
+      {% endif %}
+    </th>
+    <td data-label="Type" class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap">{{ row.type ? row.type.title : '—' }}</td>
+    <td data-label="Status" class="align-top px-6 py-4 whitespace-nowrap">
+      <span class="inline-flex flex-wrap gap-1.5">{{ badges.condition(e) }}{{ badges.availability(e) }}</span>
+    </td>
+    <td data-label="MSRP" class="align-top font-body-md text-body-md text-on-surface-variant px-6 py-4 whitespace-nowrap text-right">
+      {{ e.msrp ? '$' ~ (e.msrp.amount / 100)|number_format(2, '.', ',') }}{{ e.priceUnit == 'Pair' ? ' / pr' }}
+    </td>
+    <td data-label="Sale Price" class="align-top font-body-md text-body-md text-accent-teal font-medium px-6 py-4 whitespace-nowrap text-right">
+      {{ e.salePrice ? '$' ~ (e.salePrice.amount / 100)|number_format(2, '.', ',') : '—' }}
+    </td>
+  </tr>
+{% endmacro %}

@@ -1,0 +1,26 @@
+{#
+ # badges.twig — unified status-badge macros (canonical: docs/design/badges.md).
+ # Two axes on an Inventory item: condition (3 tonal tiers, always shown) and
+ # availability (Reserved/Sold only). Classes are fixed CSS in src/input.css.
+ # Usage: {% import '_partials/badges.twig' as badges %} {{ badges.condition(item) }}{{ badges.availability(item) }}
+ #}
+
+{% macro condition(item) %}
+  {%- if item.condition -%}
+    {%- set cls = {
+      'Brand New': 'status-pill--new',
+      'Almost New': 'status-pill--new',
+      'Display': 'status-pill--demo',
+      'Floor Demo': 'status-pill--demo',
+      'Trade In': 'status-pill--preowned',
+      'Consignment': 'status-pill--preowned',
+      'Used': 'status-pill--preowned',
+    }[item.condition|string] ?? 'status-pill--preowned' -%}
+    <span class="status-pill {{ cls }}">{{ item.condition }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+{% macro availability(item) %}
+  {%- set cls = { 'reserved': 'status-pill--reserved', 'sold': 'status-pill--sold' }[item.availability|string] ?? null -%}
+  {%- if cls -%}<span class="status-pill {{ cls }}">{{ item.availability.label }}</span>{%- endif -%}
+{% endmacro %}

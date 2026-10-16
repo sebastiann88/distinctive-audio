@@ -1,0 +1,17 @@
+{#
+ # legacy.twig — 301-redirect a legacy flat ".html" URL to its new Craft route.
+ # Routed from config/routes.php (the `slug` token is passed in).
+ #
+ # Resolves to the matching entry's actual URL, so it follows whatever URL shape
+ # the entry uses (flat /integrated-amplifiers OR nested
+ # /products/amplification/integrated-amplifiers) with no map to maintain.
+ # Falls back to /slug when no entry matches. index.html → home.
+ #
+ # NOTE: only fires once the legacy .html files leave the docroot (task #16) —
+ # while they remain in web/, nginx serves them as static files.
+ #}
+{% if slug == 'index' %}
+  {% redirect '/' 301 %}
+{% endif %}
+{% set target = craft.entries.slug(slug).one() %}
+{% redirect (target ? target.url : '/' ~ slug) 301 %}

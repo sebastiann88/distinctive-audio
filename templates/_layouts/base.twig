@@ -1,0 +1,107 @@
+{#
+ # base.twig — primary site layout
+ #
+ # Ported from the static web/*.html shell. Owns the <head>, the shared
+ # header/footer chrome, and the <main id="main-content"> wrapper that the
+ # skip-link targets. Page templates extend this and fill {% block content %}.
+ #
+ # Per-page meta: override {% block title %} and {% block metaDescription %};
+ # they are echoed back into the OpenGraph tags via Twig's block() function.
+ # Page-specific structured data goes in {% block jsonld %}.
+ #
+ # NOTE: OpenGraph / Twitter / canonical are templated here for the build-out
+ # proof-of-concept. SEOmatic will take ownership of meta + schema in task #12.
+ #}
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="theme-color" content="#00263d" />
+
+    {#
+     # SEOmatic owns <title> + description + OpenGraph/Twitter + canonical (one
+     # set of tags — no hand-rolled duplicates). We capture each page's title /
+     # description from the child-template blocks (without rendering them here)
+     # and hand them to SEOmatic so our crafted copy still drives the tags.
+     #}
+    {% set seoTitleValue %}{% block title %}Ottawa's High-End Audio Store{% endblock %}{% endset %}
+    {% set seoDescriptionValue %}{% block metaDescription %}Helping the Ottawa–Gatineau region listen better since 1986. High-end audio — turntables, amplifiers, loudspeakers — matched to your room and music.{% endblock %}{% endset %}
+    {% do seomatic.meta.seoTitle(seoTitleValue|trim) %}
+    {% do seomatic.meta.seoDescription(seoDescriptionValue|trim) %}
+    {# No social accounts exist yet — suppress the empty twitter:creator ("@") tag. #}
+    {% do seomatic.tag.get('twitter:creator').include(false) %}
+
+    {# Text fonts — Inter (labels), Manrope (body/titles), Newsreader (headlines):
+       self-hosted woff2 subsets (same files + cache as the immersive homepage). #}
+    {% include '_partials/fonts.twig' %}
+
+    {# Material Symbols stays on Google Fonts because category cardIcon is an
+       owner-editable field (any glyph name must resolve). But request ONLY what
+       the CSS uses — fixed weight 400 / opsz 24 with the FILL 0..1 axis
+       (src/input.css pins the rest) — instead of the full 100..700 variable
+       range, and display=block so raw ligature names never flash as text. #}
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&amp;display=block"
+      rel="stylesheet"
+    />
+
+    {# @tailwindplus/elements — powers <el-disclosure> (mobile menu) and the FAQ accordions. #}
+    <link href="https://cdn.jsdelivr.net" rel="preconnect" crossorigin />
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+      type="module"
+    ></script>
+
+    {# Compiled Tailwind (src/input.css + tailwind.config.js → web/css/style.css). #}
+    <link rel="stylesheet" href="/css/style.css" />
+
+    {% block head %}{% endblock %}
+    {% block jsonld %}{% endblock %}
+  </head>
+  <body
+    class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container"
+  >
+    {#
+     # Site navigation, used by both the header and footer.
+     # primaryNav is the small, stable top-level nav (hard-coded by design).
+     # productNav / newArrivals are static placeholders for the build-out PoC —
+     # swap to the entry queries noted in footer.twig once the content model
+     # (task #7) and inventory import (task #9) exist.
+     #}
+    {% set primaryNav = [
+      { label: 'Home',           url: '/',               segment: null },
+      { label: 'About',          url: '/about',          segment: 'about' },
+      { label: 'Lines We Carry', url: '/lines-we-carry', segment: 'lines-we-carry' },
+      { label: 'Products',       url: '/products',       segment: 'products' },
+      { label: 'Contact',        url: '/contact',        segment: 'contact' },
+    ] %}
+
+    {# catUrl: category slug → live (nested) URL, available to every template so
+       hardcoded category links resolve to the current URL shape. #}
+    {% set catUrl = {} %}
+    {% for c in craft.entries.section('productCategories').all() %}
+      {% set catUrl = catUrl|merge({ (c.slug): c.url }) %}
+    {% endfor %}
+
+    <a
+      class="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:bg-primary focus:text-on-primary focus:px-4 focus:py-2 focus:rounded"
+      href="#main-content"
+      >Skip to main content</a
+    >
+
+    {# On the homepage the nav overlays the cinematic hero (see header.twig). #}
+    {% set isHome = craft.app.request.pathInfo == '' %}
+    {% include '_partials/header.twig' with { heroOverlay: isHome } %}
+
+    <main id="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% include '_partials/footer.twig' %}
+
+    <script src="/js/script.js?v=2"></script>
+  </body>
+</html>
